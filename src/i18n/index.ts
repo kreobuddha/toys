@@ -18,7 +18,7 @@ void i18n
     supportedLngs: SUPPORTED_LOCALES,
     ns: ['translation'],
     defaultNS: 'translation',
-    backend: { loadPath: '/locales/{{lng}}/{{ns}}.json' },
+    backend: { loadPath: `${import.meta.env.BASE_URL}locales/{{lng}}/{{ns}}.json` },
     interpolation: { escapeValue: false }, // React escapes already
     react: { useSuspense: true },
   });
