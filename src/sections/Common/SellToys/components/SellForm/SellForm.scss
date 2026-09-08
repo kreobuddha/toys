@@ -1,0 +1,38 @@
+@use '@/styles/mixins' as *;
+
+.sell-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.sell-form__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  width: 100%;
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sell-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+
+.sell-form__error {
+  color: #c62828;
+  font-size: 13px;
+}
+
+.sell-form__success {
+  padding: 20px;
+  border-radius: 12px;
+  background: #eaf6ec;
+  color: #1f6b34;
+}

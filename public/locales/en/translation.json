@@ -102,5 +102,139 @@
     "text": "We've sent a confirmation to your email. Your toys are on the way.",
     "order": "Order number",
     "backHome": "Back to home"
+  },
+  "home": {
+    "heroTitle": "Loved toys, ready for a second childhood",
+    "heroText": "We buy back educational toys children have outgrown, restore them and pass them on. Good for the planet, good for your wallet.",
+    "heroCatalog": "Browse toys",
+    "heroSell": "Sell your toys",
+    "howTitle": "How it works",
+    "how": [
+      {
+        "title": "Families send us toys",
+        "text": "Parents whose children have outgrown their toys fill in a short form and ship them to us."
+      },
+      {
+        "title": "We restore and check",
+        "text": "Every item is cleaned, checked for missing parts and repaired where needed."
+      },
+      {
+        "title": "You pick and we deliver",
+        "text": "Choose from the catalog, pay online and get the toys at your door or pick them up."
+      }
+    ],
+    "featuredTitle": "Just arrived",
+    "featuredAll": "See all toys",
+    "faqTitle": "Questions parents ask",
+    "faq": [
+      {
+        "q": "Are the toys safe?",
+        "a": "Yes. Each toy is cleaned, checked against the manufacturer's age label and has no missing or broken parts."
+      },
+      {
+        "q": "What condition are they in?",
+        "a": "Every listing states the condition honestly: like new, very good or good. Photos show the actual item."
+      },
+      {
+        "q": "Can I return a toy?",
+        "a": "Within 14 days, if it is not what you expected. Contact us and we will arrange the return."
+      },
+      {
+        "q": "Where do you deliver?",
+        "a": "Across the Netherlands by courier or post, or pick up in Amsterdam for free."
+      }
+    ],
+    "reviewsTitle": "What parents say",
+    "reviews": [
+      {
+        "text": "The magnetic tiles looked brand new. My son has played with them every day since.",
+        "author": "Anna, Amsterdam"
+      },
+      {
+        "text": "Sending in our old puzzles was easy and it felt good knowing they will be used again.",
+        "author": "Mark, Utrecht"
+      },
+      {
+        "text": "Half the price of new and nothing was missing. We will be back.",
+        "author": "Sofie, Haarlem"
+      }
+    ]
+  },
+  "about": {
+    "title": "About us",
+    "intro": "We are a small team in Amsterdam who believe good toys deserve more than one childhood.",
+    "missionTitle": "Why we do this",
+    "missionText": "Educational toys are built to last, yet most are used for a year or two before ending up in a cupboard or a landfill. We give them a second life: families pass them on, we restore them, and other families get quality toys for a fair price.",
+    "valuesTitle": "What we stand for",
+    "values": [
+      {
+        "title": "Honesty",
+        "text": "We describe every toy's condition exactly as it is and show real photos."
+      },
+      {
+        "title": "Quality",
+        "text": "Only complete, clean and safe toys make it to the catalog."
+      },
+      {
+        "title": "Less waste",
+        "text": "Every toy we resell is one fewer produced and one fewer thrown away."
+      }
+    ],
+    "teamTitle": "The team",
+    "teamText": "Content coming soon.",
+    "contactTitle": "Get in touch",
+    "contactText": "Questions about an order or a toy you would like to pass on? Write to us at hello@example.com."
+  },
+  "sell": {
+    "title": "Sell your toys",
+    "intro": "Has your child outgrown their toys? Pass them on to a new family and get paid for it.",
+    "howTitle": "How it works",
+    "how": [
+      {
+        "title": "Tell us what you have",
+        "text": "Fill in the form below with a short description of the toys and your contact details."
+      },
+      {
+        "title": "We make an offer",
+        "text": "Within two working days we reply with a price or ask for a couple of photos."
+      },
+      {
+        "title": "Ship or drop off",
+        "text": "Send the toys to us or bring them to our point in Amsterdam. We pay once they arrive."
+      }
+    ],
+    "acceptTitle": "What we accept",
+    "acceptText": "Wooden and plastic educational toys, construction sets, puzzles, musical instruments, role-play sets and children's books. Complete, clean and without safety recalls.",
+    "faqTitle": "Frequently asked",
+    "faq": [
+      {
+        "q": "How much do you pay?",
+        "a": "Typically 30–50% of the resale price, depending on condition and demand. We tell you the amount before you ship."
+      },
+      {
+        "q": "What if a piece is missing?",
+        "a": "Tell us in the form. Some sets are fine with a piece missing, others are not; we will let you know."
+      },
+      {
+        "q": "Who pays for shipping?",
+        "a": "We do. After accepting the offer you get a prepaid label."
+      },
+      {
+        "q": "Can I donate instead?",
+        "a": "Of course. Just mention it in the message and we will put the toys into circulation for free."
+      }
+    ],
+    "formTitle": "Tell us about your toys",
+    "name": "Your name",
+    "email": "Email",
+    "phone": "Phone (optional)",
+    "message": "What toys do you have?",
+    "messagePlaceholder": "E.g. a wooden marble run (complete), 50 magnetic tiles, a few puzzles for ages 3–5",
+    "submit": "Send request",
+    "sending": "Sending…",
+    "required": "This field is required",
+    "invalidEmail": "Enter a valid email address",
+    "success": "Thank you! We have received your request and will reply within two working days.",
+    "error": "Could not send the request. Please try again."
   }
 }
