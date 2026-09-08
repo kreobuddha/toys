@@ -1,12 +1,13 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import type {
-  Article,
-  CreateOrderInput,
-  CreateOrderResponse,
-  Paginated,
-  Product,
-  ProductsQuery,
-  SellRequestInput,
+  IArticle,
+  ICatalogFacets,
+  ICreateOrderInput,
+  ICreateOrderResponse,
+  IPaginated,
+  IProduct,
+  IProductsQuery,
+  ISellRequestInput,
 } from './types';
 
 export const api = createApi({
@@ -14,7 +15,7 @@ export const api = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_API_URL }),
   tagTypes: ['Product', 'Article'],
   endpoints: (build) => ({
-    getProducts: build.query<Paginated<Product>, ProductsQuery>({
+    getProducts: build.query<IPaginated<IProduct>, IProductsQuery>({
       query: (params) => ({ url: '/products', params }),
       providesTags: (result) =>
         result
@@ -24,22 +25,25 @@ export const api = createApi({
             ]
           : [{ type: 'Product', id: 'LIST' }],
     }),
-    getProduct: build.query<Product, string>({
+    getCatalogFacets: build.query<ICatalogFacets, void>({
+      query: () => '/products/facets',
+    }),
+    getProduct: build.query<IProduct, string>({
       query: (id) => `/products/${id}`,
       providesTags: (_r, _e, id) => [{ type: 'Product', id }],
     }),
-    getArticles: build.query<Article[], void>({
+    getArticles: build.query<IArticle[], void>({
       query: () => '/articles',
       providesTags: [{ type: 'Article', id: 'LIST' }],
     }),
-    getArticle: build.query<Article, string>({
+    getArticle: build.query<IArticle, string>({
       query: (slug) => `/articles/${slug}`,
       providesTags: (_r, _e, slug) => [{ type: 'Article', id: slug }],
     }),
-    createOrder: build.mutation<CreateOrderResponse, CreateOrderInput>({
+    createOrder: build.mutation<ICreateOrderResponse, ICreateOrderInput>({
       query: (body) => ({ url: '/orders', method: 'POST', body }),
     }),
-    sendSellRequest: build.mutation<void, SellRequestInput>({
+    sendSellRequest: build.mutation<void, ISellRequestInput>({
       query: (body) => ({ url: '/sell-requests', method: 'POST', body }),
     }),
   }),
@@ -47,6 +51,7 @@ export const api = createApi({
 
 export const {
   useGetProductsQuery,
+  useGetCatalogFacetsQuery,
   useGetProductQuery,
   useGetArticlesQuery,
   useGetArticleQuery,

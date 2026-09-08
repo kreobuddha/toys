@@ -1,6 +1,6 @@
 // Draft contract. Adjust once the backend team shares the real API.
 
-export interface Product {
+export interface IProduct {
   id: number;
   slug: string;
   title: string;
@@ -15,9 +15,14 @@ export interface Product {
   articleSlug?: string; // related blog article
 }
 
+export interface ICatalogFacets {
+  categories: string[];
+  ageRanges: string[];
+}
+
 export type SortOption = 'price_asc' | 'price_desc' | 'newest';
 
-export interface ProductsQuery {
+export interface IProductsQuery {
   page?: number;
   perPage?: number;
   search?: string;
@@ -28,14 +33,14 @@ export interface ProductsQuery {
   sort?: SortOption;
 }
 
-export interface Paginated<T> {
+export interface IPaginated<T> {
   items: T[];
   page: number;
   perPage: number;
   total: number;
 }
 
-export interface Article {
+export interface IArticle {
   id: number;
   slug: string;
   title: string;
@@ -52,13 +57,13 @@ export type ArticleBlock =
 
 export type DeliveryMethod = 'pickup' | 'courier' | 'post';
 
-export interface OrderItemInput {
+export interface IOrderItemInput {
   productId: number;
   quantity: number;
 }
 
-export interface CreateOrderInput {
-  items: OrderItemInput[];
+export interface ICreateOrderInput {
+  items: IOrderItemInput[];
   contact: {
     name: string;
     email: string;
@@ -70,12 +75,12 @@ export interface CreateOrderInput {
   };
 }
 
-export interface CreateOrderResponse {
+export interface ICreateOrderResponse {
   orderId: string;
   checkoutUrl: string; // Stripe Checkout session URL
 }
 
-export interface SellRequestInput {
+export interface ISellRequestInput {
   name: string;
   email: string;
   phone?: string;

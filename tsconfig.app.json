@@ -18,8 +18,11 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "@/*": ["./src/*"]
-    }
+      "@/*": ["./src/*"],
+      "@components/*": ["./src/components/*"],
+      "@sections/*": ["./src/sections/*"]
+    },
+    "resolveJsonModule": true
   },
-  "include": ["src"]
+  "include": ["src", "public/locales/en/translation.json"]
 }

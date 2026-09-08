@@ -1,26 +1,28 @@
-import { useEffect } from 'react';
+import { useEffect, type ReactElement } from 'react';
 import { Navigate, Outlet, useLocation, useParams } from 'react-router-dom';
+import i18n from '@/i18n';
 import { LocaleContext } from '@/i18n/LocaleContext';
 import { DEFAULT_LOCALE, isLocale } from '@/i18n/locales';
 
 const LOCALE_LIKE = /^[a-z]{2,3}(-[A-Za-z]{2,4})?$/;
 
-function looksLikeLocale(segment: string | undefined): segment is string {
-  return segment !== undefined && LOCALE_LIKE.test(segment);
-}
+const looksLikeLocale = (segment: string | undefined): segment is string =>
+  segment !== undefined && LOCALE_LIKE.test(segment);
 
 /**
  * Mounted at /:locale. Validates the prefix and provides the locale to the
  * subtree. A path without a valid locale (/catalog, /xx/about) is redirected to
  * the default locale with the original path preserved (/en/catalog).
  */
-export function LocaleRoute() {
+const LocaleRoute = (): ReactElement => {
   const { locale } = useParams();
   const { pathname, search, hash } = useLocation();
   const valid = isLocale(locale);
 
   useEffect(() => {
-    if (valid) document.documentElement.lang = locale;
+    if (!valid) return;
+    document.documentElement.lang = locale;
+    if (i18n.language !== locale) void i18n.changeLanguage(locale);
   }, [valid, locale]);
 
   if (!valid) {
@@ -35,4 +37,6 @@ export function LocaleRoute() {
       <Outlet />
     </LocaleContext.Provider>
   );
-}
+};
+
+export default LocaleRoute;

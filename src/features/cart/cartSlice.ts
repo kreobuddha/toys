@@ -1,8 +1,8 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '@/app/store';
-import type { Product } from '@/api/types';
+import type { IProduct } from '@/api/types';
 
-export interface CartItem {
+export interface ICartItem {
   productId: number;
   quantity: number;
   // Snapshot so the cart renders without refetching every product.
@@ -12,34 +12,34 @@ export interface CartItem {
   image?: string;
 }
 
-interface CartState {
-  items: CartItem[];
+export interface ICartState {
+  items: ICartItem[];
 }
 
 const STORAGE_KEY = 'toys.cart';
 
-function loadCart(): CartState {
+const loadCart = (): ICartState => {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? (JSON.parse(raw) as CartState) : { items: [] };
+    return raw ? (JSON.parse(raw) as ICartState) : { items: [] };
   } catch {
     return { items: [] };
   }
-}
+};
 
-export function persistCart(state: CartState) {
+export const persistCart = (state: ICartState): void => {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   } catch {
     // storage unavailable (private mode etc.) — cart lives in memory only
   }
-}
+};
 
 const cartSlice = createSlice({
   name: 'cart',
   initialState: loadCart,
   reducers: {
-    addItem(state, action: PayloadAction<Product>) {
+    addItem(state, action: PayloadAction<IProduct>) {
       const p = action.payload;
       const existing = state.items.find((i) => i.productId === p.id);
       if (existing) {
@@ -77,8 +77,8 @@ const cartSlice = createSlice({
 export const { addItem, setQuantity, removeItem, clearCart } = cartSlice.actions;
 export const cartReducer = cartSlice.reducer;
 
-export const selectCartItems = (s: RootState) => s.cart.items;
-export const selectCartCount = (s: RootState) =>
+export const selectCartItems = (s: RootState): ICartItem[] => s.cart.items;
+export const selectCartCount = (s: RootState): number =>
   s.cart.items.reduce((sum, i) => sum + i.quantity, 0);
-export const selectCartTotal = (s: RootState) =>
+export const selectCartTotal = (s: RootState): number =>
   s.cart.items.reduce((sum, i) => sum + i.price * i.quantity, 0);

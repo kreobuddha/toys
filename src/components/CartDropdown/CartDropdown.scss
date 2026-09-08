@@ -1,0 +1,149 @@
+@use '@/styles/mixins' as *;
+
+.cart-dropdown {
+  position: relative;
+}
+
+.cart-dropdown__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: 0;
+  padding: 0;
+  color: inherit;
+}
+
+.cart-dropdown__badge {
+  background: var(--color-accent);
+  color: #fff;
+  border-radius: 999px;
+  padding: 0 7px;
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.cart-dropdown__panel {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  width: 360px;
+  max-width: calc(100vw - 2 * 16px);
+  padding: 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-bg);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  z-index: 20;
+
+  @include mobile {
+    position: fixed;
+    top: 64px;
+    right: 16px;
+  }
+}
+
+.cart-dropdown__empty {
+  margin: 0;
+  color: var(--color-muted);
+  text-align: center;
+}
+
+.cart-dropdown__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.cart-dropdown__item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.cart-dropdown__thumb {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  object-fit: cover;
+  background: #f3f3f3;
+  flex-shrink: 0;
+}
+
+.cart-dropdown__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.cart-dropdown__name {
+  font-size: 14px;
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.cart-dropdown__price {
+  font-size: 13px;
+  color: var(--color-muted);
+}
+
+.cart-dropdown__qty {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+}
+
+.cart-dropdown__qty-button {
+  width: 28px;
+  height: 28px;
+  border: 0;
+  background: none;
+  color: var(--color-muted);
+
+  &:hover {
+    color: var(--color-text);
+  }
+}
+
+.cart-dropdown__qty-value {
+  min-width: 24px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.cart-dropdown__remove {
+  border: 0;
+  background: none;
+  color: var(--color-muted);
+  font-size: 18px;
+  line-height: 1;
+
+  &:hover {
+    color: var(--color-text);
+  }
+}
+
+.cart-dropdown__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 12px;
+}
+
+.cart-dropdown__total {
+  font-size: 14px;
+}
