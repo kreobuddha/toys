@@ -88,7 +88,7 @@ export const handlers = [
     // straight to the success page so the flow can be exercised end to end.
     const body: ICreateOrderResponse = {
       orderId,
-      checkoutUrl: `${location.origin}/en/order/success?order=${orderId}`,
+      checkoutUrl: `${location.origin}${import.meta.env.BASE_URL}en/order/success?order=${orderId}`,
     };
     return HttpResponse.json(body, { status: 201 });
   }),

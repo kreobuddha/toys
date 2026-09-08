@@ -16,27 +16,31 @@ import {
   SellToys,
 } from './sections';
 
-export const router = createBrowserRouter([
-  { path: '/', element: <Navigate to={`/${DEFAULT_LOCALE}`} replace /> },
-  {
-    path: '/:locale',
-    element: <LocaleRoute />,
-    children: [
-      {
-        element: <Layout />,
-        children: [
-          { index: true, element: <Home /> },
-          { path: paths.catalog, element: <Catalog /> },
-          { path: paths.product(), element: <Product /> },
-          { path: paths.checkout, element: <Checkout /> },
-          { path: paths.orderSuccess, element: <Success /> },
-          { path: paths.sellToys, element: <SellToys /> },
-          { path: paths.blog, element: <Blog /> },
-          { path: paths.article(), element: <Article /> },
-          { path: paths.about, element: <About /> },
-          { path: '*', element: <NotFound /> },
-        ],
-      },
-    ],
-  },
-]);
+export const router = createBrowserRouter(
+  [
+    { path: '/', element: <Navigate to={`/${DEFAULT_LOCALE}`} replace /> },
+    {
+      path: '/:locale',
+      element: <LocaleRoute />,
+      children: [
+        {
+          element: <Layout />,
+          children: [
+            { index: true, element: <Home /> },
+            { path: paths.catalog, element: <Catalog /> },
+            { path: paths.product(), element: <Product /> },
+            { path: paths.checkout, element: <Checkout /> },
+            { path: paths.orderSuccess, element: <Success /> },
+            { path: paths.sellToys, element: <SellToys /> },
+            { path: paths.blog, element: <Blog /> },
+            { path: paths.article(), element: <Article /> },
+            { path: paths.about, element: <About /> },
+            { path: '*', element: <NotFound /> },
+          ],
+        },
+      ],
+    },
+  ],
+  // Vite's base ('/' or '/toys/') becomes the router prefix.
+  { basename: import.meta.env.BASE_URL }
+);

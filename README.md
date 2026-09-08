@@ -21,14 +21,14 @@ cp .env.example .env   # set VITE_API_URL; VITE_USE_MOCKS=true serves the API fr
 npm run dev
 ```
 
-| Script                 | What it does                  |
-| ---------------------- | ----------------------------- |
-| `npm run dev`          | Dev server with HMR           |
-| `npm run build`        | Type-check + production build |
-| `npm run typecheck`    | `tsc -b --noEmit`             |
-| `npm run lint`         | ESLint                        |
-| `npm run format`       | Prettier, write               |
-| `npm run format:check` | Prettier, check only          |
+| Script                 | What it does                                     |
+| ---------------------- | ------------------------------------------------ |
+| `npm run dev`          | Dev server with HMR                              |
+| `npm run build`        | Type-check + production build + SPA 404 fallback |
+| `npm run typecheck`    | `tsc -b --noEmit`                                |
+| `npm run lint`         | ESLint                                           |
+| `npm run format`       | Prettier, write                                  |
+| `npm run format:check` | Prettier, check only                             |
 
 ## Structure
 
@@ -60,3 +60,15 @@ Components use `useTranslation()` from react-i18next; keys are type-checked agai
 via `src/i18n/i18next.d.ts`. The active language follows the `/:locale` URL segment. To add a
 language: add the code to `SUPPORTED_LOCALES` in `src/i18n/locales.ts` and create
 `public/locales/<lng>/translation.json`.
+
+## Deploy (GitHub Pages)
+
+Every push to `master` runs `.github/workflows/pages.yml`: it builds with `BASE_PATH=/toys/` and
+`VITE_USE_MOCKS=true` and publishes `dist/` to GitHub Pages at <https://kreobuddha.github.io/toys/>.
+`postbuild` copies `index.html` to `404.html` so deep links work without server-side rewrites.
+
+One-time setup: the repository must be public (Pages is not available for private repositories on
+the Free plan), and _Settings → Pages → Source_ must be set to **GitHub Actions**.
+
+When the backend is live, set `VITE_USE_MOCKS=false` and `VITE_API_URL` in the workflow, and make
+sure the API allows CORS from `kreobuddha.github.io`.
