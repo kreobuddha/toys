@@ -7,6 +7,7 @@ import type {
   SortOption,
 } from '@/api/types';
 import { AGE_RANGES, CATEGORIES, products } from './data/products';
+import { articles } from './data/articles';
 
 const API = import.meta.env.VITE_API_URL;
 
@@ -58,6 +59,21 @@ export const handlers = [
     const product = products.find((p) => String(p.id) === params.id);
     await delay(RESPONSE_DELAY_MS);
     return product ? HttpResponse.json(product) : new HttpResponse(null, { status: 404 });
+  }),
+
+  http.get(`${API}/articles`, async () => {
+    await delay(RESPONSE_DELAY_MS);
+    // List payload carries no blocks; the article endpoint returns the full body.
+    const list = [...articles]
+      .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt))
+      .map((article) => ({ ...article, blocks: [] }));
+    return HttpResponse.json(list);
+  }),
+
+  http.get(`${API}/articles/:slug`, async ({ params }) => {
+    const article = articles.find((a) => a.slug === params.slug);
+    await delay(RESPONSE_DELAY_MS);
+    return article ? HttpResponse.json(article) : new HttpResponse(null, { status: 404 });
   }),
 
   http.post(`${API}/orders`, async ({ request }) => {
