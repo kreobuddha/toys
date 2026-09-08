@@ -15,7 +15,7 @@ See [README.md](README.md) for setup and scripts.
 
 - **Never commit or push on your own initiative.** Leave changes in the working tree so Rustam
   can review the diff; commit only when he explicitly asks.
-- Feature work goes in a branch off `main`; PRs are opened only on request.
+- Feature work goes in a branch off `master`; PRs are opened only on request.
 
 ## Stack & structure
 
