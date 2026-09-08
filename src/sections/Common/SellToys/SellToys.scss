@@ -1,3 +1,81 @@
+@use '@/styles/mixins' as *;
+
+.sell-toys {
+  padding: 24px 0 64px;
+}
+
+.sell-toys__header {
+  max-width: 720px;
+  margin-bottom: 40px;
+}
+
 .sell-toys__title {
-  margin: 32px 0 16px;
+  margin: 8px 0 12px;
+  font-size: 36px;
+}
+
+.sell-toys__intro {
+  margin: 0;
+  font-size: 18px;
+  color: var(--color-muted);
+}
+
+.sell-toys__block {
+  margin-bottom: 48px;
+
+  &--narrow {
+    max-width: 720px;
+  }
+}
+
+.sell-toys__heading {
+  margin: 0 0 20px;
+  font-size: 24px;
+}
+
+.sell-toys__text {
+  margin: 0;
+  max-width: 720px;
+  line-height: 1.6;
+}
+
+.sell-toys__steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sell-toys__step {
+  padding: 24px;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+}
+
+.sell-toys__step-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  color: #fff;
+  font-weight: 600;
+}
+
+.sell-toys__step-title {
+  margin: 16px 0 8px;
+  font-size: 18px;
+}
+
+.sell-toys__step-text {
+  margin: 0;
+  color: var(--color-muted);
 }

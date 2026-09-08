@@ -1,5 +1,6 @@
 import { delay, http, HttpResponse } from 'msw';
 import type {
+  ISellRequestInput,
   ICreateOrderInput,
   ICreateOrderResponse,
   IPaginated,
@@ -90,5 +91,12 @@ export const handlers = [
       checkoutUrl: `${location.origin}/en/order/success?order=${orderId}`,
     };
     return HttpResponse.json(body, { status: 201 });
+  }),
+
+  http.post(`${API}/sell-requests`, async ({ request }) => {
+    const input = (await request.json()) as ISellRequestInput;
+    await delay(RESPONSE_DELAY_MS);
+    if (!input.email || !input.message) return new HttpResponse(null, { status: 400 });
+    return new HttpResponse(null, { status: 201 });
   }),
 ];
