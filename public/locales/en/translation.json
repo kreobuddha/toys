@@ -56,5 +56,51 @@
     "back": "Back to blog",
     "notFound": "This article does not exist.",
     "relatedToys": "Browse toys in the catalog"
+  },
+  "product": {
+    "backToCatalog": "Back to catalog",
+    "category": "Category",
+    "ageRange": "Age",
+    "condition": "Condition",
+    "outOfStock": "Sold out",
+    "inCart": "In cart",
+    "description": "Description",
+    "readArticle": "Read our article about this toy",
+    "notFound": "This toy is no longer available.",
+    "gallery": "Product images",
+    "showImage": "Show image {{index}}"
+  },
+  "checkout": {
+    "title": "Checkout",
+    "empty": "Your cart is empty.",
+    "goToCatalog": "Go to catalog",
+    "contact": "Contact details",
+    "name": "Full name",
+    "email": "Email",
+    "phone": "Phone (optional)",
+    "delivery": "Delivery",
+    "deliveryPickup": "Pickup",
+    "deliveryPickupHint": "Collect from our point in Amsterdam",
+    "deliveryCourier": "Courier",
+    "deliveryCourierHint": "1–2 days within the Netherlands",
+    "deliveryPost": "Post",
+    "deliveryPostHint": "3–5 days, tracked",
+    "free": "Free",
+    "address": "Delivery address",
+    "summary": "Your order",
+    "subtotal": "Subtotal",
+    "deliveryCost": "Delivery",
+    "total": "Total",
+    "pay": "Proceed to payment",
+    "paying": "Redirecting to payment…",
+    "required": "This field is required",
+    "invalidEmail": "Enter a valid email address",
+    "submitError": "Could not create the order. Please try again."
+  },
+  "success": {
+    "title": "Thank you for your order!",
+    "text": "We've sent a confirmation to your email. Your toys are on the way.",
+    "order": "Order number",
+    "backHome": "Back to home"
   }
 }

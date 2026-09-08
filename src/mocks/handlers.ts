@@ -1,5 +1,11 @@
 import { delay, http, HttpResponse } from 'msw';
-import type { IPaginated, IProduct, SortOption } from '@/api/types';
+import type {
+  ICreateOrderInput,
+  ICreateOrderResponse,
+  IPaginated,
+  IProduct,
+  SortOption,
+} from '@/api/types';
 import { AGE_RANGES, CATEGORIES, products } from './data/products';
 import { articles } from './data/articles';
 
@@ -68,5 +74,21 @@ export const handlers = [
     const article = articles.find((a) => a.slug === params.slug);
     await delay(RESPONSE_DELAY_MS);
     return article ? HttpResponse.json(article) : new HttpResponse(null, { status: 404 });
+  }),
+
+  http.post(`${API}/orders`, async ({ request }) => {
+    const input = (await request.json()) as ICreateOrderInput;
+    await delay(RESPONSE_DELAY_MS);
+    if (!input.items?.length || !input.contact?.email) {
+      return new HttpResponse(null, { status: 400 });
+    }
+    const orderId = `TOY-${String(Date.now()).slice(-6)}`;
+    // The real backend returns a Stripe Checkout URL; the mock sends the user
+    // straight to the success page so the flow can be exercised end to end.
+    const body: ICreateOrderResponse = {
+      orderId,
+      checkoutUrl: `${location.origin}/en/order/success?order=${orderId}`,
+    };
+    return HttpResponse.json(body, { status: 201 });
   }),
 ];
