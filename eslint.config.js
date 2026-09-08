@@ -6,7 +6,7 @@ import prettier from 'eslint-config-prettier';
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
-  { ignores: ['dist'] },
+  { ignores: ['dist', 'public'] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ['**/*.{ts,tsx}'],
@@ -21,6 +21,10 @@ export default tseslint.config(
     rules: {
       ...reactHooks.configs.recommended.rules,
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+      // House style (docs/code-rules.md): no `function` declarations, and an explicit return
+      // type on anything a module exposes.
+      'func-style': ['error', 'expression', { allowArrowFunctions: true }],
+      '@typescript-eslint/explicit-module-boundary-types': 'error',
     },
   },
   prettier

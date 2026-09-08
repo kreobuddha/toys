@@ -1,0 +1,19 @@
+@use '@/styles/mixins' as *;
+
+.catalog-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  @include tablet {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    align-items: end;
+  }
+}
+
+.catalog-filters__price {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}

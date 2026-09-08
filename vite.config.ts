@@ -7,11 +7,8 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
-    },
-  },
-  css: {
-    modules: {
-      localsConvention: 'camelCaseOnly',
+      '@components': fileURLToPath(new URL('./src/components', import.meta.url)),
+      '@sections': fileURLToPath(new URL('./src/sections', import.meta.url)),
     },
   },
   server: { port: 5173 },

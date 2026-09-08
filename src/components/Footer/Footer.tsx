@@ -1,13 +1,16 @@
-import { useT } from '@/i18n';
-import styles from './Footer.module.scss';
+import './Footer.scss';
+import type { ReactElement } from 'react';
+import { useTranslation } from 'react-i18next';
 
-export function Footer() {
-  const t = useT();
+const Footer = (): ReactElement => {
+  const { t } = useTranslation();
   return (
-    <footer className={styles.root}>
+    <footer className="footer">
       <div className="container">
-        © {new Date().getFullYear()} Toys. {t.footer.rights}
+        © {new Date().getFullYear()} Toys. {t('footer.rights')}
       </div>
     </footer>
   );
-}
+};
+
+export default Footer;

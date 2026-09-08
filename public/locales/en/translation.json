@@ -1,0 +1,51 @@
+{
+  "nav": {
+    "home": "Home",
+    "catalog": "Catalog",
+    "sell": "Sell toys",
+    "blog": "Blog",
+    "about": "About"
+  },
+  "common": {
+    "loading": "Loading…",
+    "error": "Something went wrong. Please try again.",
+    "addToCart": "Add to cart",
+    "notFound": "Page not found"
+  },
+  "catalog": {
+    "title": "Catalog",
+    "search": "Search toys",
+    "category": "Category",
+    "ageRange": "Age",
+    "all": "All",
+    "sort": "Sort by",
+    "sortNewest": "Newest",
+    "sortPriceAsc": "Price: low to high",
+    "sortPriceDesc": "Price: high to low",
+    "priceFrom": "Price from",
+    "priceTo": "to",
+    "reset": "Reset filters",
+    "results_one": "{{count}} toy",
+    "results_other": "{{count}} toys",
+    "empty": "Nothing found. Try different filters.",
+    "outOfStock": "Sold out",
+    "inCart": "In cart"
+  },
+  "pagination": {
+    "prev": "Previous",
+    "next": "Next"
+  },
+  "footer": {
+    "rights": "All rights reserved."
+  },
+  "cart": {
+    "title": "Cart",
+    "open": "Open cart",
+    "close": "Close",
+    "empty": "Your cart is empty.",
+    "remove": "Remove",
+    "quantity": "Quantity",
+    "total": "Total",
+    "checkout": "Checkout"
+  }
+}

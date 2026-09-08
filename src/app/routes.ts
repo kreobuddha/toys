@@ -5,34 +5,41 @@ import type { Locale } from '@/i18n/locales';
 export const paths = {
   home: '',
   catalog: 'catalog',
-  product: (id: string | number = ':id') => `catalog/${id}`,
-  cart: 'cart',
+  product: (id: string | number = ':id'): string => `catalog/${id}`,
   checkout: 'checkout',
   orderSuccess: 'order/success',
   sellToys: 'sell',
   blog: 'blog',
-  article: (slug = ':slug') => `blog/${slug}`,
+  article: (slug = ':slug'): string => `blog/${slug}`,
   about: 'about',
 } as const;
 
-export function localePath(locale: Locale, path = ''): string {
-  return path ? `/${locale}/${path}` : `/${locale}`;
+export const localePath = (locale: Locale, path = ''): string =>
+  path ? `/${locale}/${path}` : `/${locale}`;
+
+export interface Links {
+  home: string;
+  catalog: string;
+  product: (id: string | number) => string;
+  checkout: string;
+  orderSuccess: string;
+  sellToys: string;
+  blog: string;
+  article: (slug: string) => string;
+  about: string;
 }
 
-export function buildLinks(locale: Locale) {
-  const to = (p: string) => localePath(locale, p);
+export const buildLinks = (locale: Locale): Links => {
+  const to = (p: string): string => localePath(locale, p);
   return {
     home: to(paths.home),
     catalog: to(paths.catalog),
-    product: (id: string | number) => to(paths.product(id)),
-    cart: to(paths.cart),
+    product: (id) => to(paths.product(id)),
     checkout: to(paths.checkout),
     orderSuccess: to(paths.orderSuccess),
     sellToys: to(paths.sellToys),
     blog: to(paths.blog),
-    article: (slug: string) => to(paths.article(slug)),
+    article: (slug) => to(paths.article(slug)),
     about: to(paths.about),
   };
-}
-
-export type Links = ReturnType<typeof buildLinks>;
+};
