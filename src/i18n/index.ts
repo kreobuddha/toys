@@ -5,7 +5,7 @@ import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from './locales';
 
 export { useLocale } from './LocaleContext';
 export { DEFAULT_LOCALE, SUPPORTED_LOCALES, isLocale, type Locale } from './locales';
-export { formatPrice } from './format';
+export { formatDate, formatPrice } from './format';
 
 // Resources live in public/locales/<lng>/<ns>.json and are fetched on demand.
 // The active language follows the /:locale route segment (see LocaleRoute).

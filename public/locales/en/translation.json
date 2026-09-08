@@ -47,5 +47,14 @@
     "quantity": "Quantity",
     "total": "Total",
     "checkout": "Checkout"
+  },
+  "blog": {
+    "title": "Blog",
+    "intro": "Notes on play, development and second-hand toys.",
+    "readMore": "Read article",
+    "empty": "No articles yet.",
+    "back": "Back to blog",
+    "notFound": "This article does not exist.",
+    "relatedToys": "Browse toys in the catalog"
   }
 }
