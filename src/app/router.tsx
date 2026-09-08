@@ -1,6 +1,8 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { Layout } from '@/components/Layout/Layout';
-import { routes } from './routes';
+import { DEFAULT_LOCALE } from '@/i18n/locales';
+import { LocaleRoute } from './LocaleRoute';
+import { paths } from './routes';
 import { Home } from '@/pages/Home/Home';
 import { Catalog } from '@/pages/Catalog/Catalog';
 import { Product } from '@/pages/Product/Product';
@@ -14,20 +16,27 @@ import { About } from '@/pages/About/About';
 import { NotFound } from '@/pages/NotFound/NotFound';
 
 export const router = createBrowserRouter([
+  { path: '/', element: <Navigate to={`/${DEFAULT_LOCALE}`} replace /> },
   {
-    element: <Layout />,
+    path: '/:locale',
+    element: <LocaleRoute />,
     children: [
-      { path: routes.home, element: <Home /> },
-      { path: routes.catalog, element: <Catalog /> },
-      { path: routes.product(), element: <Product /> },
-      { path: routes.cart, element: <Cart /> },
-      { path: routes.checkout, element: <Checkout /> },
-      { path: routes.orderSuccess, element: <OrderSuccess /> },
-      { path: routes.sellToys, element: <SellToys /> },
-      { path: routes.blog, element: <Blog /> },
-      { path: routes.article(), element: <Article /> },
-      { path: routes.about, element: <About /> },
-      { path: '*', element: <NotFound /> },
+      {
+        element: <Layout />,
+        children: [
+          { index: true, element: <Home /> },
+          { path: paths.catalog, element: <Catalog /> },
+          { path: paths.product(), element: <Product /> },
+          { path: paths.cart, element: <Cart /> },
+          { path: paths.checkout, element: <Checkout /> },
+          { path: paths.orderSuccess, element: <OrderSuccess /> },
+          { path: paths.sellToys, element: <SellToys /> },
+          { path: paths.blog, element: <Blog /> },
+          { path: paths.article(), element: <Article /> },
+          { path: paths.about, element: <About /> },
+          { path: '*', element: <NotFound /> },
+        ],
+      },
     ],
   },
 ]);

@@ -6,7 +6,7 @@ Second-hand educational toys shop: catalog, cart, Stripe checkout, toy intake fo
 
 - Vite + React 19 + TypeScript
 - Redux Toolkit + RTK Query (`src/api`, `src/features`)
-- react-router-dom v7 (`src/app/router.tsx`, paths in `src/app/routes.ts`)
+- react-router-dom v7 (`src/app/router.tsx`). All pages live under `/:locale/...` (`/en/catalog`); a missing or unknown prefix redirects to `/en/...`. Build hrefs with `useLinks()` (`links.product(id)`), never hardcode paths.
 - SCSS + CSS Modules, one folder per component/page (`Name.tsx` + `Name.module.scss`)
 - ESLint + Prettier
 
