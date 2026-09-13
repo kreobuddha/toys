@@ -24,7 +24,6 @@ const SORTERS: Record<SortOption, (a: IProduct, b: IProduct) => number> = {
 export const handlers = [
   http.get(`${API}/products`, async ({ request }) => {
     const q = new URL(request.url).searchParams;
-    const search = q.get('search')?.trim().toLowerCase();
     const category = q.get('category');
     const ageRange = q.get('ageRange');
     const minPrice = Number(q.get('minPrice') ?? 0);
@@ -34,7 +33,6 @@ export const handlers = [
     const perPage = Math.max(1, Number(q.get('perPage') ?? 12));
 
     const filtered = products
-      .filter((p) => !search || p.title.toLowerCase().includes(search))
       .filter((p) => !category || p.category === category)
       .filter((p) => !ageRange || p.ageRange === ageRange)
       .filter((p) => p.price >= minPrice && p.price <= maxPrice)

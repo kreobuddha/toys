@@ -56,9 +56,6 @@ const ShopFilters = ({
   onReset,
 }: ShopFiltersProps): ReactElement => {
   const { t } = useTranslation();
-  const [search, setSearch] = useDebouncedField(filters.search ?? '', (v) =>
-    onChange({ search: v }, { replace: true })
-  );
   const [minPrice, setMinPrice] = useDebouncedField(fromMinor(filters.minPrice), (v) =>
     onChange({ minPrice: toMinor(v) }, { replace: true })
   );
@@ -73,13 +70,6 @@ const ShopFilters = ({
 
   return (
     <aside className="shop-filters">
-      <Input
-        id="search"
-        type="search"
-        placeholder={t('shop.search')}
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
       <Select
         id="category"
         label={t('shop.category')}

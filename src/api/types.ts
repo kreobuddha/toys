@@ -25,7 +25,6 @@ export type SortOption = 'price_asc' | 'price_desc' | 'newest';
 export interface IProductsQuery {
   page?: number;
   perPage?: number;
-  search?: string;
   category?: string;
   ageRange?: string;
   minPrice?: number;

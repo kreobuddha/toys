@@ -40,7 +40,6 @@ export const useShopParams = (): UseShopParamsResult => {
     const sort = searchParams.get('sort') as SortOption | null;
     return {
       page: num('page') ?? 1,
-      search: searchParams.get('search') || undefined,
       category: searchParams.get('category') || undefined,
       ageRange: searchParams.get('ageRange') || undefined,
       minPrice: num('minPrice'),
@@ -76,7 +75,7 @@ export const useShopParams = (): UseShopParamsResult => {
 
   const query: IProductsQuery = { ...filters, perPage: PER_PAGE };
   const hasFilters = Boolean(
-    filters.search || filters.category || filters.ageRange || filters.minPrice || filters.maxPrice
+    filters.category || filters.ageRange || filters.minPrice || filters.maxPrice
   );
 
   return { filters, query, update, reset, hasFilters };
