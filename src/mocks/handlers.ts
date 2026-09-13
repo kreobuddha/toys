@@ -1,4 +1,5 @@
 import { delay, http, HttpResponse } from 'msw';
+import { isNlPostcode } from '@/api/nlAddress';
 import {
   isAgeGroup,
   isCondition,
@@ -102,6 +103,12 @@ export const handlers = [
     await delay(RESPONSE_DELAY_MS);
     if (!input.items?.length || !input.contact?.email) {
       return new HttpResponse(null, { status: 400 });
+    }
+    // The real backend checks the address against the BAG; the mock only turns away
+    // addresses outside the Netherlands.
+    const address = input.delivery?.address;
+    if (address && (address.country !== 'NL' || !isNlPostcode(address.postcode))) {
+      return new HttpResponse(null, { status: 422 });
     }
     const orderId = `TOY-${String(Date.now()).slice(-6)}`;
     // The real backend returns a Stripe Checkout URL; the mock sends the user

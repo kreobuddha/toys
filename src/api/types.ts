@@ -83,6 +83,16 @@ export type ArticleBlock =
 
 export type DeliveryMethod = 'pickup' | 'courier' | 'post';
 
+/** Delivery address; the shop delivers within the Netherlands only. */
+export interface INlAddress {
+  postcode: string; // "1012JS": no space, upper case
+  houseNumber: number;
+  addition?: string; // house letter and/or addition: "B", "1A", "A-2"
+  street: string;
+  city: string;
+  country: 'NL';
+}
+
 export interface IOrderItemInput {
   productId: number;
   quantity: number;
@@ -97,7 +107,7 @@ export interface ICreateOrderInput {
   };
   delivery: {
     method: DeliveryMethod;
-    address?: string;
+    address?: INlAddress; // courier and post only; the backend must validate it again
   };
 }
 
