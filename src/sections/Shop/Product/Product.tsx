@@ -54,7 +54,7 @@ const Product = (): ReactElement => {
 
       {product && (
         <div className="product__layout">
-          <ProductGallery images={product.images} alt={product.title} />
+          <ProductGallery key={product.id} images={product.images} alt={product.title} />
 
           <div className="product__details">
             <h1 className="product__title">{product.title}</h1>

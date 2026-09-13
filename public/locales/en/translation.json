@@ -84,7 +84,16 @@
     "readArticle": "Read our article about this toy",
     "notFound": "This toy is no longer available.",
     "gallery": "Product images",
-    "showImage": "Show image {{index}}"
+    "showImage": "Show image {{index}}",
+    "enlarge": "Enlarge image"
+  },
+  "lightbox": {
+    "label": "Image viewer",
+    "close": "Close",
+    "previous": "Previous image",
+    "next": "Next image",
+    "counter": "{{current}} / {{total}}",
+    "zoom": "Zoom"
   },
   "checkout": {
     "title": "Checkout",

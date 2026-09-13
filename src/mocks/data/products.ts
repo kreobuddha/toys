@@ -71,7 +71,7 @@ export const products: IProduct[] = Array.from({ length: 47 }, (_, i) => {
       'for a new home. Develops fine motor skills, logic and imagination.',
     price: 500 + Math.floor(r() * 90) * 50, // €5.00 – €49.50
     currency: 'EUR',
-    images: [1, 2, 3].map((n) => `https://picsum.photos/seed/toy-${id}-${n}/600/600`),
+    images: [1, 2, 3].map((n) => `https://picsum.photos/seed/toy-${id}-${n}/1200/1200`),
     category,
     brand,
     condition,
