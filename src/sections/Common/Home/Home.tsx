@@ -13,7 +13,7 @@ const FEATURED_COUNT = 4;
 const Home = (): ReactElement => {
   const { t } = useTranslation();
   const links = useLinks();
-  const { data: featured } = useGetProductsQuery({ sort: 'newest', perPage: FEATURED_COUNT });
+  const { data: featured } = useGetProductsQuery({ perPage: FEATURED_COUNT });
 
   const steps = t('home.how', { returnObjects: true });
   const faq = t('home.faq', { returnObjects: true });

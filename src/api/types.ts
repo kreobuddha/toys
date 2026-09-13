@@ -20,7 +20,7 @@ export interface IProductFacets {
   ageRanges: string[];
 }
 
-export type SortOption = 'price_asc' | 'price_desc' | 'newest';
+export type SortOption = 'price_asc' | 'price_desc';
 
 export interface IProductsQuery {
   page?: number;
@@ -29,7 +29,7 @@ export interface IProductsQuery {
   ageRange?: string;
   minPrice?: number;
   maxPrice?: number;
-  sort?: SortOption;
+  sort?: SortOption; // omitted: the backend's default order
 }
 
 export interface IPaginated<T> {

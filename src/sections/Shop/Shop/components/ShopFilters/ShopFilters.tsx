@@ -10,7 +10,7 @@ import type { ShopParams, UpdateOptions } from '@sections/Shop/Shop/useShopParam
 interface ShopFiltersProps {
   filters: ShopParams;
   facets?: IProductFacets;
-  hasFilters: boolean;
+  canReset: boolean;
   onChange: (patch: Partial<ShopParams>, options?: UpdateOptions) => void;
   onReset: () => void;
 }
@@ -51,7 +51,7 @@ const fromMinor = (value?: number): string => (value ? String(value / 100) : '')
 const ShopFilters = ({
   filters,
   facets,
-  hasFilters,
+  canReset,
   onChange,
   onReset,
 }: ShopFiltersProps): ReactElement => {
@@ -104,7 +104,7 @@ const ShopFilters = ({
           onChange={(e) => setMaxPrice(e.target.value)}
         />
       </div>
-      {hasFilters && (
+      {canReset && (
         <Button variant="ghost" size="sm" onClick={onReset}>
           {t('shop.reset')}
         </Button>

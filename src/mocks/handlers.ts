@@ -1,4 +1,5 @@
 import { delay, http, HttpResponse } from 'msw';
+import { isSortOption } from '@/api/productAttributes';
 import type {
   ISellRequestInput,
   ICreateOrderInput,
@@ -18,8 +19,10 @@ const RESPONSE_DELAY_MS = 1000;
 const SORTERS: Record<SortOption, (a: IProduct, b: IProduct) => number> = {
   price_asc: (a, b) => a.price - b.price,
   price_desc: (a, b) => b.price - a.price,
-  newest: (a, b) => b.id - a.id,
 };
+
+// Without `sort` the backend keeps its own default order; the mock lists newest first.
+const NEWEST_FIRST = (a: IProduct, b: IProduct): number => b.id - a.id;
 
 export const handlers = [
   http.get(`${API}/products`, async ({ request }) => {
@@ -28,7 +31,7 @@ export const handlers = [
     const ageRange = q.get('ageRange');
     const minPrice = Number(q.get('minPrice') ?? 0);
     const maxPrice = Number(q.get('maxPrice') ?? Infinity);
-    const sort = (q.get('sort') ?? 'newest') as SortOption;
+    const sort = q.get('sort');
     const page = Math.max(1, Number(q.get('page') ?? 1));
     const perPage = Math.max(1, Number(q.get('perPage') ?? 12));
 
@@ -36,7 +39,7 @@ export const handlers = [
       .filter((p) => !category || p.category === category)
       .filter((p) => !ageRange || p.ageRange === ageRange)
       .filter((p) => p.price >= minPrice && p.price <= maxPrice)
-      .sort(SORTERS[sort] ?? SORTERS.newest);
+      .sort(isSortOption(sort) ? SORTERS[sort] : NEWEST_FIRST);
 
     const start = (page - 1) * perPage;
     const body: IPaginated<IProduct> = {

@@ -1,9 +1,12 @@
 import { useCallback, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { isSortOption } from '@/api/productAttributes';
 import type { IProductsQuery, SortOption } from '@/api/types';
 
 export const PER_PAGE = 12;
-const SORTS: SortOption[] = ['newest', 'price_asc', 'price_desc'];
+
+/** Sort used while the URL has none; `null` keeps the backend order. Never written to the URL. */
+export const DEFAULT_SORT: SortOption | null = null;
 
 export type ShopParams = Omit<IProductsQuery, 'perPage'>;
 
@@ -21,9 +24,10 @@ export interface UseShopParamsResult {
 
 const isDefaultValue = (key: string, value: unknown): boolean =>
   value === undefined ||
+  value === null ||
   value === '' ||
   (key === 'page' && value === 1) ||
-  (key === 'sort' && value === 'newest');
+  (key === 'sort' && value === DEFAULT_SORT);
 
 /**
  * Shop state lives in the URL so filters survive reload and are shareable.
@@ -37,14 +41,14 @@ export const useShopParams = (): UseShopParamsResult => {
       const v = Number(searchParams.get(key));
       return Number.isFinite(v) && v > 0 ? v : undefined;
     };
-    const sort = searchParams.get('sort') as SortOption | null;
+    const sort = searchParams.get('sort');
     return {
       page: num('page') ?? 1,
       category: searchParams.get('category') || undefined,
       ageRange: searchParams.get('ageRange') || undefined,
       minPrice: num('minPrice'),
       maxPrice: num('maxPrice'),
-      sort: sort && SORTS.includes(sort) ? sort : 'newest',
+      sort: isSortOption(sort) ? sort : undefined,
     };
   }, [searchParams]);
 
@@ -73,7 +77,11 @@ export const useShopParams = (): UseShopParamsResult => {
 
   const reset = useCallback((): void => setSearchParams({}), [setSearchParams]);
 
-  const query: IProductsQuery = { ...filters, perPage: PER_PAGE };
+  const query: IProductsQuery = {
+    ...filters,
+    sort: filters.sort ?? DEFAULT_SORT ?? undefined,
+    perPage: PER_PAGE,
+  };
   const hasFilters = Boolean(
     filters.category || filters.ageRange || filters.minPrice || filters.maxPrice
   );
