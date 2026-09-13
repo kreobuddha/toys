@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { toProductsParams } from './productAttributes';
 import type {
   IArticle,
   IProductFacets,
@@ -16,7 +17,7 @@ export const api = createApi({
   tagTypes: ['Product', 'Article'],
   endpoints: (build) => ({
     getProducts: build.query<IPaginated<IProduct>, IProductsQuery>({
-      query: (params) => ({ url: '/products', params }),
+      query: (query) => ({ url: '/products', params: toProductsParams(query) }),
       providesTags: (result) =>
         result
           ? [

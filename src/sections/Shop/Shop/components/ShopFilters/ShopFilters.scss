@@ -4,16 +4,34 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+
+.shop-filters__bar {
+  display: none;
 
   @include tablet {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    align-items: end;
+    display: block;
   }
 }
 
-.shop-filters__price {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
+.shop-filters__panel {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  @include tablet {
+    display: none;
+  }
+}
+
+.shop-filters__panel--open {
+  @include tablet {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    align-items: start;
+  }
+}
+
+.shop-filters__reset {
+  align-self: flex-start;
 }

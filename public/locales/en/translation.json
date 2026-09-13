@@ -14,21 +14,37 @@
   },
   "shop": {
     "title": "Shop",
+    "filters": "Filters",
+    "filtersCount": "Filters ({{count}})",
     "category": "Category",
-    "ageRange": "Age",
-    "all": "All",
+    "brand": "Brand",
+    "brandOther": "Other",
+    "age": "Age (years)",
+    "condition": "Condition",
+    "price": "Price",
+    "priceMin": "Minimum price",
+    "priceMax": "Maximum price",
     "sort": "Sort by",
     "sortPlaceholder": "Sort by price",
     "sortPriceAsc": "Price: low to high",
     "sortPriceDesc": "Price: high to low",
-    "priceFrom": "Price from",
-    "priceTo": "to",
     "reset": "Reset all",
     "results_one": "{{count}} toy",
     "results_other": "{{count}} toys",
     "empty": "Nothing found. Try different filters.",
     "outOfStock": "Sold out",
     "inCart": "In cart"
+  },
+  "age": {
+    "group": "{{from}}–{{to}}",
+    "groupOpen": "{{from}}+",
+    "range": "{{from}}–{{to}} years",
+    "rangeOpen": "{{from}}+ years"
+  },
+  "condition": {
+    "new": "New",
+    "excellent": "Excellent",
+    "good": "Good"
   },
   "pagination": {
     "prev": "Previous",
@@ -59,7 +75,8 @@
   "product": {
     "backToShop": "Back to shop",
     "category": "Category",
-    "ageRange": "Age",
+    "brand": "Brand",
+    "age": "Age",
     "condition": "Condition",
     "outOfStock": "Sold out",
     "inCart": "In cart",
@@ -132,7 +149,7 @@
       },
       {
         "q": "What condition are they in?",
-        "a": "Every listing states the condition honestly: like new, very good or good. Photos show the actual item."
+        "a": "Every listing states the condition honestly: new, excellent or good. Photos show the actual item."
       },
       {
         "q": "Can I return a toy?",

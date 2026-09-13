@@ -92,7 +92,7 @@ export const articles: IArticle[] = [
       {
         type: 'text',
         html: paragraphs(
-          'Each listing states the condition honestly: like new, very good or good. The photos are of the actual item, not a stock image.'
+          'Each listing states the condition honestly: new, excellent or good. The photos are of the actual item, not a stock image.'
         ),
       },
     ],

@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { useLinks } from '@/app/useLinks';
 import { addItem, selectCartItems } from '@/features/cart/cartSlice';
 import { formatPrice, useLocale } from '@/i18n';
+import { useProductLabels } from '@/i18n/productLabels';
 import Button from '@components/Button/Button';
 import ProductGallery from './components/ProductGallery/ProductGallery';
 
@@ -15,6 +16,7 @@ const Product = (): ReactElement => {
   const { t } = useTranslation();
   const locale = useLocale();
   const links = useLinks();
+  const labels = useProductLabels();
   const dispatch = useAppDispatch();
   const { data: product, isLoading, isError, error } = useGetProductQuery(id);
   const inCart = useAppSelector(selectCartItems).some((i) => i.productId === product?.id);
@@ -35,9 +37,10 @@ const Product = (): ReactElement => {
 
   const facts = product
     ? [
-        { label: t('product.category'), value: product.category },
-        { label: t('product.ageRange'), value: product.ageRange },
-        { label: t('product.condition'), value: product.condition },
+        { label: t('product.category'), value: product.category.name },
+        { label: t('product.brand'), value: product.brand?.name },
+        { label: t('product.age'), value: labels.ageRange(product.ageGroups) },
+        { label: t('product.condition'), value: labels.condition(product.condition) },
       ].filter((f): f is { label: string; value: string } => Boolean(f.value))
     : [];
 

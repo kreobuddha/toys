@@ -1,114 +1,121 @@
 import './ShopFilters.scss';
-import { useEffect, useRef, useState, type ReactElement } from 'react';
-import type { IProductFacets } from '@/api/types';
-import Button from '@components/Button/Button';
-import Input from '@components/Input/Input';
-import Select from '@components/Select/Select';
+import { useState, type ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
+import clsx from 'clsx';
+import { AGE_GROUPS, CONDITIONS, OTHER_BRAND } from '@/api/productAttributes';
+import type { IPriceRange, IProductFacets } from '@/api/types';
+import { useProductLabels } from '@/i18n/productLabels';
+import Button from '@components/Button/Button';
+import FilterGroup from '@sections/Shop/Shop/components/FilterGroup/FilterGroup';
+import PriceFilter from '@sections/Shop/Shop/components/PriceFilter/PriceFilter';
 import type { ShopParams, UpdateOptions } from '@sections/Shop/Shop/useShopParams';
 
 interface ShopFiltersProps {
-  filters: ShopParams;
+  params: ShopParams;
   facets?: IProductFacets;
+  /** Facet price bounds widened to slider steps; the price filter waits for them. */
+  priceBounds?: IPriceRange;
+  activeCount: number;
   canReset: boolean;
   onChange: (patch: Partial<ShopParams>, options?: UpdateOptions) => void;
   onReset: () => void;
 }
 
-const DEBOUNCE_MS = 300;
-
-type DebouncedField = readonly [string, (value: string) => void];
-
-/** Local text state synced to the URL after a pause, so typing doesn't spam requests. */
-const useDebouncedField = (value: string, onCommit: (v: string) => void): DebouncedField => {
-  const [local, setLocal] = useState(value);
-  // Adopt external changes (reset button, back navigation) without an effect.
-  const [prevValue, setPrevValue] = useState(value);
-  if (value !== prevValue) {
-    setPrevValue(value);
-    setLocal(value);
-  }
-
-  const commitRef = useRef(onCommit);
-  useEffect(() => {
-    commitRef.current = onCommit;
-  }, [onCommit]);
-
-  useEffect(() => {
-    if (local === value) return;
-    const id = setTimeout(() => commitRef.current(local), DEBOUNCE_MS);
-    return () => clearTimeout(id);
-  }, [local, value]);
-
-  return [local, setLocal];
-};
-
-const toMinor = (value: string): number | undefined =>
-  value ? Math.round(Number(value) * 100) : undefined;
-
-const fromMinor = (value?: number): string => (value ? String(value / 100) : '');
-
 const ShopFilters = ({
-  filters,
+  params,
   facets,
+  priceBounds,
+  activeCount,
   canReset,
   onChange,
   onReset,
 }: ShopFiltersProps): ReactElement => {
   const { t } = useTranslation();
-  const [minPrice, setMinPrice] = useDebouncedField(fromMinor(filters.minPrice), (v) =>
-    onChange({ minPrice: toMinor(v) }, { replace: true })
-  );
-  const [maxPrice, setMaxPrice] = useDebouncedField(fromMinor(filters.maxPrice), (v) =>
-    onChange({ maxPrice: toMinor(v) }, { replace: true })
-  );
+  const labels = useProductLabels();
+  // Below 1024px the panel folds behind the toggle; wider screens always show it.
+  const [open, setOpen] = useState(false);
 
-  const withAll = (values: string[] = []): { value: string; label: string }[] => [
-    { value: '', label: t('shop.all') },
-    ...values.map((v) => ({ value: v, label: v })),
-  ];
+  const categoryOptions = (facets?.categories ?? []).map((category) => ({
+    value: category.slug,
+    label: category.name,
+  }));
+  const brandOptions = facets
+    ? [
+        ...facets.brands.map((brand) => ({ value: brand.slug, label: brand.name })),
+        { value: OTHER_BRAND, label: t('shop.brandOther') },
+      ]
+    : [];
+  const ageOptions = AGE_GROUPS.map((group) => ({
+    value: group.id,
+    label: labels.ageGroup(group.id),
+  }));
+  const conditionOptions = CONDITIONS.map((condition) => ({
+    value: condition,
+    label: labels.condition(condition),
+  }));
+
+  const handlePriceChange = (minPrice?: number, maxPrice?: number): void => {
+    onChange({ minPrice, maxPrice }, { replace: true });
+  };
 
   return (
     <aside className="shop-filters">
-      <Select
-        id="category"
-        label={t('shop.category')}
-        options={withAll(facets?.categories)}
-        value={filters.category ?? ''}
-        onChange={(e) => onChange({ category: e.target.value })}
-      />
-      <Select
-        id="ageRange"
-        label={t('shop.ageRange')}
-        options={withAll(facets?.ageRanges)}
-        value={filters.ageRange ?? ''}
-        onChange={(e) => onChange({ ageRange: e.target.value })}
-      />
-      <div className="shop-filters__price">
-        <Input
-          id="minPrice"
-          label={t('shop.priceFrom')}
-          type="number"
-          min={0}
-          inputMode="decimal"
-          value={minPrice}
-          onChange={(e) => setMinPrice(e.target.value)}
-        />
-        <Input
-          id="maxPrice"
-          label={t('shop.priceTo')}
-          type="number"
-          min={0}
-          inputMode="decimal"
-          value={maxPrice}
-          onChange={(e) => setMaxPrice(e.target.value)}
-        />
-      </div>
-      {canReset && (
-        <Button variant="ghost" size="sm" onClick={onReset}>
-          {t('shop.reset')}
+      <div className="shop-filters__bar">
+        <Button
+          variant="secondary"
+          aria-expanded={open}
+          aria-controls="shop-filters-panel"
+          onClick={() => setOpen((value) => !value)}
+        >
+          {activeCount > 0 ? t('shop.filtersCount', { count: activeCount }) : t('shop.filters')}
         </Button>
-      )}
+      </div>
+      <div
+        id="shop-filters-panel"
+        className={clsx('shop-filters__panel', open && 'shop-filters__panel--open')}
+      >
+        {categoryOptions.length > 0 && (
+          <FilterGroup
+            legend={t('shop.category')}
+            options={categoryOptions}
+            selected={params.categories}
+            onChange={(categories) => onChange({ categories })}
+          />
+        )}
+        {brandOptions.length > 0 && (
+          <FilterGroup
+            legend={t('shop.brand')}
+            options={brandOptions}
+            selected={params.brands}
+            onChange={(brands) => onChange({ brands })}
+          />
+        )}
+        <FilterGroup
+          legend={t('shop.age')}
+          options={ageOptions}
+          selected={params.ageGroups}
+          onChange={(ageGroups) => onChange({ ageGroups })}
+        />
+        <FilterGroup
+          legend={t('shop.condition')}
+          options={conditionOptions}
+          selected={params.conditions}
+          onChange={(conditions) => onChange({ conditions })}
+        />
+        {priceBounds && priceBounds.max > priceBounds.min && (
+          <PriceFilter
+            bounds={priceBounds}
+            min={params.minPrice}
+            max={params.maxPrice}
+            onChange={handlePriceChange}
+          />
+        )}
+        {canReset && (
+          <Button variant="ghost" size="sm" className="shop-filters__reset" onClick={onReset}>
+            {t('shop.reset')}
+          </Button>
+        )}
+      </div>
     </aside>
   );
 };
