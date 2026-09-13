@@ -11,10 +11,10 @@ const Header = (): ReactElement => {
   const links = useLinks();
 
   const navItems = [
-    { to: links.catalog, label: t('nav.catalog') },
-    { to: links.sellToys, label: t('nav.sell') },
-    { to: links.blog, label: t('nav.blog') },
-    { to: links.about, label: t('nav.about') },
+    { to: links.shop, label: t('nav.shop') },
+    { to: links.sellToUs, label: t('nav.sellToUs') },
+    { to: links.ourStory, label: t('nav.ourStory') },
+    { to: links.journal, label: t('nav.journal') },
   ];
 
   return (

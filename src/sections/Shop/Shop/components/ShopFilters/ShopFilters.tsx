@@ -1,17 +1,17 @@
-import './CatalogFilters.scss';
+import './ShopFilters.scss';
 import { useEffect, useRef, useState, type ReactElement } from 'react';
-import type { ICatalogFacets } from '@/api/types';
+import type { IProductFacets } from '@/api/types';
 import Button from '@components/Button/Button';
 import Input from '@components/Input/Input';
 import Select from '@components/Select/Select';
 import { useTranslation } from 'react-i18next';
-import type { CatalogFilters as Filters, UpdateOptions } from '../../useCatalogParams';
+import type { ShopParams, UpdateOptions } from '@sections/Shop/Shop/useShopParams';
 
-interface CatalogFiltersProps {
-  filters: Filters;
-  facets?: ICatalogFacets;
+interface ShopFiltersProps {
+  filters: ShopParams;
+  facets?: IProductFacets;
   hasFilters: boolean;
-  onChange: (patch: Partial<Filters>, options?: UpdateOptions) => void;
+  onChange: (patch: Partial<ShopParams>, options?: UpdateOptions) => void;
   onReset: () => void;
 }
 
@@ -48,13 +48,13 @@ const toMinor = (value: string): number | undefined =>
 
 const fromMinor = (value?: number): string => (value ? String(value / 100) : '');
 
-const CatalogFilters = ({
+const ShopFilters = ({
   filters,
   facets,
   hasFilters,
   onChange,
   onReset,
-}: CatalogFiltersProps): ReactElement => {
+}: ShopFiltersProps): ReactElement => {
   const { t } = useTranslation();
   const [search, setSearch] = useDebouncedField(filters.search ?? '', (v) =>
     onChange({ search: v }, { replace: true })
@@ -67,37 +67,37 @@ const CatalogFilters = ({
   );
 
   const withAll = (values: string[] = []): { value: string; label: string }[] => [
-    { value: '', label: t('catalog.all') },
+    { value: '', label: t('shop.all') },
     ...values.map((v) => ({ value: v, label: v })),
   ];
 
   return (
-    <aside className="catalog-filters">
+    <aside className="shop-filters">
       <Input
         id="search"
         type="search"
-        placeholder={t('catalog.search')}
+        placeholder={t('shop.search')}
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
       <Select
         id="category"
-        label={t('catalog.category')}
+        label={t('shop.category')}
         options={withAll(facets?.categories)}
         value={filters.category ?? ''}
         onChange={(e) => onChange({ category: e.target.value })}
       />
       <Select
         id="ageRange"
-        label={t('catalog.ageRange')}
+        label={t('shop.ageRange')}
         options={withAll(facets?.ageRanges)}
         value={filters.ageRange ?? ''}
         onChange={(e) => onChange({ ageRange: e.target.value })}
       />
-      <div className="catalog-filters__price">
+      <div className="shop-filters__price">
         <Input
           id="minPrice"
-          label={t('catalog.priceFrom')}
+          label={t('shop.priceFrom')}
           type="number"
           min={0}
           inputMode="decimal"
@@ -106,7 +106,7 @@ const CatalogFilters = ({
         />
         <Input
           id="maxPrice"
-          label={t('catalog.priceTo')}
+          label={t('shop.priceTo')}
           type="number"
           min={0}
           inputMode="decimal"
@@ -116,11 +116,11 @@ const CatalogFilters = ({
       </div>
       {hasFilters && (
         <Button variant="ghost" size="sm" onClick={onReset}>
-          {t('catalog.reset')}
+          {t('shop.reset')}
         </Button>
       )}
     </aside>
   );
 };
 
-export default CatalogFilters;
+export default ShopFilters;

@@ -47,7 +47,7 @@ const SellForm = (): ReactElement => {
   if (isSuccess) {
     return (
       <p className="sell-form__success" role="status">
-        {t('sell.success')}
+        {t('sellToUs.success')}
       </p>
     );
   }
@@ -58,10 +58,10 @@ const SellForm = (): ReactElement => {
         <div className="sell-form__field">
           <Input
             id="sell-name"
-            label={t('sell.name')}
+            label={t('sellToUs.name')}
             autoComplete="name"
             aria-invalid={Boolean(errors.name)}
-            {...register('name', { required: t('sell.required') })}
+            {...register('name', { required: t('sellToUs.required') })}
           />
           {errors.name && <span className="sell-form__error">{errors.name.message}</span>}
         </div>
@@ -69,12 +69,12 @@ const SellForm = (): ReactElement => {
           <Input
             id="sell-email"
             type="email"
-            label={t('sell.email')}
+            label={t('sellToUs.email')}
             autoComplete="email"
             aria-invalid={Boolean(errors.email)}
             {...register('email', {
-              required: t('sell.required'),
-              pattern: { value: EMAIL_PATTERN, message: t('sell.invalidEmail') },
+              required: t('sellToUs.required'),
+              pattern: { value: EMAIL_PATTERN, message: t('sellToUs.invalidEmail') },
             })}
           />
           {errors.email && <span className="sell-form__error">{errors.email.message}</span>}
@@ -84,7 +84,7 @@ const SellForm = (): ReactElement => {
         <Input
           id="sell-phone"
           type="tel"
-          label={t('sell.phone')}
+          label={t('sellToUs.phone')}
           autoComplete="tel"
           {...register('phone')}
         />
@@ -92,18 +92,18 @@ const SellForm = (): ReactElement => {
       <div className="sell-form__field">
         <Textarea
           id="sell-message"
-          label={t('sell.message')}
-          placeholder={t('sell.messagePlaceholder')}
+          label={t('sellToUs.message')}
+          placeholder={t('sellToUs.messagePlaceholder')}
           aria-invalid={Boolean(errors.message)}
-          {...register('message', { required: t('sell.required') })}
+          {...register('message', { required: t('sellToUs.required') })}
         />
         {errors.message && <span className="sell-form__error">{errors.message.message}</span>}
       </div>
 
-      {submitError && <p className="sell-form__error">{t('sell.error')}</p>}
+      {submitError && <p className="sell-form__error">{t('sellToUs.error')}</p>}
 
       <Button type="submit" disabled={isLoading}>
-        {isLoading ? t('sell.sending') : t('sell.submit')}
+        {isLoading ? t('sellToUs.sending') : t('sellToUs.submit')}
       </Button>
     </form>
   );

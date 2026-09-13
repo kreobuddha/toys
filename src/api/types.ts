@@ -12,10 +12,10 @@ export interface IProduct {
   ageRange?: string;
   condition?: string;
   inStock: boolean;
-  articleSlug?: string; // related blog article
+  articleSlug?: string; // related journal article
 }
 
-export interface ICatalogFacets {
+export interface IProductFacets {
   categories: string[];
   ageRanges: string[];
 }

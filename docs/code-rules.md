@@ -57,8 +57,8 @@ named identically:
 ```
 src/components/ProductCard/ProductCard.tsx
 src/components/ProductCard/ProductCard.scss
-src/sections/Catalog/Catalog/Catalog.tsx
-src/sections/Catalog/Catalog/Catalog.scss
+src/sections/Shop/Shop/Shop.tsx
+src/sections/Shop/Shop/Shop.scss
 ```
 
 The component imports its own stylesheet directly, and that import comes **first**, before any
@@ -82,10 +82,10 @@ and `src/styles/_mixins.scss`.
 Non-rendering modules are exceptions to the folder rule and stay as flat files: `src/app/`
 (store, router, route paths), `src/api/`, `src/features/` (redux slices), `src/i18n/`,
 `src/mocks/`, `src/styles/` and `src/main.tsx`. A page big enough to split keeps its own
-`components/` folder next to it (`src/sections/Catalog/Catalog/components/CatalogFilters/`), and
+`components/` folder next to it (`src/sections/Shop/Shop/components/ShopFilters/`), and
 a hook used by one page only lives beside that page
-(`src/sections/Catalog/Catalog/useCatalogParams.ts`). Pages are grouped by section under
-`src/sections/<Section>/<Page>/` (Catalog, Order, Blog, Common).
+(`src/sections/Shop/Shop/useShopParams.ts`). Pages are grouped by section under
+`src/sections/<Section>/<Page>/` (Shop, Order, Journal, Common).
 
 ## 3. No `../../` imports — use the aliases
 
@@ -97,7 +97,7 @@ Anything outside the current folder is imported via an alias (configured in `vit
 import { useAppDispatch } from '@/app/hooks';
 import type { IProduct } from '@/api/types';
 import ProductCard from '@components/ProductCard/ProductCard';
-import Catalog from '@sections/Catalog/Catalog/Catalog';
+import Shop from '@sections/Shop/Shop/Shop';
 ```
 
 Only same-folder imports stay relative, since they can't go wrong when a folder moves:

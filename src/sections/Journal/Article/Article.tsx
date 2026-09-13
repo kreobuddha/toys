@@ -19,15 +19,15 @@ const Article = (): ReactElement => {
 
   const renderState = (): ReactElement | null => {
     if (isLoading) return <p className="article__state">{t('common.loading')}</p>;
-    if (isNotFound) return <p className="article__state">{t('blog.notFound')}</p>;
+    if (isNotFound) return <p className="article__state">{t('journal.notFound')}</p>;
     if (isError) return <p className="article__state">{t('common.error')}</p>;
     return null;
   };
 
   return (
     <section className="container article">
-      <Link to={links.blog} className="article__back">
-        ← {t('blog.back')}
+      <Link to={links.journal} className="article__back">
+        ← {t('journal.back')}
       </Link>
 
       {renderState()}
@@ -44,8 +44,8 @@ const Article = (): ReactElement => {
           {article.cover && <img src={article.cover} alt="" className="article__cover" />}
           <ArticleBlocks blocks={article.blocks} />
           <footer className="article__footer">
-            <Link to={links.catalog} className="article__catalog">
-              {t('blog.relatedToys')} →
+            <Link to={links.shop} className="article__shop">
+              {t('journal.relatedToys')} →
             </Link>
           </footer>
         </article>

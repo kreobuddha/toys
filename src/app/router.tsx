@@ -4,16 +4,16 @@ import { DEFAULT_LOCALE } from '@/i18n/locales';
 import LocaleRoute from './LocaleRoute';
 import { paths } from './routes';
 import {
-  About,
   Article,
-  Blog,
-  Catalog,
   Checkout,
   Home,
+  Journal,
   NotFound,
-  Success,
+  OurStory,
   Product,
-  SellToys,
+  SellToUs,
+  Shop,
+  Success,
 } from './sections';
 
 export const router = createBrowserRouter(
@@ -27,14 +27,14 @@ export const router = createBrowserRouter(
           element: <Layout />,
           children: [
             { index: true, element: <Home /> },
-            { path: paths.catalog, element: <Catalog /> },
+            { path: paths.shop, element: <Shop /> },
             { path: paths.product(), element: <Product /> },
             { path: paths.checkout, element: <Checkout /> },
             { path: paths.orderSuccess, element: <Success /> },
-            { path: paths.sellToys, element: <SellToys /> },
-            { path: paths.blog, element: <Blog /> },
+            { path: paths.sellToUs, element: <SellToUs /> },
+            { path: paths.ourStory, element: <OurStory /> },
+            { path: paths.journal, element: <Journal /> },
             { path: paths.article(), element: <Article /> },
-            { path: paths.about, element: <About /> },
             { path: '*', element: <NotFound /> },
           ],
         },

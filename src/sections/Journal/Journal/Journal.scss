@@ -1,25 +1,25 @@
 @use '@/styles/mixins' as *;
 
-.blog {
+.journal {
   padding: 24px 0 48px;
 }
 
-.blog__title {
+.journal__title {
   margin: 8px 0 8px;
 }
 
-.blog__intro {
+.journal__intro {
   margin: 0 0 32px;
   color: var(--color-muted);
 }
 
-.blog__state {
+.journal__state {
   padding: 48px 0;
   text-align: center;
   color: var(--color-muted);
 }
 
-.blog__grid {
+.journal__grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;

@@ -43,8 +43,8 @@ const Product = (): ReactElement => {
 
   return (
     <section className="container product">
-      <Link to={links.catalog} className="product__back">
-        ← {t('product.backToCatalog')}
+      <Link to={links.shop} className="product__back">
+        ← {t('product.backToShop')}
       </Link>
 
       {renderState()}

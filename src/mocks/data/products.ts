@@ -34,7 +34,7 @@ const NAMES = [
   'Animal Dominoes',
 ];
 
-// Deterministic pseudo-random so the catalog looks the same on every reload.
+// Deterministic pseudo-random so the shop looks the same on every reload.
 const rng = (seed: number): (() => number) => {
   let s = seed;
   return () => {

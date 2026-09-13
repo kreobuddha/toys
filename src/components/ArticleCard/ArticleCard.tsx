@@ -33,7 +33,7 @@ const ArticleCard = ({ article }: ArticleCardProps): ReactElement => {
         </h2>
         <p className="article-card__excerpt">{article.excerpt}</p>
         <Link to={href(article.slug)} className="article-card__more">
-          {t('blog.readMore')} →
+          {t('journal.readMore')} →
         </Link>
       </div>
     </article>

@@ -5,16 +5,16 @@ import type { IProductsQuery, SortOption } from '@/api/types';
 export const PER_PAGE = 12;
 const SORTS: SortOption[] = ['newest', 'price_asc', 'price_desc'];
 
-export type CatalogFilters = Omit<IProductsQuery, 'perPage'>;
+export type ShopParams = Omit<IProductsQuery, 'perPage'>;
 
 export interface UpdateOptions {
   replace?: boolean;
 }
 
-export interface UseCatalogParamsResult {
-  filters: CatalogFilters;
+export interface UseShopParamsResult {
+  filters: ShopParams;
   query: IProductsQuery;
-  update: (patch: Partial<CatalogFilters>, options?: UpdateOptions) => void;
+  update: (patch: Partial<ShopParams>, options?: UpdateOptions) => void;
   reset: () => void;
   hasFilters: boolean;
 }
@@ -26,13 +26,13 @@ const isDefaultValue = (key: string, value: unknown): boolean =>
   (key === 'sort' && value === 'newest');
 
 /**
- * Catalog state lives in the URL so filters survive reload and are shareable.
+ * Shop state lives in the URL so filters survive reload and are shareable.
  * Any filter change resets the page to 1; empty values are dropped from the URL.
  */
-export const useCatalogParams = (): UseCatalogParamsResult => {
+export const useShopParams = (): UseShopParamsResult => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const filters = useMemo<CatalogFilters>(() => {
+  const filters = useMemo<ShopParams>(() => {
     const num = (key: string): number | undefined => {
       const v = Number(searchParams.get(key));
       return Number.isFinite(v) && v > 0 ? v : undefined;
@@ -51,10 +51,10 @@ export const useCatalogParams = (): UseCatalogParamsResult => {
 
   /**
    * `replace` keeps debounced text input from flooding history; selects and
-   * pagination push so the back button walks through catalog states.
+   * pagination push so the back button walks through shop states.
    */
   const update = useCallback(
-    (patch: Partial<CatalogFilters>, { replace = false }: UpdateOptions = {}): void => {
+    (patch: Partial<ShopParams>, { replace = false }: UpdateOptions = {}): void => {
       setSearchParams(
         (prev) => {
           const next = new URLSearchParams(prev);

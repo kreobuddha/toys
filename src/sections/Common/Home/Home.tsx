@@ -26,10 +26,10 @@ const Home = (): ReactElement => {
           <h1 className="home__title">{t('home.heroTitle')}</h1>
           <p className="home__lead">{t('home.heroText')}</p>
           <div className="home__actions">
-            <Link to={links.catalog}>
-              <Button>{t('home.heroCatalog')}</Button>
+            <Link to={links.shop}>
+              <Button>{t('home.heroShop')}</Button>
             </Link>
-            <Link to={links.sellToys}>
+            <Link to={links.sellToUs}>
               <Button variant="secondary">{t('home.heroSell')}</Button>
             </Link>
           </div>
@@ -53,7 +53,7 @@ const Home = (): ReactElement => {
         <section className="container home__section">
           <div className="home__section-head">
             <h2 className="home__heading">{t('home.featuredTitle')}</h2>
-            <Link to={links.catalog} className="home__link">
+            <Link to={links.shop} className="home__link">
               {t('home.featuredAll')} →
             </Link>
           </div>

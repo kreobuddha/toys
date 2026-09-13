@@ -36,7 +36,7 @@ export const articles: IArticle[] = [
         type: 'text',
         html: paragraphs(
           'This is also why second-hand open-ended toys are such a good deal. A scuffed block is still a block. A stacking ring with a chipped edge still stacks.',
-          'When you pick one from our <strong>catalog</strong>, look for sets with many pieces of the same kind. Variety within a set matters less than quantity.'
+          'When you pick one from our <strong>shop</strong>, look for sets with many pieces of the same kind. Variety within a set matters less than quantity.'
         ),
       },
     ],

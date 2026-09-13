@@ -34,7 +34,7 @@ const ProductCard = ({ product }: ProductCardProps): ReactElement => {
           loading="lazy"
           className="product-card__image"
         />
-        {!product.inStock && <span className="product-card__badge">{t('catalog.outOfStock')}</span>}
+        {!product.inStock && <span className="product-card__badge">{t('shop.outOfStock')}</span>}
       </Link>
       <div className="product-card__body">
         <div className="product-card__meta">
@@ -56,7 +56,7 @@ const ProductCard = ({ product }: ProductCardProps): ReactElement => {
             disabled={!product.inStock}
             onClick={handleAdd}
           >
-            {inCart ? t('catalog.inCart') : t('common.addToCart')}
+            {inCart ? t('shop.inCart') : t('common.addToCart')}
           </Button>
         </div>
       </div>

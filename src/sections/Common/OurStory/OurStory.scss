@@ -1,35 +1,35 @@
 @use '@/styles/mixins' as *;
 
-.about {
+.our-story {
   padding: 24px 0 64px;
   max-width: 800px;
 }
 
-.about__header {
+.our-story__header {
   margin-bottom: 40px;
 }
 
-.about__title {
+.our-story__title {
   margin: 8px 0 12px;
   font-size: 36px;
 }
 
-.about__intro {
+.our-story__intro {
   margin: 0;
   font-size: 18px;
   color: var(--color-muted);
 }
 
-.about__block {
+.our-story__block {
   margin-bottom: 40px;
 }
 
-.about__heading {
+.our-story__heading {
   margin: 0 0 12px;
   font-size: 24px;
 }
 
-.about__text {
+.our-story__text {
   margin: 0;
   line-height: 1.6;
 
@@ -39,7 +39,7 @@
   }
 }
 
-.about__values {
+.our-story__values {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
@@ -52,18 +52,18 @@
   }
 }
 
-.about__value {
+.our-story__value {
   padding: 20px;
   border: 1px solid var(--color-border);
   border-radius: 12px;
 }
 
-.about__value-title {
+.our-story__value-title {
   margin: 0 0 8px;
   font-size: 17px;
 }
 
-.about__value-text {
+.our-story__value-text {
   margin: 0;
   color: var(--color-muted);
 }

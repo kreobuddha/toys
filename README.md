@@ -1,12 +1,12 @@
 # Toys
 
-Second-hand educational toys shop: catalog, cart, Stripe checkout, toy intake form, blog.
+Second-hand educational toys shop: product listing, cart, Stripe checkout, toy intake form, journal.
 
 ## Stack
 
 - Vite + React 19 + TypeScript
 - Redux Toolkit + RTK Query (`src/api`, `src/features`)
-- react-router-dom v7 (`src/app/router.tsx`). All pages live under `/:locale/...` (`/en/catalog`); a missing or unknown prefix redirects to `/en/...`. Build hrefs with `useLinks()` (`links.product(id)`), never hardcode paths.
+- react-router-dom v7 (`src/app/router.tsx`). All pages live under `/:locale/...` (`/en/shop`); a missing or unknown prefix redirects to `/en/...`. Build hrefs with `useLinks()` (`links.product(id)`), never hardcode paths.
 - SCSS + BEM, one folder per component/page (`Name.tsx` + `Name.scss`)
 - i18next + react-i18next, JSON resources in `public/locales/<lng>/`
 - ESLint + Prettier
@@ -38,7 +38,7 @@ src/
   api/        RTK Query api + API types (draft contract, adjust to real backend)
   features/   redux slices (cart)
   components/ shared UI (Layout, Header, Footer)
-  sections/   pages grouped by section (Catalog, Order, Blog, Common), one folder per page
+  sections/   pages grouped by section (Shop, Order, Journal, Common), one folder per page
   i18n/       i18next setup, locale list, typed keys (i18next.d.ts), price formatting
   mocks/      MSW handlers + fake data, used in dev while the backend is not ready
   styles/     global styles, SCSS variables & mixins

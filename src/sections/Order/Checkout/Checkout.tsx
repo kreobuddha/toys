@@ -78,7 +78,7 @@ const Checkout = (): ReactElement => {
       <section className="container checkout">
         <h1 className="checkout__title">{t('checkout.title')}</h1>
         <p className="checkout__empty">{t('checkout.empty')}</p>
-        <Link to={links.catalog}>{t('checkout.goToCatalog')}</Link>
+        <Link to={links.shop}>{t('checkout.goToShop')}</Link>
       </section>
     );
   }
