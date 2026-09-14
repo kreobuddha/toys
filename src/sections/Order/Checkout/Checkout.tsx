@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import type { DeliveryMethod, ICreateOrderInput, INlAddress } from '@/api/types';
 import { useCreateOrderMutation } from '@/api/api';
-import { normalizePostcode, parseAddressLine } from '@/api/nlAddress';
+import { normalizePostcode, resolveStreet } from '@/api/nlAddress';
 import { useAppSelector } from '@/app/hooks';
 import { useLinks } from '@/app/useLinks';
 import { selectCartItems, selectCartTotal } from '@/features/cart/cartSlice';
@@ -39,7 +39,7 @@ const DELIVERY_LABELS = {
  * formats; anything typed after the house number ("Dam 5B") joins the apartment.
  */
 const toNlAddress = (values: AddressFormValues): INlAddress | undefined => {
-  const parts = parseAddressLine(values.addressLine);
+  const parts = resolveStreet(values.addressLine, values.addressPick);
   if (!parts) return undefined;
   const apartment = [parts.rest, values.apartment.trim()].filter(Boolean).join(' ');
   return {
@@ -72,6 +72,7 @@ const Checkout = (): ReactElement => {
       city: initialCity.name,
       cityPick: initialCity,
       addressLine: '',
+      addressPick: null,
       apartment: '',
       postcode: '',
     },

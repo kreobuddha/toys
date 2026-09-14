@@ -22,6 +22,13 @@ export interface IAddressLineParts {
   rest?: string;
 }
 
+/** A picked "street + house number" suggestion. */
+export interface IAddressPick {
+  label: string;
+  street: string;
+  houseNumber: number;
+}
+
 /** "1012 js" → "1012JS". Validate with isNlPostcode afterwards. */
 export const normalizePostcode = (value: string): string => value.replace(/\s+/g, '').toUpperCase();
 
@@ -42,3 +49,15 @@ export const parseAddressLine = (line: string): IAddressLineParts | undefined =>
   const parts = { street, houseNumber: Number(houseNumber) };
   return rest ? { ...parts, rest } : parts;
 };
+
+/**
+ * Street and house number of an address line: taken from the picked suggestion while the line
+ * still shows it (so streets with a number in their name survive), parsed otherwise.
+ */
+export const resolveStreet = (
+  line: string,
+  pick: IAddressPick | null
+): IAddressLineParts | undefined =>
+  pick && line.trim() === pick.label
+    ? { street: pick.street, houseNumber: pick.houseNumber }
+    : parseAddressLine(line);

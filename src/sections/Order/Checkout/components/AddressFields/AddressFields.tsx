@@ -1,10 +1,22 @@
 import './AddressFields.scss';
 import { useMemo, useState, type ReactElement } from 'react';
-import { useController, useFormContext } from 'react-hook-form';
+import { useController, useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { skipToken } from '@reduxjs/toolkit/query/react';
-import { isNlPostcode, parseAddressLine, type INlCity } from '@/api/nlAddress';
-import { useLazySuggestNlCitiesQuery, useSuggestNlCitiesQuery } from '@/api/pdokApi';
+import {
+  formatPostcode,
+  isNlPostcode,
+  resolveStreet,
+  type IAddressPick,
+  type INlCity,
+} from '@/api/nlAddress';
+import {
+  useLazySuggestNlCitiesQuery,
+  useSuggestNlCitiesQuery,
+  useSuggestNlStreetsQuery,
+  type INlStreetQuery,
+  type INlStreetSuggestion,
+} from '@/api/pdokApi';
 import Combobox, { type ComboboxOption } from '@components/Combobox/Combobox';
 import Input from '@components/Input/Input';
 import { saveCity } from './savedCity';
@@ -16,6 +28,8 @@ export interface AddressFormValues {
   cityPick: INlCity | null;
   /** Street and house number in one line: "Herengracht 611". */
   addressLine: string;
+  /** The picked "street + house number" row; it applies while the line still shows its label. */
+  addressPick: IAddressPick | null;
   apartment: string;
   postcode: string;
 }
@@ -24,13 +38,32 @@ interface CityOption extends ComboboxOption {
   city: INlCity;
 }
 
+interface StreetOption extends ComboboxOption {
+  row: INlStreetSuggestion;
+}
+
 const SUGGEST_DELAY_MS = 250;
 const MIN_CITY_QUERY_LENGTH = 2;
+const MIN_STREET_QUERY_LENGTH = 3;
+const MAX_STREET_OPTIONS = 8;
 
 const toCityQuery = (text: string): string => text.trim().toLowerCase();
 
 const isSameCity = (text: string, city: INlCity | null): city is INlCity =>
   city !== null && toCityQuery(text) === city.name.toLowerCase();
+
+/** Addresses once the line has a house number, street names before it, nothing without a city. */
+const toStreetQuery = (
+  cityCode: string | undefined,
+  line: string,
+  pick: IAddressPick | null
+): INlStreetQuery | undefined => {
+  if (!cityCode) return undefined;
+  const parts = resolveStreet(line, pick);
+  if (parts) return { cityCode, street: parts.street, houseNumber: parts.houseNumber };
+  const street = line.trim();
+  return street.length >= MIN_STREET_QUERY_LENGTH ? { cityCode, street } : undefined;
+};
 
 /**
  * Dutch delivery address. Suggestions only help: the order never waits for them, only formats are
@@ -52,6 +85,19 @@ const AddressFields = (): ReactElement => {
     name: 'city',
     rules: { required: t('checkout.required') },
   });
+  const {
+    field: { ref: addressLineInputRef, ...addressLineField },
+  } = useController({
+    control,
+    name: 'addressLine',
+    rules: {
+      required: t('checkout.required'),
+      validate: (line, values) =>
+        Boolean(resolveStreet(line, values.addressPick)) || t('checkout.invalidAddressLine'),
+    },
+  });
+  const [cityPick, addressPick] = useWatch({ control, name: ['cityPick', 'addressPick'] });
+  const cityCode = isSameCity(cityField.value, cityPick) ? cityPick.code : undefined;
 
   // City suggestions follow what the customer types, so opening the checkout sends no request.
   const [cityQuery, setCityQuery] = useState('');
@@ -60,7 +106,9 @@ const AddressFields = (): ReactElement => {
     debouncedCityQuery.length >= MIN_CITY_QUERY_LENGTH ? debouncedCityQuery : skipToken
   );
   const [findCities] = useLazySuggestNlCitiesQuery();
-  const cityPending = cityQuery.length >= MIN_CITY_QUERY_LENGTH && cityQuery !== debouncedCityQuery;
+  // A skipped query keeps reporting its last success, so "answered" also needs a query for the text.
+  const hasCityQuery = cityQuery.length >= MIN_CITY_QUERY_LENGTH;
+  const cityPending = hasCityQuery && cityQuery !== debouncedCityQuery;
 
   const cityOptions = useMemo(
     (): CityOption[] =>
@@ -74,6 +122,25 @@ const AddressFields = (): ReactElement => {
         city: { name: city.name, code: city.code },
       })),
     [cityLookup.currentData]
+  );
+
+  // Street suggestions follow the line itself, whether typed or picked.
+  const debouncedLine = useDebouncedValue(addressLineField.value, SUGGEST_DELAY_MS);
+  const streetQuery = toStreetQuery(cityCode, debouncedLine, addressPick);
+  const streetLookup = useSuggestNlStreetsQuery(streetQuery ?? skipToken);
+  const hasStreetQuery = toStreetQuery(cityCode, addressLineField.value, addressPick) !== undefined;
+  const streetLoading =
+    hasStreetQuery && (addressLineField.value !== debouncedLine || streetLookup.isFetching);
+
+  const streetOptions = useMemo(
+    (): StreetOption[] =>
+      (streetLookup.currentData ?? []).slice(0, MAX_STREET_OPTIONS).map((row) => {
+        const label =
+          row.houseNumber === undefined ? row.street : `${row.street} ${row.houseNumber}`;
+        const hint = row.postcodes.length === 1 ? formatPostcode(row.postcodes[0]) : undefined;
+        return { id: label, label, hint, row };
+      }),
+    [streetLookup.currentData]
   );
 
   const confirmCity = (city: INlCity): void => {
@@ -91,8 +158,14 @@ const AddressFields = (): ReactElement => {
   const handleCityBlur = async (): Promise<void> => {
     cityField.onBlur();
     const typed = getValues('city');
+    const pick = getValues('cityPick');
+    if (isSameCity(typed, pick)) {
+      // The confirmed city typed in other letters: show it the way the register writes it.
+      if (typed !== pick.name) cityField.onChange(pick.name);
+      return;
+    }
     const q = toCityQuery(typed);
-    if (q.length < MIN_CITY_QUERY_LENGTH || isSameCity(typed, getValues('cityPick'))) return;
+    if (q.length < MIN_CITY_QUERY_LENGTH) return;
     try {
       const cities = await findCities(q, true).unwrap();
       const matches = cities.filter((city) => city.name.toLowerCase() === q);
@@ -103,6 +176,18 @@ const AddressFields = (): ReactElement => {
     } catch {
       // No answer: the city stays as typed, just without street suggestions.
     }
+  };
+
+  const handleStreetSelect = ({ row, label }: StreetOption): void => {
+    if (row.houseNumber === undefined) {
+      // Only the street so far: the customer goes on with the house number.
+      setValue('addressPick', null);
+      addressLineField.onChange(`${row.street} `);
+      return;
+    }
+    // The pick must be in place before the line is validated against it.
+    setValue('addressPick', { label, street: row.street, houseNumber: row.houseNumber });
+    addressLineField.onChange(label);
   };
 
   return (
@@ -119,24 +204,28 @@ const AddressFields = (): ReactElement => {
           options={cityOptions}
           onSelect={(option) => confirmCity(option.city)}
           loading={cityPending || cityLookup.isFetching}
-          answered={cityLookup.isSuccess && !cityPending && !cityLookup.isFetching}
+          answered={hasCityQuery && cityLookup.isSuccess && !cityPending && !cityLookup.isFetching}
           autoComplete="address-level2"
           aria-invalid={Boolean(errors.city)}
         />
         {errors.city && <span className="address-fields__error">{errors.city.message}</span>}
       </div>
       <div className="address-fields__field">
-        <Input
+        <Combobox
           id="addressLine"
           label={t('checkout.addressLine')}
           placeholder={t('checkout.addressLinePlaceholder')}
+          name={addressLineField.name}
+          ref={addressLineInputRef}
+          value={addressLineField.value}
+          onChange={addressLineField.onChange}
+          onBlur={addressLineField.onBlur}
+          options={streetOptions}
+          onSelect={handleStreetSelect}
+          loading={streetLoading}
+          answered={hasStreetQuery && streetLookup.isSuccess && !streetLoading}
           autoComplete="address-line1"
           aria-invalid={Boolean(errors.addressLine)}
-          {...register('addressLine', {
-            required: t('checkout.required'),
-            validate: (value) =>
-              Boolean(parseAddressLine(value)) || t('checkout.invalidAddressLine'),
-          })}
         />
         {errors.addressLine && (
           <span className="address-fields__error">{errors.addressLine.message}</span>

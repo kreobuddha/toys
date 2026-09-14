@@ -68,5 +68,6 @@ and both can be present (`Allard Piersonstraat 1A-2`). An unknown address gives 
 
 ## Status
 
-The checkout suggests cities through `/suggest` with `fq=type:woonplaats`. Street suggestions and
-the automatic postcode follow later in release 0.2.0.
+The checkout suggests cities through `/suggest` with `fq=type:woonplaats`, then streets within the
+chosen city: street names first, one row per house number once a number is typed. The automatic
+postcode follows later in release 0.2.0.
