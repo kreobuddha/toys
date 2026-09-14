@@ -6,8 +6,7 @@ import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import type { DeliveryMethod, ICreateOrderInput, INlAddress } from '@/api/types';
 import { useCreateOrderMutation } from '@/api/api';
-import { matchNlAddress, normalizeAddition, toNlAddressQuery } from '@/api/nlAddress';
-import { useLazyLookupNlAddressQuery } from '@/api/pdokApi';
+import { normalizePostcode, parseAddressLine } from '@/api/nlAddress';
 import { useAppSelector } from '@/app/hooks';
 import { useLinks } from '@/app/useLinks';
 import { selectCartItems, selectCartTotal } from '@/features/cart/cartSlice';
@@ -34,6 +33,24 @@ const DELIVERY_LABELS = {
   post: { name: 'checkout.deliveryPost', hint: 'checkout.deliveryPostHint' },
 } as const satisfies Record<DeliveryMethod, { name: string; hint: string }>;
 
+/**
+ * The delivery address as the order carries it. The field rules have already checked the
+ * formats; anything typed after the house number ("Dam 5B") joins the apartment.
+ */
+const toNlAddress = (values: AddressFormValues): INlAddress | undefined => {
+  const parts = parseAddressLine(values.addressLine);
+  if (!parts) return undefined;
+  const apartment = [parts.rest, values.apartment.trim()].filter(Boolean).join(' ');
+  return {
+    postcode: normalizePostcode(values.postcode),
+    city: values.city.trim(),
+    street: parts.street,
+    houseNumber: parts.houseNumber,
+    apartment: apartment || undefined,
+    country: 'NL',
+  };
+};
+
 const Checkout = (): ReactElement => {
   const { t } = useTranslation();
   const locale = useLocale();
@@ -42,7 +59,6 @@ const Checkout = (): ReactElement => {
   const subtotal = useAppSelector(selectCartTotal);
   const currency = items[0]?.currency ?? 'EUR';
   const [createOrder] = useCreateOrderMutation();
-  const [lookupAddress] = useLazyLookupNlAddressQuery();
   const [submitError, setSubmitError] = useState(false);
 
   const form = useForm<CheckoutForm>({
@@ -51,72 +67,25 @@ const Checkout = (): ReactElement => {
       email: '',
       phone: '',
       delivery: 'pickup',
-      postcode: '',
-      houseNumber: '',
-      addition: '',
-      street: '',
       city: '',
+      addressLine: '',
+      apartment: '',
+      postcode: '',
     },
   });
   const {
     register,
     handleSubmit,
     control,
-    setError,
     formState: { errors, isSubmitting },
   } = form;
 
   const deliveryMethod = useWatch({ control, name: 'delivery' });
   const delivery = DELIVERY_OPTIONS.find((o) => o.method === deliveryMethod) ?? DELIVERY_OPTIONS[0];
 
-  /**
-   * Checks the address against the BAG before the order goes out, reusing the lookup the fields
-   * already made. Returns undefined once the form points at the problem.
-   */
-  const resolveAddress = async (values: CheckoutForm): Promise<INlAddress | undefined> => {
-    // Field validation stops malformed postcodes and house numbers before this point.
-    const query = toNlAddressQuery(values.postcode, values.houseNumber);
-    if (!query) return undefined;
-    try {
-      const match = matchNlAddress(await lookupAddress(query, true).unwrap(), values.addition);
-      if (match.status === 'found') return match.option.address;
-      if (match.status === 'notFound') {
-        setError(
-          'houseNumber',
-          { type: 'lookup', message: t('checkout.addressNotFound') },
-          { shouldFocus: true }
-        );
-      } else {
-        setError(
-          'addition',
-          {
-            type: 'lookup',
-            message: t('checkout.additionRequired', { additions: match.additions.join(', ') }),
-          },
-          { shouldFocus: true }
-        );
-      }
-      return undefined;
-    } catch {
-      // PDOK is unavailable, so the fields ask for street and city instead.
-      const street = values.street.trim();
-      const city = values.city.trim();
-      if (!street || !city) {
-        setError(
-          street ? 'city' : 'street',
-          { type: 'required', message: t('checkout.required') },
-          { shouldFocus: true }
-        );
-        return undefined;
-      }
-      const addition = normalizeAddition(values.addition) || undefined;
-      return { ...query, addition, street, city, country: 'NL' };
-    }
-  };
-
   const onSubmit = async (values: CheckoutForm): Promise<void> => {
     setSubmitError(false);
-    const address = delivery.needsAddress ? await resolveAddress(values) : undefined;
+    const address = delivery.needsAddress ? toNlAddress(values) : undefined;
     if (delivery.needsAddress && !address) return;
     const input: ICreateOrderInput = {
       items: items.map((i) => ({ productId: i.productId, quantity: i.quantity })),

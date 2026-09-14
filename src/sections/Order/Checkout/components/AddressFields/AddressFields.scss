@@ -1,5 +1,3 @@
-@use '@/styles/mixins' as *;
-
 .address-fields {
   display: flex;
   flex-direction: column;
@@ -9,16 +7,8 @@
 
 .address-fields__row {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-
-  @include mobile {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-.address-fields__row--manual {
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
 }
 
 .address-fields__field {
@@ -28,28 +18,7 @@
   min-width: 0;
 }
 
-.address-fields__field--postcode {
-  @include mobile {
-    grid-column: 1 / -1;
-  }
-}
-
 .address-fields__error {
   color: #c62828;
   font-size: 13px;
-}
-
-.address-fields__status {
-  min-height: 21px;
-  margin: 0;
-  font-size: 14px;
-  color: var(--color-muted);
-
-  &--found {
-    color: #1f6b34;
-  }
-
-  &--problem {
-    color: #c62828;
-  }
 }
