@@ -1,10 +1,10 @@
 {
   "nav": {
     "home": "Home",
-    "catalog": "Catalog",
-    "sell": "Sell toys",
-    "blog": "Blog",
-    "about": "About"
+    "shop": "Shop",
+    "sellToUs": "Sell to Us",
+    "ourStory": "Our Story",
+    "journal": "Journal"
   },
   "common": {
     "loading": "Loading…",
@@ -12,24 +12,39 @@
     "addToCart": "Add to cart",
     "notFound": "Page not found"
   },
-  "catalog": {
-    "title": "Catalog",
-    "search": "Search toys",
+  "shop": {
+    "title": "Shop",
+    "filters": "Filters",
+    "filtersCount": "Filters ({{count}})",
     "category": "Category",
-    "ageRange": "Age",
-    "all": "All",
+    "brand": "Brand",
+    "brandOther": "Other",
+    "age": "Age (years)",
+    "condition": "Condition",
+    "price": "Price",
+    "priceMin": "Minimum price",
+    "priceMax": "Maximum price",
     "sort": "Sort by",
-    "sortNewest": "Newest",
+    "sortPlaceholder": "Sort by price",
     "sortPriceAsc": "Price: low to high",
     "sortPriceDesc": "Price: high to low",
-    "priceFrom": "Price from",
-    "priceTo": "to",
-    "reset": "Reset filters",
+    "reset": "Reset all",
     "results_one": "{{count}} toy",
     "results_other": "{{count}} toys",
     "empty": "Nothing found. Try different filters.",
     "outOfStock": "Sold out",
     "inCart": "In cart"
+  },
+  "age": {
+    "group": "{{from}}–{{to}}",
+    "groupOpen": "{{from}}+",
+    "range": "{{from}}–{{to}} years",
+    "rangeOpen": "{{from}}+ years"
+  },
+  "condition": {
+    "new": "New",
+    "excellent": "Excellent",
+    "good": "Good"
   },
   "pagination": {
     "prev": "Previous",
@@ -48,19 +63,20 @@
     "total": "Total",
     "checkout": "Checkout"
   },
-  "blog": {
-    "title": "Blog",
+  "journal": {
+    "title": "Journal",
     "intro": "Notes on play, development and second-hand toys.",
     "readMore": "Read article",
     "empty": "No articles yet.",
-    "back": "Back to blog",
+    "back": "Back to journal",
     "notFound": "This article does not exist.",
-    "relatedToys": "Browse toys in the catalog"
+    "relatedToys": "Browse toys in the shop"
   },
   "product": {
-    "backToCatalog": "Back to catalog",
+    "backToShop": "Back to shop",
     "category": "Category",
-    "ageRange": "Age",
+    "brand": "Brand",
+    "age": "Age",
     "condition": "Condition",
     "outOfStock": "Sold out",
     "inCart": "In cart",
@@ -68,12 +84,21 @@
     "readArticle": "Read our article about this toy",
     "notFound": "This toy is no longer available.",
     "gallery": "Product images",
-    "showImage": "Show image {{index}}"
+    "showImage": "Show image {{index}}",
+    "enlarge": "Enlarge image"
+  },
+  "lightbox": {
+    "label": "Image viewer",
+    "close": "Close",
+    "previous": "Previous image",
+    "next": "Next image",
+    "counter": "{{current}} / {{total}}",
+    "zoom": "Zoom"
   },
   "checkout": {
     "title": "Checkout",
     "empty": "Your cart is empty.",
-    "goToCatalog": "Go to catalog",
+    "goToShop": "Go to shop",
     "contact": "Contact details",
     "name": "Full name",
     "email": "Email",
@@ -86,7 +111,20 @@
     "deliveryPost": "Post",
     "deliveryPostHint": "3–5 days, tracked",
     "free": "Free",
-    "address": "Delivery address",
+    "postcode": "Postcode",
+    "houseNumber": "House number",
+    "addition": "Addition (optional)",
+    "street": "Street",
+    "city": "City",
+    "country": "Country",
+    "countryNetherlands": "Netherlands",
+    "nlOnly": "We deliver within the Netherlands only.",
+    "invalidPostcode": "Enter a Dutch postcode, like 1012 AB.",
+    "invalidHouseNumber": "Enter the house number in digits.",
+    "addressLookup": "Looking up the address…",
+    "addressNotFound": "We could not find this address. Check the postcode and house number.",
+    "additionRequired": "Choose the addition for this house number: {{additions}}.",
+    "addressUnavailable": "The address lookup is not available right now. Enter the street and city.",
     "summary": "Your order",
     "subtotal": "Subtotal",
     "deliveryCost": "Delivery",
@@ -106,7 +144,7 @@
   "home": {
     "heroTitle": "Loved toys, ready for a second childhood",
     "heroText": "We buy back educational toys children have outgrown, restore them and pass them on. Good for the planet, good for your wallet.",
-    "heroCatalog": "Browse toys",
+    "heroShop": "Browse toys",
     "heroSell": "Sell your toys",
     "howTitle": "How it works",
     "how": [
@@ -120,7 +158,7 @@
       },
       {
         "title": "You pick and we deliver",
-        "text": "Choose from the catalog, pay online and get the toys at your door or pick them up."
+        "text": "Choose from our shop, pay online and get the toys at your door or pick them up."
       }
     ],
     "featuredTitle": "Just arrived",
@@ -133,7 +171,7 @@
       },
       {
         "q": "What condition are they in?",
-        "a": "Every listing states the condition honestly: like new, very good or good. Photos show the actual item."
+        "a": "Every listing states the condition honestly: new, excellent or good. Photos show the actual item."
       },
       {
         "q": "Can I return a toy?",
@@ -160,8 +198,8 @@
       }
     ]
   },
-  "about": {
-    "title": "About us",
+  "ourStory": {
+    "title": "Our story",
     "intro": "We are a small team in Amsterdam who believe good toys deserve more than one childhood.",
     "missionTitle": "Why we do this",
     "missionText": "Educational toys are built to last, yet most are used for a year or two before ending up in a cupboard or a landfill. We give them a second life: families pass them on, we restore them, and other families get quality toys for a fair price.",
@@ -173,7 +211,7 @@
       },
       {
         "title": "Quality",
-        "text": "Only complete, clean and safe toys make it to the catalog."
+        "text": "Only complete, clean and safe toys make it to the shop."
       },
       {
         "title": "Less waste",
@@ -185,7 +223,7 @@
     "contactTitle": "Get in touch",
     "contactText": "Questions about an order or a toy you would like to pass on? Write to us at hello@example.com."
   },
-  "sell": {
+  "sellToUs": {
     "title": "Sell your toys",
     "intro": "Has your child outgrown their toys? Pass them on to a new family and get paid for it.",
     "howTitle": "How it works",

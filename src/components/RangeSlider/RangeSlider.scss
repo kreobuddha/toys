@@ -1,0 +1,87 @@
+.range-slider {
+  position: relative;
+  height: 24px;
+}
+
+.range-slider__track {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left: 0;
+  height: 4px;
+  margin-top: -2px;
+  border-radius: 2px;
+  background: var(--color-border);
+}
+
+.range-slider__fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-radius: inherit;
+  background: var(--color-accent);
+}
+
+// Both inputs cover the whole track. They ignore the pointer and only the thumbs take it, so
+// the lower thumb stays reachable under the upper input.
+.range-slider__input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  background: none;
+  appearance: none;
+  pointer-events: none;
+
+  &::-webkit-slider-runnable-track {
+    height: 100%;
+    background: none;
+  }
+
+  &::-webkit-slider-thumb {
+    width: 18px;
+    height: 18px;
+    margin-top: 3px;
+    border: 2px solid var(--color-accent);
+    border-radius: 50%;
+    background: var(--color-bg);
+    appearance: none;
+    cursor: pointer;
+    pointer-events: auto;
+  }
+
+  &::-moz-range-track {
+    background: none;
+  }
+
+  &::-moz-range-thumb {
+    box-sizing: border-box;
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--color-accent);
+    border-radius: 50%;
+    background: var(--color-bg);
+    cursor: pointer;
+    pointer-events: auto;
+  }
+
+  &:focus-visible {
+    outline: none;
+  }
+
+  &:focus-visible::-webkit-slider-thumb {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  &:focus-visible::-moz-range-thumb {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  &--top {
+    z-index: 1;
+  }
+}

@@ -13,6 +13,10 @@
   align-items: center;
   gap: 32px;
   height: 64px;
+
+  @include mobile {
+    gap: 16px;
+  }
 }
 
 .header__logo {
@@ -25,14 +29,18 @@
   gap: 24px;
   flex: 1;
 
+  // Four links plus logo and cart do not fit a phone: scroll instead of wrapping.
   @include mobile {
-    gap: 12px;
+    gap: 16px;
+    overflow-x: auto;
+    scrollbar-width: none;
   }
 }
 
 .header__link {
   text-decoration: none;
   color: var(--color-muted);
+  white-space: nowrap;
 
   &--active {
     color: var(--color-text);

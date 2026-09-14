@@ -1,0 +1,55 @@
+@use '@/styles/mixins' as *;
+
+.shop__title {
+  margin: 32px 0 24px;
+}
+
+.shop__layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 32px;
+  align-items: start;
+
+  @include tablet {
+    grid-template-columns: 1fr;
+  }
+}
+
+.shop__content {
+  min-width: 0;
+}
+
+.shop__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.shop__count {
+  color: var(--color-muted);
+  white-space: nowrap;
+}
+
+.shop__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  transition: opacity 0.15s;
+
+  &[aria-busy='true'] {
+    opacity: 0.6;
+  }
+
+  @include mobile {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+}
+
+.shop__state {
+  padding: 48px 0;
+  text-align: center;
+  color: var(--color-muted);
+}

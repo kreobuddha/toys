@@ -11,8 +11,8 @@ const looksLikeLocale = (segment: string | undefined): segment is string =>
 
 /**
  * Mounted at /:locale. Validates the prefix and provides the locale to the
- * subtree. A path without a valid locale (/catalog, /xx/about) is redirected to
- * the default locale with the original path preserved (/en/catalog).
+ * subtree. A path without a valid locale (/shop, /xx/our-story) is redirected to
+ * the default locale with the original path preserved (/en/shop).
  */
 const LocaleRoute = (): ReactElement => {
   const { locale } = useParams();
@@ -26,8 +26,8 @@ const LocaleRoute = (): ReactElement => {
   }, [valid, locale]);
 
   if (!valid) {
-    // /xx/about -> /en/about (drop an unsupported language code),
-    // /catalog  -> /en/catalog (keep a path that merely lacks the prefix).
+    // /xx/our-story -> /en/our-story (drop an unsupported language code),
+    // /shop         -> /en/shop (keep a path that merely lacks the prefix).
     const rest = looksLikeLocale(locale) ? pathname.slice(locale.length + 1) : pathname;
     return <Navigate to={`/${DEFAULT_LOCALE}${rest}${search}${hash}`} replace />;
   }

@@ -1,7 +1,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { toProductsParams } from './productAttributes';
 import type {
   IArticle,
-  ICatalogFacets,
+  IProductFacets,
   ICreateOrderInput,
   ICreateOrderResponse,
   IPaginated,
@@ -16,7 +17,7 @@ export const api = createApi({
   tagTypes: ['Product', 'Article'],
   endpoints: (build) => ({
     getProducts: build.query<IPaginated<IProduct>, IProductsQuery>({
-      query: (params) => ({ url: '/products', params }),
+      query: (query) => ({ url: '/products', params: toProductsParams(query) }),
       providesTags: (result) =>
         result
           ? [
@@ -25,7 +26,7 @@ export const api = createApi({
             ]
           : [{ type: 'Product', id: 'LIST' }],
     }),
-    getCatalogFacets: build.query<ICatalogFacets, void>({
+    getProductFacets: build.query<IProductFacets, void>({
       query: () => '/products/facets',
     }),
     getProduct: build.query<IProduct, string>({
@@ -51,7 +52,7 @@ export const api = createApi({
 
 export const {
   useGetProductsQuery,
-  useGetCatalogFacetsQuery,
+  useGetProductFacetsQuery,
   useGetProductQuery,
   useGetArticlesQuery,
   useGetArticleQuery,

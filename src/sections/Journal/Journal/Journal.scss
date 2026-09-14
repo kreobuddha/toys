@@ -1,0 +1,36 @@
+@use '@/styles/mixins' as *;
+
+.journal {
+  padding-top: 24px;
+  padding-bottom: 48px;
+}
+
+.journal__title {
+  margin: 8px 0 8px;
+}
+
+.journal__intro {
+  margin: 0 0 32px;
+  color: var(--color-muted);
+}
+
+.journal__state {
+  padding: 48px 0;
+  text-align: center;
+  color: var(--color-muted);
+}
+
+.journal__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+
+  @include tablet {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include mobile {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}

@@ -1,6 +1,6 @@
 # Toys
 
-Second-hand educational toys shop: catalog, cart, Stripe checkout, toy intake form, blog.
+Second-hand educational toys shop: product listing, cart, Stripe checkout, toy intake form, journal.
 See [README.md](README.md) for setup and scripts.
 
 ## Communication
@@ -26,7 +26,7 @@ See [README.md](README.md) for setup and scripts.
 - `src/features/` — redux slices (cart).
 - `src/components/` — shared UI, one folder per component. The cart is a header dropdown
   (`CartDropdown`), not a page.
-- `src/sections/` — pages grouped by section: `Catalog/` (Catalog, Product), `Order/` (Checkout), `Blog/` (Blog, Article), `Common/` (Home, About, SellToys, Success, NotFound). One
+- `src/sections/` — pages grouped by section: `Shop/` (Shop, Product), `Order/` (Checkout), `Journal/` (Journal, Article), `Common/` (Home, OurStory, SellToUs, Success, NotFound). One
   folder per page; a page's own sub-components go in `<Page>/components/`.
 - `src/i18n/` — i18next setup and locale list; strings live in `public/locales/<lng>/translation.json`.
 - `src/mocks/` — MSW handlers and fake data, active in dev when `VITE_USE_MOCKS=true`.
@@ -34,7 +34,7 @@ See [README.md](README.md) for setup and scripts.
 
 ## Routing & i18n
 
-All pages live under `/:locale/...` (`/en/catalog`). Build hrefs with `useLinks()`, never
+All pages live under `/:locale/...` (`/en/shop`). Build hrefs with `useLinks()`, never
 hardcode paths. A missing or unknown locale prefix redirects to `/en/...`. i18next follows the
 route segment. Every user-facing string goes through `useTranslation()` and a key in
 `public/locales/en/translation.json`; keys are type-checked, add new ones to that file first.

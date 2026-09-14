@@ -8,6 +8,7 @@ import { addItem, selectCartItems } from '@/features/cart/cartSlice';
 import Button from '@components/Button/Button';
 import { useTranslation } from 'react-i18next';
 import { formatPrice, useLocale } from '@/i18n';
+import { useProductLabels } from '@/i18n/productLabels';
 
 interface ProductCardProps {
   product: IProduct;
@@ -17,6 +18,7 @@ const ProductCard = ({ product }: ProductCardProps): ReactElement => {
   const { t } = useTranslation();
   const locale = useLocale();
   const links = useLinks();
+  const labels = useProductLabels();
   const dispatch = useAppDispatch();
   const inCart = useAppSelector(selectCartItems).some((i) => i.productId === product.id);
   const href = links.product(product.id);
@@ -34,12 +36,11 @@ const ProductCard = ({ product }: ProductCardProps): ReactElement => {
           loading="lazy"
           className="product-card__image"
         />
-        {!product.inStock && <span className="product-card__badge">{t('catalog.outOfStock')}</span>}
+        {!product.inStock && <span className="product-card__badge">{t('shop.outOfStock')}</span>}
       </Link>
       <div className="product-card__body">
         <div className="product-card__meta">
-          {product.category}
-          {product.ageRange && ` · ${product.ageRange}`}
+          {[product.category.name, labels.ageRange(product.ageGroups)].filter(Boolean).join(' · ')}
         </div>
         <h3 className="product-card__title">
           <Link to={href} className="product-card__title-link">
@@ -56,7 +57,7 @@ const ProductCard = ({ product }: ProductCardProps): ReactElement => {
             disabled={!product.inStock}
             onClick={handleAdd}
           >
-            {inCart ? t('catalog.inCart') : t('common.addToCart')}
+            {inCart ? t('shop.inCart') : t('common.addToCart')}
           </Button>
         </div>
       </div>

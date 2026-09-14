@@ -1,13 +1,23 @@
 import { delay, http, HttpResponse } from 'msw';
+import { isNlPostcode } from '@/api/nlAddress';
+import {
+  isAgeGroup,
+  isCondition,
+  isSortOption,
+  LIST_PARAMS,
+  OTHER_BRAND,
+  parseList,
+} from '@/api/productAttributes';
 import type {
   ISellRequestInput,
   ICreateOrderInput,
   ICreateOrderResponse,
   IPaginated,
   IProduct,
+  IProductFacets,
   SortOption,
 } from '@/api/types';
-import { AGE_RANGES, CATEGORIES, products } from './data/products';
+import { BRANDS, CATEGORIES, products } from './data/products';
 import { articles } from './data/articles';
 
 const API = import.meta.env.VITE_API_URL;
@@ -18,27 +28,32 @@ const RESPONSE_DELAY_MS = 1000;
 const SORTERS: Record<SortOption, (a: IProduct, b: IProduct) => number> = {
   price_asc: (a, b) => a.price - b.price,
   price_desc: (a, b) => b.price - a.price,
-  newest: (a, b) => b.id - a.id,
 };
+
+// Without `sort` the backend keeps its own default order; the mock lists newest first.
+const NEWEST_FIRST = (a: IProduct, b: IProduct): number => b.id - a.id;
 
 export const handlers = [
   http.get(`${API}/products`, async ({ request }) => {
     const q = new URL(request.url).searchParams;
-    const search = q.get('search')?.trim().toLowerCase();
-    const category = q.get('category');
-    const ageRange = q.get('ageRange');
+    const categories = parseList(q.get(LIST_PARAMS.categories));
+    const brands = parseList(q.get(LIST_PARAMS.brands));
+    const ageGroups = parseList(q.get(LIST_PARAMS.ageGroups)).filter(isAgeGroup);
+    const conditions = parseList(q.get(LIST_PARAMS.conditions)).filter(isCondition);
     const minPrice = Number(q.get('minPrice') ?? 0);
     const maxPrice = Number(q.get('maxPrice') ?? Infinity);
-    const sort = (q.get('sort') ?? 'newest') as SortOption;
+    const sort = q.get('sort');
     const page = Math.max(1, Number(q.get('page') ?? 1));
     const perPage = Math.max(1, Number(q.get('perPage') ?? 12));
 
     const filtered = products
-      .filter((p) => !search || p.title.toLowerCase().includes(search))
-      .filter((p) => !category || p.category === category)
-      .filter((p) => !ageRange || p.ageRange === ageRange)
+      .filter((p) => !categories.length || categories.includes(p.category.slug))
+      .filter((p) => !brands.length || brands.includes(p.brand?.slug ?? OTHER_BRAND))
+      // A toy matches the age filter when it suits any of the requested groups.
+      .filter((p) => !ageGroups.length || p.ageGroups.some((group) => ageGroups.includes(group)))
+      .filter((p) => !conditions.length || conditions.includes(p.condition))
       .filter((p) => p.price >= minPrice && p.price <= maxPrice)
-      .sort(SORTERS[sort] ?? SORTERS.newest);
+      .sort(isSortOption(sort) ? SORTERS[sort] : NEWEST_FIRST);
 
     const start = (page - 1) * perPage;
     const body: IPaginated<IProduct> = {
@@ -52,8 +67,14 @@ export const handlers = [
   }),
 
   http.get(`${API}/products/facets`, async () => {
+    const prices = products.map((p) => p.price);
+    const body: IProductFacets = {
+      categories: CATEGORIES,
+      brands: BRANDS,
+      price: { min: Math.min(...prices), max: Math.max(...prices) },
+    };
     await delay(RESPONSE_DELAY_MS);
-    return HttpResponse.json({ categories: [...CATEGORIES], ageRanges: [...AGE_RANGES] });
+    return HttpResponse.json(body);
   }),
 
   http.get(`${API}/products/:id`, async ({ params }) => {
@@ -82,6 +103,12 @@ export const handlers = [
     await delay(RESPONSE_DELAY_MS);
     if (!input.items?.length || !input.contact?.email) {
       return new HttpResponse(null, { status: 400 });
+    }
+    // The real backend checks the address against the BAG; the mock only turns away
+    // addresses outside the Netherlands.
+    const address = input.delivery?.address;
+    if (address && (address.country !== 'NL' || !isNlPostcode(address.postcode))) {
+      return new HttpResponse(null, { status: 422 });
     }
     const orderId = `TOY-${String(Date.now()).slice(-6)}`;
     // The real backend returns a Stripe Checkout URL; the mock sends the user
