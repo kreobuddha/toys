@@ -1,7 +1,8 @@
 @use '@/styles/mixins' as *;
 
 .our-story {
-  padding: 24px 0 64px;
+  padding-top: 24px;
+  padding-bottom: 64px;
   max-width: 800px;
 }
 

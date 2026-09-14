@@ -42,6 +42,8 @@ button {
   cursor: pointer;
 }
 
+// A page block sharing an element with .container sets vertical padding only: a `padding`
+// shorthand in the page stylesheet loads later and wipes the side padding on phones.
 .container {
   max-width: $container-max;
   margin: 0 auto;

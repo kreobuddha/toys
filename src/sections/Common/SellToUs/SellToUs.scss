@@ -1,7 +1,8 @@
 @use '@/styles/mixins' as *;
 
 .sell-to-us {
-  padding: 24px 0 64px;
+  padding-top: 24px;
+  padding-bottom: 64px;
 }
 
 .sell-to-us__header {
