@@ -75,6 +75,7 @@ const Checkout = (): ReactElement => {
       addressPick: null,
       apartment: '',
       postcode: '',
+      postcodeAuto: '',
     },
   });
   const {

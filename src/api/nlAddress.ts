@@ -61,3 +61,12 @@ export const resolveStreet = (
   pick && line.trim() === pick.label
     ? { street: pick.street, houseNumber: pick.houseNumber }
     : parseAddressLine(line);
+
+/** A street name reduced for comparison: no case, diacritics or punctuation ("1e" stays "1e"). */
+export const normalizeStreetName = (name: string): string =>
+  name
+    .normalize('NFD')
+    .replace(/\p{M}/gu, '')
+    .replace(/[^\p{L}\p{N}]+/gu, ' ')
+    .trim()
+    .toLowerCase();

@@ -1,11 +1,13 @@
 import './AddressFields.scss';
-import { useMemo, useState, type ReactElement } from 'react';
+import { useEffect, useMemo, useState, type ReactElement } from 'react';
 import { useController, useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { skipToken } from '@reduxjs/toolkit/query/react';
 import {
   formatPostcode,
   isNlPostcode,
+  normalizePostcode,
+  normalizeStreetName,
   resolveStreet,
   type IAddressPick,
   type INlCity,
@@ -32,6 +34,8 @@ export interface AddressFormValues {
   addressPick: IAddressPick | null;
   apartment: string;
   postcode: string;
+  /** The postcode the form filled in last; a different value means the customer typed it. */
+  postcodeAuto: string;
 }
 
 interface CityOption extends ComboboxOption {
@@ -66,6 +70,26 @@ const toStreetQuery = (
 };
 
 /**
+ * The postcode when the rows for the line's street and house number carry exactly one. Names must
+ * match exactly after normalising, so "Herengracht 61" never takes Nieuwe Herengracht's postcode.
+ */
+const toPostcodeHint = (
+  rows: INlStreetSuggestion[] | undefined,
+  query: INlStreetQuery | undefined
+): string | undefined => {
+  if (!rows || query?.houseNumber === undefined) return undefined;
+  const street = normalizeStreetName(query.street);
+  const postcodes = new Set(
+    rows
+      .filter(
+        (row) => row.houseNumber === query.houseNumber && normalizeStreetName(row.street) === street
+      )
+      .flatMap((row) => row.postcodes)
+  );
+  return postcodes.size === 1 ? [...postcodes][0] : undefined;
+};
+
+/**
  * Dutch delivery address. Suggestions only help: the order never waits for them, only formats are
  * checked, and the backend validates the address itself.
  */
@@ -76,7 +100,7 @@ const AddressFields = (): ReactElement => {
     control,
     getValues,
     setValue,
-    formState: { errors },
+    formState: { errors, isSubmitted },
   } = useFormContext<AddressFormValues>();
   const {
     field: { ref: cityInputRef, ...cityField },
@@ -142,6 +166,22 @@ const AddressFields = (): ReactElement => {
       }),
     [streetLookup.currentData]
   );
+
+  // The postcode follows the line: picked, typed, after a city change, or cleared when stale.
+  const postcodeHint = toPostcodeHint(streetLookup.currentData, streetQuery);
+  const postcodeSettled = streetQuery === undefined || !streetLoading;
+
+  useEffect(() => {
+    if (!postcodeSettled) return;
+    const current = getValues('postcode');
+    const auto = getValues('postcodeAuto');
+    // A postcode the customer typed stays; only an empty field or the previous fill may change.
+    if (current.trim() !== '' && normalizePostcode(current) !== normalizePostcode(auto)) return;
+    const next = postcodeHint ? formatPostcode(postcodeHint) : '';
+    if (next === current && next === auto) return;
+    setValue('postcodeAuto', next);
+    setValue('postcode', next, { shouldValidate: isSubmitted });
+  }, [postcodeHint, postcodeSettled, isSubmitted, getValues, setValue]);
 
   const confirmCity = (city: INlCity): void => {
     setValue('cityPick', city);
