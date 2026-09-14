@@ -68,5 +68,5 @@ and both can be present (`Allard Piersonstraat 1A-2`). An unknown address gives 
 
 ## Status
 
-Release 0.2.0 replaces the postcode-first form with city and street suggestions. Until those land,
-the checkout sends nothing to PDOK.
+The checkout suggests cities through `/suggest` with `fq=type:woonplaats`. Street suggestions and
+the automatic postcode follow later in release 0.2.0.

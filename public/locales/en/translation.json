@@ -50,6 +50,10 @@
     "prev": "Previous",
     "next": "Next"
   },
+  "combobox": {
+    "loading": "Searching…",
+    "empty": "No matches"
+  },
   "footer": {
     "rights": "All rights reserved."
   },

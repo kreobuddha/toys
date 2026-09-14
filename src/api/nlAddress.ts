@@ -9,6 +9,12 @@ const POSTCODE_PATTERN = /^[1-9][0-9]{3}(?!SA|SD|SS)[A-Z]{2}$/;
 const ADDRESS_LINE_PATTERN =
   /^([^,]*?\p{L}[^,]*?)\s+([1-9]\d{0,4})(?!\d)(?:[\s/-]*([\p{L}\d][^,]{0,19}))?$/iu;
 
+/** A locality (woonplaats) in the BAG. Its code is the only exact filter for its addresses. */
+export interface INlCity {
+  name: string;
+  code: string;
+}
+
 export interface IAddressLineParts {
   street: string;
   houseNumber: number;

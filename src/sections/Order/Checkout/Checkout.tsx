@@ -14,6 +14,7 @@ import { formatPrice, useLocale } from '@/i18n';
 import Button from '@components/Button/Button';
 import Input from '@components/Input/Input';
 import AddressFields, { type AddressFormValues } from './components/AddressFields/AddressFields';
+import { DEFAULT_CITY, loadSavedCity } from './components/AddressFields/savedCity';
 import OrderSummary from './components/OrderSummary/OrderSummary';
 import { DELIVERY_OPTIONS } from './deliveryOptions';
 
@@ -60,6 +61,7 @@ const Checkout = (): ReactElement => {
   const currency = items[0]?.currency ?? 'EUR';
   const [createOrder] = useCreateOrderMutation();
   const [submitError, setSubmitError] = useState(false);
+  const [initialCity] = useState(() => loadSavedCity() ?? DEFAULT_CITY);
 
   const form = useForm<CheckoutForm>({
     defaultValues: {
@@ -67,7 +69,8 @@ const Checkout = (): ReactElement => {
       email: '',
       phone: '',
       delivery: 'pickup',
-      city: '',
+      city: initialCity.name,
+      cityPick: initialCity,
       addressLine: '',
       apartment: '',
       postcode: '',

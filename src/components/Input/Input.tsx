@@ -1,8 +1,9 @@
 import './Input.scss';
-import type { InputHTMLAttributes, ReactElement } from 'react';
+import type { ComponentProps, ReactElement } from 'react';
 import clsx from 'clsx';
 
-type InputProps = InputHTMLAttributes<HTMLInputElement> & { label?: string };
+// ComponentProps keeps `ref`, so react-hook-form controllers can focus the field.
+type InputProps = ComponentProps<'input'> & { label?: string };
 
 const Input = ({ label, className, id, ...rest }: InputProps): ReactElement => {
   const input = <input id={id} className={clsx('input__control', className)} {...rest} />;
