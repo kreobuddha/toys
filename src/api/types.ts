@@ -86,10 +86,10 @@ export type DeliveryMethod = 'pickup' | 'courier' | 'post';
 /** Delivery address; the shop delivers within the Netherlands only. */
 export interface INlAddress {
   postcode: string; // "1012JS": no space, upper case
-  houseNumber: number;
-  addition?: string; // house letter and/or addition: "B", "1A", "A-2"
-  street: string;
   city: string;
+  street: string;
+  houseNumber: number;
+  apartment?: string; // free text: house letter, addition or floor ("B", "1A", "2 hoog")
   country: 'NL';
 }
 

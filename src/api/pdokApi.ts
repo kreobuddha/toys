@@ -1,68 +1,159 @@
-import { fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { fetchBaseQuery, type FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
 import { api } from './api';
-import type { INlAddressLookup, INlAddressOption, INlAddressQuery } from './nlAddress';
+import type { INlCity } from './nlAddress';
 
-// PDOK Locatieserver: the government's free address search over the BAG, no key, CORS open.
-// Findings and alternatives: docs/research/nl-address-autocomplete.md.
+// PDOK Locatieserver: the government's free search over the BAG address register, no key, CORS
+// open. Findings: docs/research/nl-address-autocomplete.md.
 const PDOK_URL = 'https://api.pdok.nl/bzk/locatieserver/search/v3_1';
-const FIELDS = 'straatnaam,huisnummer,huisletter,huisnummertoevoeging,postcode,woonplaatsnaam';
-const MAX_ROWS = 100; // PDOK answers 400 above this
 
 // A base query of its own, so headers the shop API adds later (auth) never reach PDOK.
 const pdokBaseQuery = fetchBaseQuery({ baseUrl: PDOK_URL });
 
-interface IPdokAddress {
-  straatnaam: string;
-  huisnummer: number;
-  huisletter?: string;
-  huisnummertoevoeging?: string;
-  postcode: string;
+const UNEXPECTED_RESPONSE: FetchBaseQueryError = {
+  status: 'CUSTOM_ERROR',
+  error: 'Unexpected PDOK response',
+};
+
+export interface INlCitySuggestion extends INlCity {
+  municipality: string;
+  province: string;
+}
+
+export interface INlStreetQuery {
+  cityCode: string;
+  street: string;
+  /** With a house number the suggestions are addresses, without one street names. */
+  houseNumber?: number;
+}
+
+export interface INlStreetSuggestion {
+  street: string;
+  /** Absent for a street name suggested before the house number is typed. */
+  houseNumber?: number;
+  /** Distinct non-empty postcodes of the BAG addresses behind this row. */
+  postcodes: string[];
+}
+
+interface IPdokResponse<Doc> {
+  response?: { numFound: number; docs: Doc[] };
+  spellcheck?: { collations?: unknown[] };
+}
+
+interface IPdokCity {
   woonplaatsnaam: string;
+  woonplaatscode: string;
+  gemeentenaam: string;
+  provincienaam: string;
 }
 
-interface IPdokResponse {
-  response?: { numFound: number; docs: IPdokAddress[] };
+interface IPdokStreet {
+  straatnaam: string;
+  huisnummer?: number;
+  postcode?: string;
 }
 
-const toOption = (doc: IPdokAddress): INlAddressOption => {
-  const letter = doc.huisletter ?? '';
-  const extra = doc.huisnummertoevoeging;
-  return {
-    address: {
-      postcode: doc.postcode,
-      houseNumber: doc.huisnummer,
-      addition: `${letter}${extra ? `${letter ? '-' : ''}${extra}` : ''}` || undefined,
+/** A `/suggest` path; `fq` repeats, which a params object cannot express. */
+const suggestPath = (q: string, filters: string[], fields: string[], rows: number): string => {
+  const params = new URLSearchParams({ q, fl: fields.join(','), rows: String(rows) });
+  for (const filter of filters) params.append('fq', filter);
+  return `/suggest?${params}`;
+};
+
+/** Solr's corrected query for a search without hits: "herengraht 611" → "herengracht 611". */
+const collationQuery = (body: IPdokResponse<unknown>): string | undefined => {
+  const collation = body.spellcheck?.collations?.find(
+    (item): item is { collationQuery: string } =>
+      typeof item === 'object' &&
+      item !== null &&
+      typeof (item as { collationQuery?: unknown }).collationQuery === 'string'
+  );
+  return collation?.collationQuery;
+};
+
+/** Each street name once, in the order PDOK ranked them. */
+const toStreetNames = (docs: IPdokStreet[]): INlStreetSuggestion[] =>
+  [...new Set(docs.map((doc) => doc.straatnaam))].map((street) => ({ street, postcodes: [] }));
+
+/** One row per street and house number in ranking order; letters and additions fold into it. */
+const toHouseNumbers = (docs: IPdokStreet[]): INlStreetSuggestion[] => {
+  const rows = new Map<string, INlStreetSuggestion>();
+  for (const doc of docs) {
+    if (doc.huisnummer === undefined) continue;
+    const key = `${doc.straatnaam}|${doc.huisnummer}`;
+    const row = rows.get(key) ?? {
       street: doc.straatnaam,
-      city: doc.woonplaatsnaam,
-      country: 'NL',
-    },
-    line: `${doc.straatnaam} ${doc.huisnummer}${letter}${extra ? `-${extra}` : ''}`,
-  };
+      houseNumber: doc.huisnummer,
+      postcodes: [],
+    };
+    if (doc.postcode && !row.postcodes.includes(doc.postcode)) row.postcodes.push(doc.postcode);
+    rows.set(key, row);
+  }
+  return [...rows.values()];
 };
 
 export const pdokApi = api.injectEndpoints({
   endpoints: (build) => ({
-    lookupNlAddress: build.query<INlAddressLookup, INlAddressQuery>({
-      queryFn: async ({ postcode, houseNumber }, queryApi, extraOptions) => {
-        const params = new URLSearchParams({ q: '*', fl: FIELDS, rows: String(MAX_ROWS) });
-        // `fq` repeats, which a params object cannot express.
-        for (const filter of ['type:adres', `postcode:${postcode}`, `huisnummer:${houseNumber}`]) {
-          params.append('fq', filter);
-        }
-        const result = await pdokBaseQuery(`/free?${params}`, queryApi, extraOptions);
+    /** Localities for typed text; pass it trimmed and lower-cased so equal input shares the cache. */
+    suggestNlCities: build.query<INlCitySuggestion[], string>({
+      queryFn: async (q, queryApi, extraOptions) => {
+        const path = suggestPath(
+          q,
+          ['type:woonplaats'],
+          ['woonplaatsnaam', 'woonplaatscode', 'gemeentenaam', 'provincienaam'],
+          10
+        );
+        const result = await pdokBaseQuery(path, queryApi, extraOptions);
         if (result.error) return { error: result.error };
-        const response = (result.data as IPdokResponse).response;
-        if (!response) {
-          return { error: { status: 'CUSTOM_ERROR', error: 'Unexpected PDOK response' } };
+        const docs = (result.data as IPdokResponse<IPdokCity>).response?.docs;
+        if (!docs) return { error: UNEXPECTED_RESPONSE };
+        const cities = docs.map((doc) => ({
+          name: doc.woonplaatsnaam,
+          code: doc.woonplaatscode,
+          municipality: doc.gemeentenaam,
+          province: doc.provincienaam,
+        }));
+        // PDOK also matches municipality and province words ("amst" finds Weesp), so names that
+        // start with the typed text go first.
+        const startsWithQuery = (city: INlCitySuggestion): boolean =>
+          city.name.toLowerCase().startsWith(q);
+        return {
+          data: [...cities.filter(startsWithQuery), ...cities.filter((c) => !startsWithQuery(c))],
+        };
+      },
+    }),
+    /**
+     * Street names within a city, or one row per house number once the line has a number. Without
+     * a number PDOK returns a street's addresses in no useful order, so names come first.
+     */
+    suggestNlStreets: build.query<INlStreetSuggestion[], INlStreetQuery>({
+      queryFn: async ({ cityCode, street, houseNumber }, queryApi, extraOptions) => {
+        const byNumber = houseNumber !== undefined;
+        const filters = [byNumber ? 'type:adres' : 'type:weg', `woonplaatscode:${cityCode}`];
+        const fields = byNumber ? ['straatnaam', 'huisnummer', 'postcode'] : ['straatnaam'];
+        const request = (q: string): ReturnType<typeof pdokBaseQuery> =>
+          pdokBaseQuery(
+            suggestPath(q, filters, fields, byNumber ? 50 : 10),
+            queryApi,
+            extraOptions
+          );
+
+        let result = await request(byNumber ? `${street} ${houseNumber}` : street);
+        if (result.error) return { error: result.error };
+        let body = result.data as IPdokResponse<IPdokStreet>;
+        // No fuzzy matching, but a search without hits comes with a corrected query.
+        const corrected = body.response?.numFound === 0 ? collationQuery(body) : undefined;
+        if (corrected) {
+          result = await request(corrected);
+          if (result.error) return { error: result.error };
+          body = result.data as IPdokResponse<IPdokStreet>;
         }
-        // The search is fuzzy: keep only exact matches of postcode and house number.
-        const options = response.docs
-          .filter((doc) => doc.postcode === postcode && doc.huisnummer === houseNumber)
-          .map(toOption);
-        return { data: { options, truncated: response.numFound > response.docs.length } };
+        const docs = body.response?.docs;
+        if (!docs) return { error: UNEXPECTED_RESPONSE };
+        return { data: byNumber ? toHouseNumbers(docs) : toStreetNames(docs) };
       },
     }),
   }),
 });
 
-export const { useLookupNlAddressQuery, useLazyLookupNlAddressQuery } = pdokApi;
+export const { useSuggestNlCitiesQuery, useLazySuggestNlCitiesQuery, useSuggestNlStreetsQuery } =
+  pdokApi;
