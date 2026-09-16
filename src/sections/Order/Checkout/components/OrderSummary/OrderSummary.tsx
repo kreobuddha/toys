@@ -17,7 +17,7 @@ const OrderSummary = ({
   deliveryCost,
   currency,
 }: OrderSummaryProps): ReactElement => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('orderSection');
   const locale = useLocale();
   const price = (minor: number): string => formatPrice(minor, currency, locale);
 

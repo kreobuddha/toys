@@ -1,33 +1,35 @@
 import './SortSelect.scss';
 import type { ChangeEvent, ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
-import { isSortOption, SORT_OPTIONS } from '@/api/productAttributes';
-import type { SortOption } from '@/api/types';
+import { SORT_OPTIONS } from '@/constants/productAttributes';
+import type { ProductSort } from '@/types/product';
 import Select from '@components/Select/Select';
 
 interface SortSelectProps {
   /** Sort from the URL, `null` when the URL has none. */
-  value: SortOption | null;
+  value: ProductSort | null;
   /** Sort the shop applies while `value` is `null`; `null` means the backend order. */
-  defaultValue: SortOption | null;
-  onChange: (value: SortOption) => void;
+  defaultValue: ProductSort | null;
+  onChange: (value: ProductSort) => void;
 }
 
 // Explicit map so the keys stay type-checked against the translation file.
 const SORT_LABELS = {
-  price_asc: 'shop.sortPriceAsc',
-  price_desc: 'shop.sortPriceDesc',
-} as const satisfies Record<SortOption, string>;
+  PRODUCT_SORT_PRICE_ASCENDING: 'shop.sortPriceAsc',
+  PRODUCT_SORT_PRICE_DESCENDING: 'shop.sortPriceDesc',
+} as const satisfies Record<ProductSort, string>;
+
+const isSort = (value: string): value is ProductSort => SORT_OPTIONS.includes(value as ProductSort);
 
 /**
  * Without a default the closed select reads "Sort by price" and the list offers only the two
  * price options, so the placeholder cannot be picked back; Reset clears the sort instead.
  */
 const SortSelect = ({ value, defaultValue, onChange }: SortSelectProps): ReactElement => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('shopSection');
 
   const handleChange = (event: ChangeEvent<HTMLSelectElement>): void => {
-    if (isSortOption(event.target.value)) onChange(event.target.value);
+    if (isSort(event.target.value)) onChange(event.target.value);
   };
 
   return (

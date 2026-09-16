@@ -1,0 +1,55 @@
+{
+  "shop": {
+    "title": "Shop",
+    "filters": "Filters",
+    "filtersCount": "Filters ({{count}})",
+    "category": "Category",
+    "age": "Age (years)",
+    "condition": "Condition",
+    "price": "Price",
+    "priceMin": "Minimum price",
+    "priceMax": "Maximum price",
+    "sort": "Sort by",
+    "sortPlaceholder": "Sort by price",
+    "sortPriceAsc": "Price: low to high",
+    "sortPriceDesc": "Price: high to low",
+    "reset": "Reset all",
+    "results_one": "{{count}} toy",
+    "results_other": "{{count}} toys",
+    "empty": "Nothing found. Try different filters.",
+    "outOfStock": "Sold out",
+    "inCart": "In cart"
+  },
+  "product": {
+    "backToShop": "Back to shop",
+    "category": "Category",
+    "age": "Age",
+    "condition": "Condition",
+    "outOfStock": "Sold out",
+    "inCart": "In cart",
+    "description": "Description",
+    "readArticle": "Read our article about this toy",
+    "notFound": "This toy is no longer available.",
+    "gallery": "Product images",
+    "showImage": "Show image {{index}}",
+    "enlarge": "Enlarge image"
+  },
+  "category": {
+    "building": "Building",
+    "puzzles": "Puzzles",
+    "sorters": "Sorters",
+    "practicalLife": "Practical life",
+    "pyramids": "Pyramids",
+    "balancing": "Balancing"
+  },
+  "condition": {
+    "new": "New",
+    "preloved": "Preloved"
+  },
+  "age": {
+    "group": "{{from}}–{{to}}",
+    "groupOpen": "{{from}}+",
+    "range": "{{from}}–{{to}} years",
+    "rangeOpen": "{{from}}+ years"
+  }
+}

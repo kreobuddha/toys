@@ -11,7 +11,7 @@ interface ProductGalleryProps {
 }
 
 const ProductGallery = ({ images, alt }: ProductGalleryProps): ReactElement => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('shopSection');
   // One index for the gallery and the lightbox: it opens on the photo shown and closes on the
   // photo the viewer stopped at.
   const lightbox = useLightbox(images.length);

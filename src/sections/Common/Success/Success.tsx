@@ -8,7 +8,7 @@ import { clearCart } from '@/features/cart/cartSlice';
 
 /** Landing page after Stripe redirects back; the cart is emptied here. */
 const Success = (): ReactElement => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('commonSection');
   const links = useLinks();
   const dispatch = useAppDispatch();
   const [searchParams] = useSearchParams();

@@ -5,7 +5,7 @@ import Faq from '@components/Faq/Faq';
 import SellForm from './components/SellForm/SellForm';
 
 const SellToUs = (): ReactElement => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('commonSection');
   const steps = t('sellToUs.how', { returnObjects: true });
   const faq = t('sellToUs.faq', { returnObjects: true });
 

@@ -1,14 +1,14 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '@/app/store';
-import type { IProduct } from '@/api/types';
+import type { IProduct } from '@/types/product';
 
 export interface ICartItem {
   productId: number;
   quantity: number;
   // Snapshot so the cart renders without refetching every product.
   title: string;
+  /** Euro cents, as the catalog prices it. */
   price: number;
-  currency: string;
   image?: string;
 }
 
@@ -50,9 +50,8 @@ const cartSlice = createSlice({
         productId: p.id,
         quantity: 1,
         title: p.title,
-        price: p.price,
-        currency: p.currency,
-        image: p.images[0],
+        price: p.price ?? 0,
+        image: p.imageUrls?.[0],
       });
     },
     setQuantity(state, action: PayloadAction<{ productId: number; quantity: number }>) {

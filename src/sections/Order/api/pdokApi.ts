@@ -1,9 +1,19 @@
 import { fetchBaseQuery, type FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
-import { api } from './api';
-import type { INlCity } from './nlAddress';
+import { api } from '@/api/api';
+import type {
+  INlCitySuggestion,
+  INlStreetQuery,
+  INlStreetSuggestion,
+  IPdokCity,
+  IPdokResponse,
+  IPdokStreet,
+} from '@/types/pdok';
 
 // PDOK Locatieserver: the government's free search over the BAG address register, no key, CORS
 // open. Findings: docs/research/nl-address-autocomplete.md.
+//
+// This is a third-party Solr API, not our backend, so its rows are reshaped here in `queryFn`
+// rather than left as they arrive.
 const PDOK_URL = 'https://api.pdok.nl/bzk/locatieserver/search/v3_1';
 
 // A base query of its own, so headers the shop API adds later (auth) never reach PDOK.
@@ -13,44 +23,6 @@ const UNEXPECTED_RESPONSE: FetchBaseQueryError = {
   status: 'CUSTOM_ERROR',
   error: 'Unexpected PDOK response',
 };
-
-export interface INlCitySuggestion extends INlCity {
-  municipality: string;
-  province: string;
-}
-
-export interface INlStreetQuery {
-  cityCode: string;
-  street: string;
-  /** With a house number the suggestions are addresses, without one street names. */
-  houseNumber?: number;
-}
-
-export interface INlStreetSuggestion {
-  street: string;
-  /** Absent for a street name suggested before the house number is typed. */
-  houseNumber?: number;
-  /** Distinct non-empty postcodes of the BAG addresses behind this row. */
-  postcodes: string[];
-}
-
-interface IPdokResponse<Doc> {
-  response?: { numFound: number; docs: Doc[] };
-  spellcheck?: { collations?: unknown[] };
-}
-
-interface IPdokCity {
-  woonplaatsnaam: string;
-  woonplaatscode: string;
-  gemeentenaam: string;
-  provincienaam: string;
-}
-
-interface IPdokStreet {
-  straatnaam: string;
-  huisnummer?: number;
-  postcode?: string;
-}
 
 /** A `/suggest` path; `fq` repeats, which a params object cannot express. */
 const suggestPath = (q: string, filters: string[], fields: string[], rows: number): string => {

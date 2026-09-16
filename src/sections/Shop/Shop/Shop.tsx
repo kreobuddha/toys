@@ -1,22 +1,29 @@
 import './Shop.scss';
 import { useMemo, type ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useGetProductFacetsQuery, useGetProductsQuery } from '@/api/api';
-import { toPriceBounds } from '@/api/productAttributes';
+import { PRICE_BOUNDS, PRICE_STEP } from '@/constants/productAttributes';
 import Pagination from '@components/Pagination/Pagination';
 import ProductCard from '@components/ProductCard/ProductCard';
+import { useGetProductsQuery } from '@sections/Shop/api/productsApi';
 import ShopFilters from './components/ShopFilters/ShopFilters';
 import SortSelect from './components/SortSelect/SortSelect';
 import { DEFAULT_SORT, PER_PAGE, useShopParams } from './useShopParams';
 
-const Shop = (): ReactElement => {
-  const { t } = useTranslation();
-  const { data: facets } = useGetProductFacetsQuery();
-  const priceBounds = useMemo(() => facets && toPriceBounds(facets.price), [facets]);
-  const { params, query, update, reset, activeCount } = useShopParams(priceBounds);
-  const { data, isLoading, isFetching, isError } = useGetProductsQuery(query);
+/** Bounds widened to whole slider steps, so both ends of the slider are reachable. */
+const PRICE_SLIDER_BOUNDS = {
+  min: Math.floor(PRICE_BOUNDS.min / PRICE_STEP) * PRICE_STEP,
+  max: Math.ceil(PRICE_BOUNDS.max / PRICE_STEP) * PRICE_STEP,
+};
 
-  const pageCount = data ? Math.ceil(data.total / PER_PAGE) : 0;
+const Shop = (): ReactElement => {
+  const { t } = useTranslation(['shopSection', 'translation']);
+  const priceBounds = useMemo(() => PRICE_SLIDER_BOUNDS, []);
+  const { params, requestParams, update, reset, activeCount } = useShopParams(priceBounds);
+  const { data, isLoading, isFetching, isError } = useGetProductsQuery(requestParams);
+
+  const products = data?.products ?? [];
+  const total = data?.total ?? 0;
+  const pageCount = Math.ceil(total / PER_PAGE);
 
   const handlePageChange = (page: number): void => {
     update({ page });
@@ -29,7 +36,6 @@ const Shop = (): ReactElement => {
       <div className="shop__layout">
         <ShopFilters
           params={params}
-          facets={facets}
           priceBounds={priceBounds}
           activeCount={activeCount}
           canReset={activeCount > 0 || params.sort !== null}
@@ -38,9 +44,7 @@ const Shop = (): ReactElement => {
         />
         <div className="shop__content">
           <div className="shop__toolbar">
-            <span className="shop__count">
-              {data ? t('shop.results', { count: data.total }) : ' '}
-            </span>
+            <span className="shop__count">{data ? t('shop.results', { count: total }) : ' '}</span>
             <SortSelect
               value={params.sort}
               defaultValue={DEFAULT_SORT}
@@ -48,14 +52,14 @@ const Shop = (): ReactElement => {
             />
           </div>
 
-          {isError && <p className="shop__state">{t('common.error')}</p>}
-          {isLoading && <p className="shop__state">{t('common.loading')}</p>}
-          {data && data.items.length === 0 && <p className="shop__state">{t('shop.empty')}</p>}
+          {isError && <p className="shop__state">{t('translation:common.error')}</p>}
+          {isLoading && <p className="shop__state">{t('translation:common.loading')}</p>}
+          {data && products.length === 0 && <p className="shop__state">{t('shop.empty')}</p>}
 
-          {data && data.items.length > 0 && (
+          {products.length > 0 && (
             <div className="shop__grid" aria-busy={isFetching}>
-              {data.items.map((p) => (
-                <ProductCard key={p.id} product={p} />
+              {products.map((product) => (
+                <ProductCard key={product.id} product={product} />
               ))}
             </div>
           )}

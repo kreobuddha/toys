@@ -4,19 +4,21 @@ import { Link } from 'react-router-dom';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import type { DeliveryMethod, ICreateOrderInput, INlAddress } from '@/api/types';
-import { useCreateOrderMutation } from '@/api/api';
-import { normalizePostcode, resolveStreet } from '@/api/nlAddress';
 import { useAppSelector } from '@/app/hooks';
 import { useLinks } from '@/app/useLinks';
+import { CURRENCY } from '@/constants/productAttributes';
 import { selectCartItems, selectCartTotal } from '@/features/cart/cartSlice';
 import { formatPrice, useLocale } from '@/i18n';
+import type { IAddress } from '@/types/address';
+import type { ICreateOrderRequest } from '@/types/order';
+import { normalizePostcode, resolveStreet } from '@/utils/nlAddress';
 import Button from '@components/Button/Button';
 import Input from '@components/Input/Input';
+import { useCreateOrderMutation } from '@sections/Order/api/ordersApi';
 import AddressFields, { type AddressFormValues } from './components/AddressFields/AddressFields';
 import { DEFAULT_CITY, loadSavedCity } from './components/AddressFields/savedCity';
 import OrderSummary from './components/OrderSummary/OrderSummary';
-import { DELIVERY_OPTIONS } from './deliveryOptions';
+import { DELIVERY_OPTIONS, toOrderDelivery, type DeliveryMethod } from './deliveryOptions';
 
 interface CheckoutForm extends AddressFormValues {
   name: string;
@@ -36,29 +38,27 @@ const DELIVERY_LABELS = {
 
 /**
  * The delivery address as the order carries it. The field rules have already checked the
- * formats; anything typed after the house number ("Dam 5B") joins the apartment.
+ * formats; anything typed after the house number ("Dam 5B") joins the addition.
  */
-const toNlAddress = (values: AddressFormValues): INlAddress | undefined => {
+const toAddress = (values: AddressFormValues): IAddress | undefined => {
   const parts = resolveStreet(values.addressLine, values.addressPick);
   if (!parts) return undefined;
-  const apartment = [parts.rest, values.apartment.trim()].filter(Boolean).join(' ');
+  const addition = [parts.rest, values.apartment.trim()].filter(Boolean).join(' ');
   return {
-    postcode: normalizePostcode(values.postcode),
+    postalCode: normalizePostcode(values.postcode),
     city: values.city.trim(),
     street: parts.street,
-    houseNumber: parts.houseNumber,
-    apartment: apartment || undefined,
-    country: 'NL',
+    houseNumber: String(parts.houseNumber),
+    houseNumberAddition: addition || undefined,
   };
 };
 
 const Checkout = (): ReactElement => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['orderSection', 'translation']);
   const locale = useLocale();
   const links = useLinks();
   const items = useAppSelector(selectCartItems);
   const subtotal = useAppSelector(selectCartTotal);
-  const currency = items[0]?.currency ?? 'EUR';
   const [createOrder] = useCreateOrderMutation();
   const [submitError, setSubmitError] = useState(false);
   const [initialCity] = useState(() => loadSavedCity() ?? DEFAULT_CITY);
@@ -90,15 +90,17 @@ const Checkout = (): ReactElement => {
 
   const onSubmit = async (values: CheckoutForm): Promise<void> => {
     setSubmitError(false);
-    const address = delivery.needsAddress ? toNlAddress(values) : undefined;
+    const address = delivery.needsAddress ? toAddress(values) : undefined;
     if (delivery.needsAddress && !address) return;
-    const input: ICreateOrderInput = {
-      items: items.map((i) => ({ productId: i.productId, quantity: i.quantity })),
-      contact: { name: values.name, email: values.email, phone: values.phone || undefined },
-      delivery: { method: values.delivery, address },
+    const order: ICreateOrderRequest = {
+      items: items.map((item) => ({ productId: item.productId, quantity: item.quantity })),
+      name: values.name,
+      email: values.email,
+      phone: values.phone || undefined,
+      delivery: toOrderDelivery(values.delivery, address),
     };
     try {
-      const { checkoutUrl } = await createOrder(input).unwrap();
+      const { checkoutUrl } = await createOrder(order).unwrap();
       // Stripe Checkout is hosted off-site, so a full navigation is intended.
       window.location.assign(checkoutUrl);
     } catch {
@@ -187,7 +189,7 @@ const Checkout = (): ReactElement => {
                     <span className="checkout__option-price">
                       {option.price === 0
                         ? t('checkout.free')
-                        : formatPrice(option.price, currency, locale)}
+                        : formatPrice(option.price, CURRENCY, locale)}
                     </span>
                   </label>
                 ))}
@@ -207,7 +209,7 @@ const Checkout = (): ReactElement => {
           items={items}
           subtotal={subtotal}
           deliveryCost={delivery.price}
-          currency={currency}
+          currency={CURRENCY}
         />
       </div>
     </section>

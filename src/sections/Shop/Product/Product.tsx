@@ -2,24 +2,27 @@ import './Product.scss';
 import type { ReactElement } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useGetProductQuery } from '@/api/api';
+import { CURRENCY } from '@/constants/productAttributes';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { useLinks } from '@/app/useLinks';
 import { addItem, selectCartItems } from '@/features/cart/cartSlice';
 import { formatPrice, useLocale } from '@/i18n';
 import { useProductLabels } from '@/i18n/productLabels';
 import Button from '@components/Button/Button';
+import { useGetProductQuery } from '@sections/Shop/api/productsApi';
 import ProductGallery from './components/ProductGallery/ProductGallery';
 
 const Product = (): ReactElement => {
   const { id = '' } = useParams();
-  const { t } = useTranslation();
+  const { t } = useTranslation(['shopSection', 'translation']);
   const locale = useLocale();
   const links = useLinks();
   const labels = useProductLabels();
   const dispatch = useAppDispatch();
-  const { data: product, isLoading, isError, error } = useGetProductQuery(id);
+  const { data, isLoading, isError, error } = useGetProductQuery(id);
+  const product = data?.product;
   const inCart = useAppSelector(selectCartItems).some((i) => i.productId === product?.id);
+  const inStock = (product?.availableQuantity ?? 0) > 0;
 
   const isNotFound =
     isError && typeof error === 'object' && 'status' in error && error.status === 404;
@@ -29,17 +32,16 @@ const Product = (): ReactElement => {
   };
 
   const renderState = (): ReactElement | null => {
-    if (isLoading) return <p className="product__state">{t('common.loading')}</p>;
+    if (isLoading) return <p className="product__state">{t('translation:common.loading')}</p>;
     if (isNotFound) return <p className="product__state">{t('product.notFound')}</p>;
-    if (isError) return <p className="product__state">{t('common.error')}</p>;
+    if (isError) return <p className="product__state">{t('translation:common.error')}</p>;
     return null;
   };
 
   const facts = product
     ? [
-        { label: t('product.category'), value: product.category.name },
-        { label: t('product.brand'), value: product.brand?.name },
-        { label: t('product.age'), value: labels.ageRange(product.ageGroups) },
+        { label: t('product.category'), value: labels.category(product.category) },
+        { label: t('product.age'), value: labels.ageRange(product.ageRange) },
         { label: t('product.condition'), value: labels.condition(product.condition) },
       ].filter((f): f is { label: string; value: string } => Boolean(f.value))
     : [];
@@ -54,15 +56,13 @@ const Product = (): ReactElement => {
 
       {product && (
         <div className="product__layout">
-          <ProductGallery key={product.id} images={product.images} alt={product.title} />
+          <ProductGallery key={product.id} images={product.imageUrls ?? []} alt={product.title} />
 
           <div className="product__details">
             <h1 className="product__title">{product.title}</h1>
             <p className="product__price">
-              {formatPrice(product.price, product.currency, locale)}
-              {!product.inStock && (
-                <span className="product__stock">{t('product.outOfStock')}</span>
-              )}
+              {formatPrice(product.price ?? 0, CURRENCY, locale)}
+              {!inStock && <span className="product__stock">{t('product.outOfStock')}</span>}
             </p>
 
             <dl className="product__facts">
@@ -76,20 +76,14 @@ const Product = (): ReactElement => {
 
             <Button
               variant={inCart ? 'secondary' : 'primary'}
-              disabled={!product.inStock}
+              disabled={!inStock}
               onClick={handleAdd}
             >
-              {inCart ? t('product.inCart') : t('common.addToCart')}
+              {inCart ? t('product.inCart') : t('translation:common.addToCart')}
             </Button>
 
             <h2 className="product__subtitle">{t('product.description')}</h2>
             <p className="product__description">{product.description}</p>
-
-            {product.articleSlug && (
-              <Link to={links.article(product.articleSlug)} className="product__article">
-                {t('product.readArticle')}
-              </Link>
-            )}
           </div>
         </div>
       )}

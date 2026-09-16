@@ -66,7 +66,7 @@ other import:
 
 ```tsx
 import './ProductCard.scss';
-import type { IProduct } from '@/api/types';
+import type { IProduct } from '@/types/product';
 ```
 
 **Why:** colocation — a component's markup, logic, and styles live together, so nothing needs
@@ -80,8 +80,9 @@ imported once in `main.tsx`; SCSS variables and media mixins are in `src/styles/
 and `src/styles/_mixins.scss`.
 
 Non-rendering modules are exceptions to the folder rule and stay as flat files: `src/app/`
-(store, router, route paths), `src/api/`, `src/features/` (redux slices), `src/i18n/`,
-`src/mocks/`, `src/styles/` and `src/main.tsx`. A page big enough to split keeps its own
+(store, router, route paths), `src/api/` (root API and base query), `src/types/`,
+`src/constants/`, `src/utils/`, `src/features/` (redux slices), `src/i18n/`, `src/styles/`
+and `src/main.tsx`. A section's endpoints live in `src/sections/<Section>/api/`. A page big enough to split keeps its own
 `components/` folder next to it (`src/sections/Shop/Shop/components/ShopFilters/`), and
 a hook used by one page only lives beside that page
 (`src/sections/Shop/Shop/useShopParams.ts`). Pages are grouped by section under
@@ -95,7 +96,7 @@ Anything outside the current folder is imported via an alias (configured in `vit
 
 ```ts
 import { useAppDispatch } from '@/app/hooks';
-import type { IProduct } from '@/api/types';
+import type { IProduct } from '@/types/product';
 import ProductCard from '@components/ProductCard/ProductCard';
 import Shop from '@sections/Shop/Shop/Shop';
 ```
@@ -114,7 +115,7 @@ lives, and makes moving a file trivial.
 ## 4. `I`-prefixed interfaces for domain types
 
 Interfaces representing data shapes — API payloads, stored state — are prefixed with `I`:
-`IProduct`, `IArticle`, `ICartItem` (in `src/api/types.ts` and feature slices). Component prop
+`IProduct`, `IArticle`, `ICartItem` (in `src/types/` and feature slices). Component prop
 interfaces (`ProductCardProps`, `PaginationProps`, ...) are **not** prefixed — this convention is
 specifically for data shapes, not React props. Union and alias types (`SortOption`,
 `ArticleBlock`) are not interfaces and carry no prefix either.
@@ -185,3 +186,100 @@ reports.
 
 **Why:** a fixed, non-negotiable formatting layer means style discussions never happen over
 whitespace.
+
+## 8. Endpoints live with their section, types in `src/types/`
+
+`src/api/api.ts` holds one root API created with `createApi` and no endpoints of its own. Every
+section attaches its endpoints to it:
+
+```
+src/sections/Shop/api/productsApi.ts      catalog endpoints
+src/sections/Journal/api/articlesApi.ts   journal endpoints
+src/sections/Order/api/ordersApi.ts       order endpoints
+src/sections/Common/api/sellToysApi.ts    toy intake endpoints
+```
+
+```ts
+export const productsApi = api.injectEndpoints({
+  endpoints: (build) => ({
+    getProducts: build.query<IListProductsResponse, IProductsParams>({
+      query: (data) => ({ url: '/products', method: 'get', params: data }),
+    }),
+  }),
+});
+
+export const { useGetProductsQuery } = productsApi;
+```
+
+Types are never declared next to the endpoint or inside a component. They live in `src/types/`,
+one file per domain (`product.ts`, `article.ts`, `order.ts`, `address.ts`, `sellToys.ts`), and are
+imported from there. Request parameter shapes are type aliases rather than interfaces, so they
+satisfy the `params` record of a request.
+
+**Why:** the root API file never grows into a catalogue of everything the app fetches, and a
+section carries its own data access — deleting a section deletes its endpoints with it. Splitting
+the types by domain keeps each file short enough to read whole and makes an unused type obvious.
+
+## 9. One request shape
+
+Every endpoint describes its request the same way, through the base query in
+`src/api/baseQuery.ts`:
+
+```ts
+query: (data) => ({ url: '/orders', method: 'post', params: { locale }, data });
+```
+
+`url` is the path after `VITE_API_URL`, `method` is lower case, `params` becomes the query string
+(an array value repeats its parameter) and `data` is the request body. No other keys, and no
+alternative spellings — `body`, bare string URLs or hand-built query strings do not appear in
+endpoint definitions.
+
+**Why:** every endpoint reads the same regardless of its verb, so scanning a section's API file
+takes no re-reading; the base query is the single place where request assembly can change.
+
+## 10. Backend responses are used as they arrive
+
+`transformResponse` and hand-written response mappers are not the way to fix a payload. Components
+read the fields the backend sends (`imageUrls`, `availableQuantity`, `PRODUCT_CONDITION_NEW`). If a
+response is awkward to consume, raise it with the backend and change the contract.
+
+The exception is a third-party API we do not own — PDOK's address search
+(`src/sections/Order/api/pdokApi.ts`) reshapes its Solr rows in `queryFn`, and says so in a
+comment.
+
+Building a **request** is not a transformation: assembling the order payload from form values, or
+mapping a URL alias to a protobuf enum, belongs on the frontend.
+
+**Why:** a mapping layer hides contract problems instead of fixing them, doubles the number of
+shapes in the app, and silently rots when the contract changes.
+
+## 11. No barrel files
+
+Modules are imported from the file that defines them. There is no `index.ts` re-exporting a
+folder, and no `sections.ts` listing every page — the router declares its lazy pages itself:
+
+```tsx
+const Shop = lazy(() => import('@sections/Shop/Shop/Shop'));
+```
+
+**Why:** a barrel adds a hop between the import and the definition, hides what a file actually
+depends on, and drags unrelated modules into a bundle.
+
+## 12. Translations are split by section
+
+`public/locales/<lng>/translation.json` holds only what is shared across the site: navigation,
+footer, cart, pagination and the strings of shared components. Everything else lives in the
+namespace of its section — `shopSection.json`, `orderSection.json`, `journalSection.json`,
+`commonSection.json` — and a page loads its own namespace:
+
+```tsx
+const { t } = useTranslation('shopSection');
+const { t } = useTranslation(['orderSection', 'translation']); // needs shared keys too
+t('translation:common.loading'); // a key from another namespace
+```
+
+Keys keep their group inside the file (`shop.title`, `checkout.pay`), and every namespace is typed
+in `src/i18n/i18next.d.ts`.
+
+**Why:** one language file per section can be translated, reviewed and shipped on its own, instead
+of pulling fragments out of a single growing file.
