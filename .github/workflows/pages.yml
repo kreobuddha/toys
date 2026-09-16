@@ -1,8 +1,8 @@
 name: Deploy to GitHub Pages
 
+# Manual only: the demo used to run on in-browser mocks, which the app no longer carries. Restore
+# the push trigger once the backend is reachable from a public URL and VITE_API_URL points at it.
 on:
-  push:
-    branches: [master]
   workflow_dispatch:
 
 permissions:
@@ -30,7 +30,6 @@ jobs:
         env:
           BASE_PATH: /toys/
           # Prototype runs on in-browser mocks until the backend is deployed.
-          VITE_USE_MOCKS: 'true'
           VITE_API_URL: https://api.example.com
       - uses: actions/upload-pages-artifact@v3
         with:
