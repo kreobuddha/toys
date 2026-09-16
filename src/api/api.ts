@@ -1,61 +1,13 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { toProductsParams } from './productAttributes';
-import type {
-  IArticle,
-  IProductFacets,
-  ICreateOrderInput,
-  ICreateOrderResponse,
-  IPaginated,
-  IProduct,
-  IProductsQuery,
-  ISellRequestInput,
-} from './types';
+import { createApi } from '@reduxjs/toolkit/query/react';
+import { baseQuery } from './baseQuery';
 
+/**
+ * Empty root API. Endpoints live next to the section that uses them and attach themselves with
+ * `api.injectEndpoints` (`src/sections/<Section>/api`), so this file never grows.
+ */
 export const api = createApi({
   reducerPath: 'api',
-  baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_API_URL }),
+  baseQuery,
   tagTypes: ['Product', 'Article'],
-  endpoints: (build) => ({
-    getProducts: build.query<IPaginated<IProduct>, IProductsQuery>({
-      query: (query) => ({ url: '/products', params: toProductsParams(query) }),
-      providesTags: (result) =>
-        result
-          ? [
-              ...result.items.map(({ id }) => ({ type: 'Product' as const, id })),
-              { type: 'Product', id: 'LIST' },
-            ]
-          : [{ type: 'Product', id: 'LIST' }],
-    }),
-    getProductFacets: build.query<IProductFacets, void>({
-      query: () => '/products/facets',
-    }),
-    getProduct: build.query<IProduct, string>({
-      query: (id) => `/products/${id}`,
-      providesTags: (_r, _e, id) => [{ type: 'Product', id }],
-    }),
-    getArticles: build.query<IArticle[], void>({
-      query: () => '/articles',
-      providesTags: [{ type: 'Article', id: 'LIST' }],
-    }),
-    getArticle: build.query<IArticle, string>({
-      query: (slug) => `/articles/${slug}`,
-      providesTags: (_r, _e, slug) => [{ type: 'Article', id: slug }],
-    }),
-    createOrder: build.mutation<ICreateOrderResponse, ICreateOrderInput>({
-      query: (body) => ({ url: '/orders', method: 'POST', body }),
-    }),
-    sendSellRequest: build.mutation<void, ISellRequestInput>({
-      query: (body) => ({ url: '/sell-requests', method: 'POST', body }),
-    }),
-  }),
+  endpoints: () => ({}),
 });
-
-export const {
-  useGetProductsQuery,
-  useGetProductFacetsQuery,
-  useGetProductQuery,
-  useGetArticlesQuery,
-  useGetArticleQuery,
-  useCreateOrderMutation,
-  useSendSellRequestMutation,
-} = api;

@@ -3,24 +3,22 @@ import { useEffect, useMemo, useState, type ReactElement } from 'react';
 import { useController, useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { skipToken } from '@reduxjs/toolkit/query/react';
+import type { IAddressPick, INlCity } from '@/types/nlAddress';
+import type { INlStreetQuery, INlStreetSuggestion } from '@/types/pdok';
 import {
   formatPostcode,
   isNlPostcode,
   normalizePostcode,
   normalizeStreetName,
   resolveStreet,
-  type IAddressPick,
-  type INlCity,
-} from '@/api/nlAddress';
+} from '@/utils/nlAddress';
+import Combobox, { type ComboboxOption } from '@components/Combobox/Combobox';
+import Input from '@components/Input/Input';
 import {
   useLazySuggestNlCitiesQuery,
   useSuggestNlCitiesQuery,
   useSuggestNlStreetsQuery,
-  type INlStreetQuery,
-  type INlStreetSuggestion,
-} from '@/api/pdokApi';
-import Combobox, { type ComboboxOption } from '@components/Combobox/Combobox';
-import Input from '@components/Input/Input';
+} from '@sections/Order/api/pdokApi';
 import { saveCity } from './savedCity';
 import { useDebouncedValue } from './useDebouncedValue';
 
@@ -94,7 +92,7 @@ const toPostcodeHint = (
  * checked, and the backend validates the address itself.
  */
 const AddressFields = (): ReactElement => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['orderSection', 'translation']);
   const {
     register,
     control,

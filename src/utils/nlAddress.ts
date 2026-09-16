@@ -1,4 +1,6 @@
-// Dutch address helpers shared by the checkout form and the mocks. No React here.
+// Dutch address helpers used by the checkout form. No React here.
+
+import type { IAddressLineParts, IAddressPick } from '@/types/nlAddress';
 
 // Four digits without a leading zero, then two letters; SA, SD and SS are never issued.
 const POSTCODE_PATTERN = /^[1-9][0-9]{3}(?!SA|SD|SS)[A-Z]{2}$/;
@@ -8,26 +10,6 @@ const POSTCODE_PATTERN = /^[1-9][0-9]{3}(?!SA|SD|SS)[A-Z]{2}$/;
 // the suggestion avoids that.
 const ADDRESS_LINE_PATTERN =
   /^([^,]*?\p{L}[^,]*?)\s+([1-9]\d{0,4})(?!\d)(?:[\s/-]*([\p{L}\d][^,]{0,19}))?$/iu;
-
-/** A locality (woonplaats) in the BAG. Its code is the only exact filter for its addresses. */
-export interface INlCity {
-  name: string;
-  code: string;
-}
-
-export interface IAddressLineParts {
-  street: string;
-  houseNumber: number;
-  /** What follows the house number: "B", "1A", "2 hoog". */
-  rest?: string;
-}
-
-/** A picked "street + house number" suggestion. */
-export interface IAddressPick {
-  label: string;
-  street: string;
-  houseNumber: number;
-}
 
 /** "1012 js" → "1012JS". Validate with isNlPostcode afterwards. */
 export const normalizePostcode = (value: string): string => value.replace(/\s+/g, '').toUpperCase();

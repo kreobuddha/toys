@@ -1,9 +1,9 @@
 import './ArticleBlocks.scss';
 import type { ReactElement } from 'react';
-import type { ArticleBlock } from '@/api/types';
+import type { IArticleBlock } from '@/types/article';
 
 interface ArticleBlocksProps {
-  blocks: ArticleBlock[];
+  blocks: IArticleBlock[];
 }
 
 /**
@@ -16,15 +16,15 @@ const ArticleBlocks = ({ blocks }: ArticleBlocksProps): ReactElement => {
       {blocks.map((block, index) => {
         switch (block.type) {
           case 'text':
-            return (
+            return block.html ? (
               <div
                 key={index}
                 className="article-blocks__text"
                 dangerouslySetInnerHTML={{ __html: block.html }}
               />
-            );
+            ) : null;
           case 'image':
-            return (
+            return block.src ? (
               <figure key={index} className="article-blocks__figure">
                 <img
                   src={block.src}
@@ -36,16 +36,16 @@ const ArticleBlocks = ({ blocks }: ArticleBlocksProps): ReactElement => {
                   <figcaption className="article-blocks__caption">{block.caption}</figcaption>
                 )}
               </figure>
-            );
+            ) : null;
           case 'quote':
-            return (
+            return block.text ? (
               <blockquote key={index} className="article-blocks__quote">
                 <p className="article-blocks__quote-text">{block.text}</p>
                 {block.author && (
                   <cite className="article-blocks__quote-author">{block.author}</cite>
                 )}
               </blockquote>
-            );
+            ) : null;
           default:
             return null;
         }

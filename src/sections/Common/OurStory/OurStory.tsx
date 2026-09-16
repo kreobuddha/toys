@@ -3,7 +3,7 @@ import type { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
 const OurStory = (): ReactElement => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('commonSection');
   const values = t('ourStory.values', { returnObjects: true });
 
   return (

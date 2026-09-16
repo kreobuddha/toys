@@ -1,4 +1,4 @@
-import type { INlCity } from '@/api/nlAddress';
+import type { INlCity } from '@/types/nlAddress';
 
 const STORAGE_KEY = 'toys.checkout.city';
 

@@ -1,9 +1,9 @@
 import './PriceFilter.scss';
 import { useEffect, useRef, useState, type ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
-import { PRICE_STEP } from '@/api/productAttributes';
-import type { IPriceRange } from '@/api/types';
+import { CURRENCY, PRICE_STEP } from '@/constants/productAttributes';
 import { formatPrice, useLocale } from '@/i18n';
+import type { IPriceRange } from '@/types/product';
 import RangeSlider, { type RangeValue } from '@components/RangeSlider/RangeSlider';
 
 interface PriceFilterProps {
@@ -13,8 +13,6 @@ interface PriceFilterProps {
   onChange: (min: number | undefined, max: number | undefined) => void;
 }
 
-// The shop sells in euros only, and the facets carry no currency.
-const CURRENCY = 'EUR';
 const COMMIT_DELAY_MS = 300;
 
 /**
@@ -22,7 +20,7 @@ const COMMIT_DELAY_MS = 300;
  * so a drag does not fire a request per step. An end left on its bound is no restriction.
  */
 const PriceFilter = ({ bounds, min, max, onChange }: PriceFilterProps): ReactElement => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('shopSection');
   const locale = useLocale();
   const [draft, setDraft] = useState({ min, max });
 

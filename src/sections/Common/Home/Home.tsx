@@ -2,18 +2,19 @@ import './Home.scss';
 import type { ReactElement } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useGetProductsQuery } from '@/api/api';
 import { useLinks } from '@/app/useLinks';
 import Button from '@components/Button/Button';
 import Faq from '@components/Faq/Faq';
 import ProductCard from '@components/ProductCard/ProductCard';
+import { useGetProductsQuery } from '@sections/Shop/api/productsApi';
 
 const FEATURED_COUNT = 4;
 
 const Home = (): ReactElement => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('commonSection');
   const links = useLinks();
-  const { data: featured } = useGetProductsQuery({ perPage: FEATURED_COUNT });
+  const { data } = useGetProductsQuery({ perPage: FEATURED_COUNT });
+  const featured = data?.products ?? [];
 
   const steps = t('home.how', { returnObjects: true });
   const faq = t('home.faq', { returnObjects: true });
@@ -49,7 +50,7 @@ const Home = (): ReactElement => {
         </ol>
       </section>
 
-      {featured && featured.items.length > 0 && (
+      {featured.length > 0 && (
         <section className="container home__section">
           <div className="home__section-head">
             <h2 className="home__heading">{t('home.featuredTitle')}</h2>
@@ -58,7 +59,7 @@ const Home = (): ReactElement => {
             </Link>
           </div>
           <div className="home__featured">
-            {featured.items.map((product) => (
+            {featured.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>

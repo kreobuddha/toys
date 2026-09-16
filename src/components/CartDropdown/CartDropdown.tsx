@@ -12,6 +12,7 @@ import {
   selectCartTotal,
   setQuantity,
 } from '@/features/cart/cartSlice';
+import { CURRENCY } from '@/constants/productAttributes';
 import { formatPrice, useLocale } from '@/i18n';
 import Button from '@components/Button/Button';
 
@@ -24,7 +25,6 @@ const CartDropdown = (): ReactElement => {
   const items = useAppSelector(selectCartItems);
   const count = useAppSelector(selectCartCount);
   const total = useAppSelector(selectCartTotal);
-  const currency = items[0]?.currency ?? 'EUR';
 
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -87,7 +87,7 @@ const CartDropdown = (): ReactElement => {
                       {item.title}
                     </Link>
                     <span className="cart-dropdown__price">
-                      {formatPrice(item.price * item.quantity, item.currency, locale)}
+                      {formatPrice(item.price * item.quantity, CURRENCY, locale)}
                     </span>
                   </div>
                   <div className="cart-dropdown__qty" aria-label={t('cart.quantity')}>
@@ -130,7 +130,7 @@ const CartDropdown = (): ReactElement => {
             </ul>
             <div className="cart-dropdown__footer">
               <span className="cart-dropdown__total">
-                {t('cart.total')}: <strong>{formatPrice(total, currency, locale)}</strong>
+                {t('cart.total')}: <strong>{formatPrice(total, CURRENCY, locale)}</strong>
               </span>
               <Link to={links.checkout} onClick={handleClose}>
                 <Button size="sm">{t('cart.checkout')}</Button>

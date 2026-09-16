@@ -2,11 +2,11 @@ import './SellForm.scss';
 import { useState, type ReactElement } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import type { ISellRequestInput } from '@/api/types';
-import { useSendSellRequestMutation } from '@/api/api';
+import type { ISubmitOfferRequest } from '@/types/sellToys';
 import Button from '@components/Button/Button';
 import Input from '@components/Input/Input';
 import Textarea from '@components/Textarea/Textarea';
+import { useSubmitOfferMutation } from '@sections/Common/api/sellToysApi';
 
 interface SellFormFields {
   name: string;
@@ -18,8 +18,8 @@ interface SellFormFields {
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const SellForm = (): ReactElement => {
-  const { t } = useTranslation();
-  const [sendRequest, { isLoading, isSuccess }] = useSendSellRequestMutation();
+  const { t } = useTranslation('commonSection');
+  const [submitOffer, { isLoading, isSuccess }] = useSubmitOfferMutation();
   const [submitError, setSubmitError] = useState(false);
   const {
     register,
@@ -31,14 +31,16 @@ const SellForm = (): ReactElement => {
 
   const onSubmit = async (form: SellFormFields): Promise<void> => {
     setSubmitError(false);
-    const input: ISellRequestInput = {
+    const offer: ISubmitOfferRequest = {
       name: form.name,
       email: form.email,
-      phone: form.phone || undefined,
-      message: form.message,
+      phone: form.phone,
+      // The form does not ask how the toys reach the shop yet, and the contract requires it.
+      deliveryInfo: { pickupPoint: {} },
+      description: form.message,
     };
     try {
-      await sendRequest(input).unwrap();
+      await submitOffer(offer).unwrap();
     } catch {
       setSubmitError(true);
     }
@@ -86,8 +88,10 @@ const SellForm = (): ReactElement => {
           type="tel"
           label={t('sellToUs.phone')}
           autoComplete="tel"
-          {...register('phone')}
+          aria-invalid={Boolean(errors.phone)}
+          {...register('phone', { required: t('sellToUs.required') })}
         />
+        {errors.phone && <span className="sell-form__error">{errors.phone.message}</span>}
       </div>
       <div className="sell-form__field">
         <Textarea
