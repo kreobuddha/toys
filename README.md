@@ -59,19 +59,24 @@ images under `/assets/`.
 Responses are used exactly as they arrive — no mapping layer — so the components read the
 contract's own field and enum names. Where the app touches the API:
 
-| File                                 | Role                                                       |
-| ------------------------------------ | ---------------------------------------------------------- |
-| `src/api/api.ts`                     | Root API; sections attach endpoints with `injectEndpoints` |
-| `src/api/baseQuery.ts`               | One request shape: `{ url, method, params, data }`         |
-| `src/sections/<Section>/api/`        | The section's endpoints                                    |
-| `src/types/`                         | Payload types, one file per domain                         |
-| `src/constants/productAttributes.ts` | Categories, ages, conditions and price bounds for the shop |
+| File                                 | Role                                                          |
+| ------------------------------------ | ------------------------------------------------------------- |
+| `src/api/api.ts`                     | Root API; sections attach endpoints with `injectEndpoints`    |
+| `src/api/baseQuery.ts`               | One request shape: `{ url, method, params, data }`            |
+| `src/sections/<Section>/api/`        | The section's endpoints                                       |
+| `src/types/`                         | Payload types, one file per domain                            |
+| `src/constants/productAttributes.ts` | Age and condition enums: order, bounds in months, URL aliases |
 
-Gaps in the contract the UI works around, all of them raised with the backend: there is no endpoint
-listing categories, brands or price bounds, so the filter panel is built from constants; products
-carry one age range and the catalog filters by one age range and one condition at a time, so those
-two filters are single-select; brands do not exist yet; and the order payload has no locale, so the
-payment provider cannot return the customer to a localized page.
+The filter panel is built from `GET /product-facets`: categories and brands come as slug and name
+with a product count, age ranges and conditions as enums with a count, and the catalog reports its
+own price bounds. Values with no products behind them are left out of the panel. Category and brand
+names come from the catalog; age and condition names live on the frontend, in `shopSection.json`,
+because they are protobuf enums and the interface is localized.
+
+Gaps in the contract the UI still works around, all of them raised with the backend: a product has
+no link to its journal article; errors carry no machine-readable reason, so a form cannot point at
+the field it broke; and the order payload has no locale, so the payment provider cannot return the
+customer to a localized page.
 
 ## Localization
 

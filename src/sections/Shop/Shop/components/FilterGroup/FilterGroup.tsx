@@ -6,24 +6,17 @@ interface FilterGroupProps<T extends string> {
   legend: string;
   options: readonly { value: T; label: string }[];
   selected: readonly T[];
-  /** One option at a time: picking another replaces it, picking the current one clears it. */
-  single?: boolean;
   onChange: (selected: T[]) => void;
 }
 
-/** A fieldset of checkboxes; any number of options can be picked unless `single` is set. */
+/** A fieldset of checkboxes; any number of options can be picked. */
 const FilterGroup = <T extends string>({
   legend,
   options,
   selected,
-  single = false,
   onChange,
 }: FilterGroupProps<T>): ReactElement => {
   const handleToggle = (value: T, checked: boolean): void => {
-    if (single) {
-      onChange(checked ? [value] : []);
-      return;
-    }
     onChange(checked ? [...selected, value] : selected.filter((item) => item !== value));
   };
 

@@ -25,7 +25,7 @@ const ProductCard = ({ product }: ProductCardProps): ReactElement => {
 
   const href = links.product(product.id);
   const inStock = (product.availableQuantity ?? 0) > 0;
-  const meta = [labels.category(product.category), labels.ageRange(product.ageRange)]
+  const meta = [product.categories?.[0]?.name, labels.ageSpan(product.ageRanges)]
     .filter(Boolean)
     .join(' · ');
 
