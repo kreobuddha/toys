@@ -1,5 +1,10 @@
 import { api } from '@/api/api';
-import type { IGetProductResponse, IListProductsResponse, IProductsParams } from '@/types/product';
+import type {
+  IGetProductFacetsResponse,
+  IGetProductResponse,
+  IListProductsResponse,
+  IProductsParams,
+} from '@/types/product';
 
 export const productsApi = api.injectEndpoints({
   endpoints: (build) => ({
@@ -17,7 +22,12 @@ export const productsApi = api.injectEndpoints({
       query: (id) => ({ url: `/products/${id}`, method: 'get' }),
       providesTags: (_result, _error, id) => [{ type: 'Product', id }],
     }),
+    /** Everything the filter panel offers: categories, brands, age ranges, conditions, prices. */
+    getProductFacets: build.query<IGetProductFacetsResponse, void>({
+      query: () => ({ url: '/product-facets', method: 'get' }),
+      providesTags: [{ type: 'Product', id: 'FACETS' }],
+    }),
   }),
 });
 
-export const { useGetProductsQuery, useGetProductQuery } = productsApi;
+export const { useGetProductsQuery, useGetProductQuery, useGetProductFacetsQuery } = productsApi;

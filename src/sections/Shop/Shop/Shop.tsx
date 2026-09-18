@@ -1,23 +1,21 @@
 import './Shop.scss';
 import { useMemo, type ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
-import { PRICE_BOUNDS, PRICE_STEP } from '@/constants/productAttributes';
+import { toPriceBounds } from '@/constants/productAttributes';
 import Pagination from '@components/Pagination/Pagination';
 import ProductCard from '@components/ProductCard/ProductCard';
-import { useGetProductsQuery } from '@sections/Shop/api/productsApi';
+import { useGetProductFacetsQuery, useGetProductsQuery } from '@sections/Shop/api/productsApi';
 import ShopFilters from './components/ShopFilters/ShopFilters';
 import SortSelect from './components/SortSelect/SortSelect';
 import { DEFAULT_SORT, PER_PAGE, useShopParams } from './useShopParams';
 
-/** Bounds widened to whole slider steps, so both ends of the slider are reachable. */
-const PRICE_SLIDER_BOUNDS = {
-  min: Math.floor(PRICE_BOUNDS.min / PRICE_STEP) * PRICE_STEP,
-  max: Math.ceil(PRICE_BOUNDS.max / PRICE_STEP) * PRICE_STEP,
-};
-
 const Shop = (): ReactElement => {
   const { t } = useTranslation(['shopSection', 'translation']);
-  const priceBounds = useMemo(() => PRICE_SLIDER_BOUNDS, []);
+  const { data: facets } = useGetProductFacetsQuery();
+  const priceBounds = useMemo(
+    () => (facets ? toPriceBounds(facets.minPrice, facets.maxPrice) : undefined),
+    [facets]
+  );
   const { params, requestParams, update, reset, activeCount } = useShopParams(priceBounds);
   const { data, isLoading, isFetching, isError } = useGetProductsQuery(requestParams);
 
@@ -36,6 +34,7 @@ const Shop = (): ReactElement => {
       <div className="shop__layout">
         <ShopFilters
           params={params}
+          facets={facets}
           priceBounds={priceBounds}
           activeCount={activeCount}
           canReset={activeCount > 0 || params.sort !== null}

@@ -1,21 +1,8 @@
-import type {
-  ProductAgeRange,
-  ProductCategory,
-  ProductCondition,
-  ProductSort,
-} from '@/types/product';
+import type { ProductAgeRange, ProductCondition, ProductSort } from '@/types/product';
 
-// Catalog attributes. The contract fixes them as protobuf enums and has no endpoint listing them,
-// so the filter panel and the shop URL are built from these constants.
-
-export const CATEGORIES: readonly ProductCategory[] = [
-  'PRODUCT_CATEGORY_BUILDING',
-  'PRODUCT_CATEGORY_PUZZLES',
-  'PRODUCT_CATEGORY_SORTERS',
-  'PRODUCT_CATEGORY_PRACTICAL_LIFE',
-  'PRODUCT_CATEGORY_PYRAMIDS',
-  'PRODUCT_CATEGORY_BALANCING',
-];
+// Catalog attributes that stay on the frontend. Categories and brands come from the catalog
+// (GetProductFacets and the products themselves); age ranges and conditions are protobuf enums,
+// so their order, their bounds in months and their localized names live here.
 
 export const AGE_RANGES: readonly ProductAgeRange[] = [
   'PRODUCT_AGE_RANGE_0_TO_6_MONTHS',
@@ -47,17 +34,8 @@ export const AGE_RANGE_MONTHS: Record<ProductAgeRange, { from: number; to?: numb
   PRODUCT_AGE_RANGE_3_YEARS_AND_UP: { from: 36 },
 };
 
-// Short aliases keep the shop URL readable: /en/shop?category=puzzles instead of the enum name.
-
-export const CATEGORY_SLUGS: Record<ProductCategory, string> = {
-  PRODUCT_CATEGORY_UNSPECIFIED: '',
-  PRODUCT_CATEGORY_BUILDING: 'building',
-  PRODUCT_CATEGORY_PUZZLES: 'puzzles',
-  PRODUCT_CATEGORY_SORTERS: 'sorters',
-  PRODUCT_CATEGORY_PRACTICAL_LIFE: 'practical-life',
-  PRODUCT_CATEGORY_PYRAMIDS: 'pyramids',
-  PRODUCT_CATEGORY_BALANCING: 'balancing',
-};
+// Short aliases keep the shop URL readable: /en/shop?age=12-18 instead of the enum name.
+// Categories and brands need none — their slugs are already short.
 
 export const AGE_RANGE_SLUGS: Record<ProductAgeRange, string> = {
   PRODUCT_AGE_RANGE_UNSPECIFIED: '',
@@ -86,10 +64,12 @@ const bySlug = <T extends string>(slugs: Record<T, string>, values: readonly T[]
   return (slug: string | null): T | undefined => (slug ? map.get(slug) : undefined);
 };
 
-export const categoryBySlug = bySlug(CATEGORY_SLUGS, CATEGORIES);
 export const ageRangeBySlug = bySlug(AGE_RANGE_SLUGS, AGE_RANGES);
 export const conditionBySlug = bySlug(CONDITION_SLUGS, CONDITIONS);
 export const sortBySlug = bySlug(SORT_SLUGS, SORT_OPTIONS);
+
+/** Brand the catalog gives toys without a public brand of their own. */
+export const OTHERS_BRAND_SLUG = 'others';
 
 /** The shop sells in euros only; the contract prices everything in euro cents. */
 export const CURRENCY = 'EUR';
@@ -97,5 +77,8 @@ export const CURRENCY = 'EUR';
 /** Price slider step in euro cents: whole euros. */
 export const PRICE_STEP = 100;
 
-/** Slider range, in euro cents. The contract has no endpoint reporting the catalog's own bounds. */
-export const PRICE_BOUNDS = { min: 0, max: 5000 };
+/** Catalog price bounds widened to whole slider steps, so both ends stay reachable. */
+export const toPriceBounds = (min = 0, max = 0): { min: number; max: number } => ({
+  min: Math.floor(min / PRICE_STEP) * PRICE_STEP,
+  max: Math.ceil(max / PRICE_STEP) * PRICE_STEP,
+});

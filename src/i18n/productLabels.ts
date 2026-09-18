@@ -1,21 +1,12 @@
 import { useTranslation } from 'react-i18next';
 import { AGE_RANGE_MONTHS } from '@/constants/productAttributes';
-import type { ProductAgeRange, ProductCategory, ProductCondition } from '@/types/product';
+import type { ProductAgeRange, ProductCondition } from '@/types/product';
 import { useLocale } from './LocaleContext';
 
-// Explicit maps so the keys stay type-checked against the translation file. Category, age and
-// condition names live on the frontend because the catalog contract has them as protobuf enums.
+// Age ranges and conditions are protobuf enums, so their names live here and follow the
+// interface language. Category and brand names come from the catalog itself.
 
-const CATEGORY_LABELS = {
-  PRODUCT_CATEGORY_UNSPECIFIED: '',
-  PRODUCT_CATEGORY_BUILDING: 'category.building',
-  PRODUCT_CATEGORY_PUZZLES: 'category.puzzles',
-  PRODUCT_CATEGORY_SORTERS: 'category.sorters',
-  PRODUCT_CATEGORY_PRACTICAL_LIFE: 'category.practicalLife',
-  PRODUCT_CATEGORY_PYRAMIDS: 'category.pyramids',
-  PRODUCT_CATEGORY_BALANCING: 'category.balancing',
-} as const satisfies Record<ProductCategory, string>;
-
+// Explicit map so the keys stay type-checked against the translation file.
 const CONDITION_LABELS = {
   PRODUCT_CONDITION_UNSPECIFIED: '',
   PRODUCT_CONDITION_NEW: 'condition.new',
@@ -25,10 +16,9 @@ const CONDITION_LABELS = {
 export interface ProductLabels {
   /** Age filter option in years: "0–0.5", "3+". */
   ageOption: (range: ProductAgeRange) => string;
-  /** Ages a product suits: "1–1.5 years", "3+ years". */
-  ageRange: (range?: ProductAgeRange) => string;
+  /** Ages a product suits, spanning all of its ranges: "1–2 years", "3+ years". */
+  ageSpan: (ranges?: readonly ProductAgeRange[]) => string;
   condition: (condition?: ProductCondition) => string;
-  category: (category?: ProductCategory) => string;
 }
 
 /** Display labels for product attributes in the current language. */
@@ -46,9 +36,15 @@ export const useProductLabels = (): ProductLabels => {
       : t('age.group', { from: years(from), to: years(to) });
   };
 
-  const ageRange = (range?: ProductAgeRange): string => {
-    if (!range || range === 'PRODUCT_AGE_RANGE_UNSPECIFIED') return '';
-    const { from, to } = AGE_RANGE_MONTHS[range];
+  const ageSpan = (ranges?: readonly ProductAgeRange[]): string => {
+    const bounds = (ranges ?? [])
+      .filter((range) => range !== 'PRODUCT_AGE_RANGE_UNSPECIFIED')
+      .map((range) => AGE_RANGE_MONTHS[range]);
+    if (bounds.length === 0) return '';
+    const from = Math.min(...bounds.map((bound) => bound.from));
+    // An open-ended range anywhere in the list opens the whole span.
+    const open = bounds.some((bound) => bound.to === undefined);
+    const to = open ? undefined : Math.max(...bounds.map((bound) => bound.to ?? 0));
     return to === undefined
       ? t('age.rangeOpen', { from: years(from) })
       : t('age.range', { from: years(from), to: years(to) });
@@ -59,10 +55,5 @@ export const useProductLabels = (): ProductLabels => {
     return key ? t(key) : '';
   };
 
-  const category = (value?: ProductCategory): string => {
-    const key = value && CATEGORY_LABELS[value];
-    return key ? t(key) : '';
-  };
-
-  return { ageOption, ageRange, condition, category };
+  return { ageOption, ageSpan, condition };
 };

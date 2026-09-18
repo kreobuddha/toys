@@ -2,7 +2,7 @@ import './Product.scss';
 import type { ReactElement } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { CURRENCY } from '@/constants/productAttributes';
+import { CURRENCY, OTHERS_BRAND_SLUG } from '@/constants/productAttributes';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { useLinks } from '@/app/useLinks';
 import { addItem, selectCartItems } from '@/features/cart/cartSlice';
@@ -40,8 +40,16 @@ const Product = (): ReactElement => {
 
   const facts = product
     ? [
-        { label: t('product.category'), value: labels.category(product.category) },
-        { label: t('product.age'), value: labels.ageRange(product.ageRange) },
+        {
+          label: t('product.category'),
+          value: (product.categories ?? []).map((category) => category.name).join(', '),
+        },
+        {
+          label: t('product.brand'),
+          // "Others" is the catalog's placeholder for a toy without a public brand.
+          value: product.brand?.slug === OTHERS_BRAND_SLUG ? '' : (product.brand?.name ?? ''),
+        },
+        { label: t('product.age'), value: labels.ageSpan(product.ageRanges) },
         { label: t('product.condition'), value: labels.condition(product.condition) },
       ].filter((f): f is { label: string; value: string } => Boolean(f.value))
     : [];

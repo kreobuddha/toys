@@ -4,6 +4,7 @@
     "filters": "Filters",
     "filtersCount": "Filters ({{count}})",
     "category": "Category",
+    "brand": "Brand",
     "age": "Age (years)",
     "condition": "Condition",
     "price": "Price",
@@ -23,6 +24,7 @@
   "product": {
     "backToShop": "Back to shop",
     "category": "Category",
+    "brand": "Brand",
     "age": "Age",
     "condition": "Condition",
     "outOfStock": "Sold out",
@@ -33,14 +35,6 @@
     "gallery": "Product images",
     "showImage": "Show image {{index}}",
     "enlarge": "Enlarge image"
-  },
-  "category": {
-    "building": "Building",
-    "puzzles": "Puzzles",
-    "sorters": "Sorters",
-    "practicalLife": "Practical life",
-    "pyramids": "Pyramids",
-    "balancing": "Balancing"
   },
   "condition": {
     "new": "New",
