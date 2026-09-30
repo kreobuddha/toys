@@ -1,22 +1,26 @@
 import './Checkout.scss';
-import { useState, type ReactElement } from 'react';
+import { useMemo, useState, type ReactElement } from 'react';
 import { Link } from 'react-router-dom';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import { useAppSelector } from '@/app/hooks';
+import { skipToken } from '@reduxjs/toolkit/query/react';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { useLinks } from '@/app/useLinks';
 import { CURRENCY } from '@/constants/productAttributes';
-import { selectCartItems, selectCartTotal } from '@/features/cart/cartSlice';
+import { applyCartPreview, selectCartItems, selectCartTotal } from '@/features/cart/cartSlice';
 import { formatPrice, useLocale } from '@/i18n';
+import { useErrorMessage, useValidationMessage } from '@/i18n/errorLabels';
 import type { IAddress } from '@/types/address';
-import type { ICreateOrderRequest } from '@/types/order';
+import type { ICreateOrderRequest, IPreviewCartRequest } from '@/types/order';
+import { errorReasonOf, fieldViolationsOf } from '@/utils/apiError';
 import { normalizePostcode, resolveStreet } from '@/utils/nlAddress';
 import Button from '@components/Button/Button';
 import Input from '@components/Input/Input';
-import { useCreateOrderMutation } from '@sections/Order/api/ordersApi';
+import { useCreateOrderMutation, usePreviewCartQuery } from '@sections/Order/api/ordersApi';
 import AddressFields, { type AddressFormValues } from './components/AddressFields/AddressFields';
 import { DEFAULT_CITY, loadSavedCity } from './components/AddressFields/savedCity';
+import CartNotice from './components/CartNotice/CartNotice';
 import OrderSummary from './components/OrderSummary/OrderSummary';
 import { DELIVERY_OPTIONS, toOrderDelivery, type DeliveryMethod } from './deliveryOptions';
 
@@ -28,6 +32,9 @@ interface CheckoutForm extends AddressFormValues {
 }
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+/** Rejected fields the form can point at; anything else reads as a general failure. */
+const FORM_FIELDS = ['name', 'email', 'phone'] as const;
 
 // Explicit map so the keys stay type-checked against the translation file.
 const DELIVERY_LABELS = {
@@ -55,13 +62,30 @@ const toAddress = (values: AddressFormValues): IAddress | undefined => {
 
 const Checkout = (): ReactElement => {
   const { t } = useTranslation(['orderSection', 'translation']);
+  const validationMessage = useValidationMessage();
+  const errorMessage = useErrorMessage();
   const locale = useLocale();
   const links = useLinks();
+  const dispatch = useAppDispatch();
   const items = useAppSelector(selectCartItems);
   const subtotal = useAppSelector(selectCartTotal);
   const [createOrder] = useCreateOrderMutation();
-  const [submitError, setSubmitError] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [initialCity] = useState(() => loadSavedCity() ?? DEFAULT_CITY);
+
+  const previewRequest = useMemo(
+    (): IPreviewCartRequest => ({
+      items: items.map((item) => ({
+        productId: item.productId,
+        quantity: item.quantity,
+        knownUnitPriceEuroCents: item.price,
+      })),
+    }),
+    [items]
+  );
+  const { data: preview } = usePreviewCartQuery(items.length > 0 ? previewRequest : skipToken);
+  const previews = preview?.items ?? [];
+  const cartChanged = previews.some((item) => (item.problemCodes ?? []).length > 0);
 
   const form = useForm<CheckoutForm>({
     defaultValues: {
@@ -89,7 +113,7 @@ const Checkout = (): ReactElement => {
   const delivery = DELIVERY_OPTIONS.find((o) => o.method === deliveryMethod) ?? DELIVERY_OPTIONS[0];
 
   const onSubmit = async (values: CheckoutForm): Promise<void> => {
-    setSubmitError(false);
+    setSubmitError(null);
     const address = delivery.needsAddress ? toAddress(values) : undefined;
     if (delivery.needsAddress && !address) return;
     const order: ICreateOrderRequest = {
@@ -103,8 +127,15 @@ const Checkout = (): ReactElement => {
       const { checkoutUrl } = await createOrder(order).unwrap();
       // Stripe Checkout is hosted off-site, so a full navigation is intended.
       window.location.assign(checkoutUrl);
-    } catch {
-      setSubmitError(true);
+    } catch (error) {
+      const violations = fieldViolationsOf(error);
+      const named = FORM_FIELDS.filter((field) => violations[field]);
+      for (const field of named) {
+        form.setError(field, { message: validationMessage(violations[field]) });
+      }
+      const reason = errorReasonOf(error);
+      const failure = reason ? errorMessage(reason) : t('checkout.submitError');
+      setSubmitError(named.length > 0 ? null : failure);
     }
   };
 
@@ -121,6 +152,11 @@ const Checkout = (): ReactElement => {
   return (
     <section className="container checkout">
       <h1 className="checkout__title">{t('checkout.title')}</h1>
+      <CartNotice
+        previews={previews}
+        items={items}
+        onApply={() => dispatch(applyCartPreview(previews))}
+      />
       <div className="checkout__layout">
         <FormProvider {...form}>
           <form className="checkout__form" onSubmit={handleSubmit(onSubmit)} noValidate>
@@ -197,9 +233,13 @@ const Checkout = (): ReactElement => {
               {delivery.needsAddress && <AddressFields />}
             </fieldset>
 
-            {submitError && <p className="checkout__error">{t('checkout.submitError')}</p>}
+            {submitError && <p className="checkout__error">{submitError}</p>}
 
-            <Button type="submit" disabled={isSubmitting} className="checkout__submit">
+            <Button
+              type="submit"
+              disabled={isSubmitting || cartChanged}
+              className="checkout__submit"
+            >
               {isSubmitting ? t('checkout.paying') : t('checkout.pay')}
             </Button>
           </form>

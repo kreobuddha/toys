@@ -31,6 +31,8 @@ export interface IArticleBlock {
 
 export interface IArticle extends IArticlePreview {
   blocks?: IArticleBlock[];
+  /** Catalog products this article is about, ordered for display. */
+  relatedProductIds?: number[];
 }
 
 /** A type alias, not an interface, so it satisfies the `params` record of a request. */

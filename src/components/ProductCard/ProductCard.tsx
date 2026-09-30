@@ -23,7 +23,7 @@ const ProductCard = ({ product }: ProductCardProps): ReactElement => {
   const dispatch = useAppDispatch();
   const inCart = useAppSelector(selectCartItems).some((item) => item.productId === product.id);
 
-  const href = links.product(product.id);
+  const href = links.product(product.slug);
   const inStock = (product.availableQuantity ?? 0) > 0;
   const meta = [product.categories?.[0]?.name, labels.ageSpan(product.ageRanges)]
     .filter(Boolean)
@@ -49,7 +49,7 @@ const ProductCard = ({ product }: ProductCardProps): ReactElement => {
         </h3>
         <div className="product-card__bottom">
           <span className="product-card__price">
-            {formatPrice(product.price ?? 0, CURRENCY, locale)}
+            {formatPrice(product.priceEuroCents ?? 0, CURRENCY, locale)}
           </span>
           <Button
             variant={inCart ? 'secondary' : 'primary'}

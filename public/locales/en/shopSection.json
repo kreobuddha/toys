@@ -28,13 +28,13 @@
     "age": "Age",
     "condition": "Condition",
     "outOfStock": "Sold out",
-    "inCart": "In cart",
     "description": "Description",
     "readArticle": "Read our article about this toy",
     "notFound": "This toy is no longer available.",
     "gallery": "Product images",
     "showImage": "Show image {{index}}",
-    "enlarge": "Enlarge image"
+    "enlarge": "Enlarge image",
+    "inCart": "In cart"
   },
   "condition": {
     "new": "New",

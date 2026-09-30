@@ -2,7 +2,9 @@ import './SellForm.scss';
 import { useState, type ReactElement } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { useErrorMessage, useValidationMessage } from '@/i18n/errorLabels';
 import type { ISubmitOfferRequest } from '@/types/sellToys';
+import { errorReasonOf, fieldViolationsOf } from '@/utils/apiError';
 import Button from '@components/Button/Button';
 import Input from '@components/Input/Input';
 import Textarea from '@components/Textarea/Textarea';
@@ -17,20 +19,26 @@ interface SellFormFields {
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+/** Rejected fields the form can point at; anything else reads as a general failure. */
+const FORM_FIELDS = ['name', 'email', 'phone'] as const;
+
 const SellForm = (): ReactElement => {
   const { t } = useTranslation('commonSection');
+  const validationMessage = useValidationMessage();
+  const errorMessage = useErrorMessage();
   const [submitOffer, { isLoading, isSuccess }] = useSubmitOfferMutation();
-  const [submitError, setSubmitError] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<SellFormFields>({
     defaultValues: { name: '', email: '', phone: '', message: '' },
   });
 
   const onSubmit = async (form: SellFormFields): Promise<void> => {
-    setSubmitError(false);
+    setSubmitError(null);
     const offer: ISubmitOfferRequest = {
       name: form.name,
       email: form.email,
@@ -41,8 +49,15 @@ const SellForm = (): ReactElement => {
     };
     try {
       await submitOffer(offer).unwrap();
-    } catch {
-      setSubmitError(true);
+    } catch (error) {
+      const violations = fieldViolationsOf(error);
+      const named = FORM_FIELDS.filter((field) => violations[field]);
+      for (const field of named) {
+        setError(field, { message: validationMessage(violations[field]) });
+      }
+      const reason = errorReasonOf(error);
+      const failure = reason ? errorMessage(reason) : t('sellToUs.error');
+      setSubmitError(named.length > 0 ? null : failure);
     }
   };
 
@@ -104,7 +119,7 @@ const SellForm = (): ReactElement => {
         {errors.message && <span className="sell-form__error">{errors.message.message}</span>}
       </div>
 
-      {submitError && <p className="sell-form__error">{t('sellToUs.error')}</p>}
+      {submitError && <p className="sell-form__error">{submitError}</p>}
 
       <Button type="submit" disabled={isLoading}>
         {isLoading ? t('sellToUs.sending') : t('sellToUs.submit')}

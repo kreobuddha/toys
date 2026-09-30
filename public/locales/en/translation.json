@@ -40,5 +40,19 @@
     "next": "Next image",
     "counter": "{{current}} / {{total}}",
     "zoom": "Zoom"
+  },
+  "validation": {
+    "required": "This field is required.",
+    "mustBePositive": "Enter a number greater than zero.",
+    "outOfRange": "This value is out of range.",
+    "invalid": "Check this field and try again.",
+    "duplicate": "This value is already used."
+  },
+  "errors": {
+    "unknown": "Something went wrong. Please try again.",
+    "productNotFound": "This toy is no longer available.",
+    "articleNotFound": "This article does not exist.",
+    "orderNotFound": "We cannot find this order.",
+    "cartTotalTooLarge": "This order is too large to pay for online. Remove a few toys and try again."
   }
 }

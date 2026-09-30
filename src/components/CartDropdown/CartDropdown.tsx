@@ -79,13 +79,17 @@ const CartDropdown = (): ReactElement => {
                     <img src={item.image} alt="" className="cart-dropdown__thumb" loading="lazy" />
                   )}
                   <div className="cart-dropdown__info">
-                    <Link
-                      to={links.product(item.productId)}
-                      className="cart-dropdown__name"
-                      onClick={handleClose}
-                    >
-                      {item.title}
-                    </Link>
+                    {item.slug ? (
+                      <Link
+                        to={links.product(item.slug)}
+                        className="cart-dropdown__name"
+                        onClick={handleClose}
+                      >
+                        {item.title}
+                      </Link>
+                    ) : (
+                      <span className="cart-dropdown__name">{item.title}</span>
+                    )}
                     <span className="cart-dropdown__price">
                       {formatPrice(item.price * item.quantity, CURRENCY, locale)}
                     </span>

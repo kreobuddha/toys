@@ -13,7 +13,7 @@ const Shop = (): ReactElement => {
   const { t } = useTranslation(['shopSection', 'translation']);
   const { data: facets } = useGetProductFacetsQuery();
   const priceBounds = useMemo(
-    () => (facets ? toPriceBounds(facets.minPrice, facets.maxPrice) : undefined),
+    () => (facets ? toPriceBounds(facets.minPriceEuroCents, facets.maxPriceEuroCents) : undefined),
     [facets]
   );
   const { params, requestParams, update, reset, activeCount } = useShopParams(priceBounds);

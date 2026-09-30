@@ -1,11 +1,11 @@
 import type { Locale } from '@/i18n/locales';
 
 // Route segments relative to the locale prefix. Used both to declare the
-// router and, via useLinks(), to build absolute hrefs like /en/shop/42.
+// router and, via useLinks(), to build absolute hrefs like /en/shop/rainbow-stacker.
 export const paths = {
   home: '',
   shop: 'shop',
-  product: (id: string | number = ':id'): string => `shop/${id}`,
+  product: (slug = ':slug'): string => `shop/${slug}`,
   checkout: 'checkout',
   orderSuccess: 'order/success',
   sellToUs: 'sell-to-us',
@@ -20,7 +20,7 @@ export const localePath = (locale: Locale, path = ''): string =>
 export interface Links {
   home: string;
   shop: string;
-  product: (id: string | number) => string;
+  product: (slug: string) => string;
   checkout: string;
   orderSuccess: string;
   sellToUs: string;
@@ -34,7 +34,7 @@ export const buildLinks = (locale: Locale): Links => {
   return {
     home: to(paths.home),
     shop: to(paths.shop),
-    product: (id) => to(paths.product(id)),
+    product: (slug) => to(paths.product(slug)),
     checkout: to(paths.checkout),
     orderSuccess: to(paths.orderSuccess),
     sellToUs: to(paths.sellToUs),

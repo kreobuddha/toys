@@ -3,10 +3,16 @@ import type {
   ICreateOrderRequest,
   ICreateOrderResponse,
   IGetPaymentStatusResponse,
+  IPreviewCartRequest,
+  IPreviewCartResponse,
 } from '@/types/order';
 
 export const ordersApi = api.injectEndpoints({
   endpoints: (build) => ({
+    /** Current prices and availability; it reserves nothing, CreateOrder checks again. */
+    previewCart: build.query<IPreviewCartResponse, IPreviewCartRequest>({
+      query: (data) => ({ url: '/cart/preview', method: 'post', data }),
+    }),
     createOrder: build.mutation<ICreateOrderResponse, ICreateOrderRequest>({
       query: (data) => ({ url: '/orders', method: 'post', data }),
     }),
@@ -16,4 +22,5 @@ export const ordersApi = api.injectEndpoints({
   }),
 });
 
-export const { useCreateOrderMutation, useGetOrderPaymentStatusQuery } = ordersApi;
+export const { usePreviewCartQuery, useCreateOrderMutation, useGetOrderPaymentStatusQuery } =
+  ordersApi;
