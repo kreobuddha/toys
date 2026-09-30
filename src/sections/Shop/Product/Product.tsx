@@ -2,14 +2,15 @@ import './Product.scss';
 import type { ReactElement } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { CURRENCY, OTHERS_BRAND_SLUG } from '@/constants/productAttributes';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { useLinks } from '@/app/useLinks';
-import { addItem, selectCartItems } from '@/features/cart/cartSlice';
+import { CURRENCY, OTHERS_BRAND_SLUG } from '@/constants/productAttributes';
+import { addItem, selectCartItems, setQuantity } from '@/features/cart/cartSlice';
 import { formatPrice, useLocale } from '@/i18n';
 import { useProductLabels } from '@/i18n/productLabels';
 import { errorReasonOf, httpStatusOf } from '@/utils/apiError';
 import Button from '@components/Button/Button';
+import QuantityStepper from '@components/QuantityStepper/QuantityStepper';
 import { useGetProductQuery } from '@sections/Shop/api/productsApi';
 import ProductGallery from './components/ProductGallery/ProductGallery';
 
@@ -22,13 +23,17 @@ const Product = (): ReactElement => {
   const dispatch = useAppDispatch();
   const { data, isLoading, isError, error } = useGetProductQuery(slug);
   const product = data?.product;
-  const inCart = useAppSelector(selectCartItems).some((i) => i.productId === product?.id);
+  const cartItem = useAppSelector(selectCartItems).find((item) => item.productId === product?.id);
   const inStock = (product?.availableQuantity ?? 0) > 0;
 
   const isNotFound = errorReasonOf(error)?.endsWith('_NOT_FOUND') || httpStatusOf(error) === 404;
 
   const handleAdd = (): void => {
     if (product) dispatch(addItem(product));
+  };
+
+  const handleQuantity = (quantity: number): void => {
+    if (product) dispatch(setQuantity({ productId: product.id, quantity }));
   };
 
   const renderState = (): ReactElement | null => {
@@ -82,13 +87,18 @@ const Product = (): ReactElement => {
               ))}
             </dl>
 
-            <Button
-              variant={inCart ? 'secondary' : 'primary'}
-              disabled={!inStock}
-              onClick={handleAdd}
-            >
-              {inCart ? t('product.inCart') : t('translation:common.addToCart')}
-            </Button>
+            {cartItem ? (
+              <QuantityStepper
+                value={cartItem.quantity}
+                max={product.availableQuantity}
+                onChange={handleQuantity}
+                className="product__quantity"
+              />
+            ) : (
+              <Button disabled={!inStock} onClick={handleAdd}>
+                {t('translation:common.addToCart')}
+              </Button>
+            )}
 
             <h2 className="product__subtitle">{t('product.description')}</h2>
             <p className="product__description">{product.description}</p>

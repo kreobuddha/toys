@@ -30,6 +30,8 @@
     "empty": "Your cart is empty.",
     "remove": "Remove",
     "quantity": "Quantity",
+    "decrease": "One fewer",
+    "increase": "One more",
     "total": "Total",
     "checkout": "Checkout"
   },
