@@ -75,3 +75,45 @@ export interface IPickupPoint {
 export interface IPickupPointsResponse {
   pickupPoints?: IPickupPoint[];
 }
+
+export type CartProblemKind =
+  | 'CART_PROBLEM_KIND_UNSPECIFIED'
+  | 'CART_PROBLEM_KIND_PRODUCT_GONE'
+  | 'CART_PROBLEM_KIND_OUT_OF_STOCK'
+  | 'CART_PROBLEM_KIND_QUANTITY_REDUCED'
+  | 'CART_PROBLEM_KIND_PRICE_CHANGED';
+
+export interface ICartItemInput {
+  productId: number;
+  quantity: number;
+  /** The price the shop last showed; a difference comes back as PRICE_CHANGED. */
+  knownUnitPriceEuroCents?: number;
+}
+
+export interface IPreviewCartRequest {
+  items: ICartItemInput[];
+}
+
+export interface ICartItemDetails {
+  title: string;
+  unitPriceEuroCents?: number;
+  /** The smaller of the requested and the available quantity. */
+  purchasableQuantity?: number;
+  availableQuantity?: number;
+  imageUrl?: string;
+  totalEuroCents?: number;
+}
+
+export interface ICartItemPreview {
+  productId: number;
+  requestedQuantity?: number;
+  /** Null once the product has left the catalog. */
+  current?: ICartItemDetails | null;
+  problemCodes?: CartProblemKind[];
+}
+
+export interface IPreviewCartResponse {
+  items?: ICartItemPreview[];
+  /** Delivery is not included. */
+  subtotalEuroCents?: number;
+}

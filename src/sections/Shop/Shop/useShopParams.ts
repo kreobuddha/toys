@@ -175,8 +175,8 @@ export const useShopParams = (priceBounds?: IPriceRange): UseShopParamsResult =>
       'filter.brandSlugs': params.brands.length > 0 ? params.brands : undefined,
       'filter.ageRanges': params.ageRanges.length > 0 ? params.ageRanges : undefined,
       'filter.conditions': params.conditions.length > 0 ? params.conditions : undefined,
-      'filter.minPrice': params.minPrice,
-      'filter.maxPrice': params.maxPrice,
+      'filter.minPriceEuroCents': params.minPrice,
+      'filter.maxPriceEuroCents': params.maxPrice,
     }),
     [params]
   );

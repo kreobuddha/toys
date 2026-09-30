@@ -18,8 +18,7 @@
     "results_one": "{{count}} toy",
     "results_other": "{{count}} toys",
     "empty": "Nothing found. Try different filters.",
-    "outOfStock": "Sold out",
-    "inCart": "In cart"
+    "outOfStock": "Sold out"
   },
   "product": {
     "backToShop": "Back to shop",
@@ -28,7 +27,6 @@
     "age": "Age",
     "condition": "Condition",
     "outOfStock": "Sold out",
-    "inCart": "In cart",
     "description": "Description",
     "readArticle": "Read our article about this toy",
     "notFound": "This toy is no longer available.",

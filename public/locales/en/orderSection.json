@@ -33,6 +33,12 @@
     "paying": "Redirecting to payment…",
     "required": "This field is required",
     "invalidEmail": "Enter a valid email address",
-    "submitError": "Could not create the order. Please try again."
+    "submitError": "Could not create the order. Please try again.",
+    "cartChanged": "The catalog has changed since you filled your cart:",
+    "cartProblemGone": "This toy is no longer in the catalog and will be removed.",
+    "cartProblemOutOfStock": "Sold out — it will be removed from your cart.",
+    "cartProblemQuantity": "Only {{quantity}} left of the {{requested}} you asked for.",
+    "cartProblemPrice": "The price is now {{price}} instead of {{previousPrice}}.",
+    "cartUpdate": "Update the cart"
   }
 }

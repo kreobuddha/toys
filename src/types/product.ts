@@ -32,8 +32,7 @@ export interface IProduct {
   slug: string;
   title: string;
   description?: string;
-  /** Euro cents. */
-  price?: number;
+  priceEuroCents?: number;
   imageUrls?: string[];
   categories?: IProductCategory[];
   ageRanges?: ProductAgeRange[];
@@ -41,6 +40,8 @@ export interface IProduct {
   /** Toys without a public brand carry the reserved "others" brand rather than no brand. */
   brand?: IProductBrand;
   availableQuantity?: number;
+  /** Slug of the journal article about this toy, when there is one. */
+  relatedArticleSlug?: string;
 }
 
 /**
@@ -52,12 +53,14 @@ export type IProductsParams = {
   page?: number;
   perPage?: number;
   sort?: ProductSort;
+  /** At most 50; the catalog returns them in the order they are sent, ahead of `sort`. */
+  'filter.productIds'?: number[];
   'filter.categorySlugs'?: string[];
   'filter.brandSlugs'?: string[];
   'filter.ageRanges'?: ProductAgeRange[];
   'filter.conditions'?: ProductCondition[];
-  'filter.minPrice'?: number;
-  'filter.maxPrice'?: number;
+  'filter.minPriceEuroCents'?: number;
+  'filter.maxPriceEuroCents'?: number;
 };
 
 export interface IListProductsResponse {
@@ -102,8 +105,8 @@ export interface IGetProductFacetsResponse {
   brands?: IProductBrandFacet[];
   ageRanges?: IProductAgeRangeFacet[];
   conditions?: IProductConditionFacet[];
-  minPrice?: number; // euro cents
-  maxPrice?: number;
+  minPriceEuroCents?: number;
+  maxPriceEuroCents?: number;
 }
 
 /** Price bounds in euro cents, used by the shop's price slider. */

@@ -15,6 +15,7 @@ import {
 import { CURRENCY } from '@/constants/productAttributes';
 import { formatPrice, useLocale } from '@/i18n';
 import Button from '@components/Button/Button';
+import QuantityStepper from '@components/QuantityStepper/QuantityStepper';
 
 /** Header cart: a toggle with a badge and a dropdown panel listing the items. */
 const CartDropdown = (): ReactElement => {
@@ -79,44 +80,28 @@ const CartDropdown = (): ReactElement => {
                     <img src={item.image} alt="" className="cart-dropdown__thumb" loading="lazy" />
                   )}
                   <div className="cart-dropdown__info">
-                    <Link
-                      to={links.product(item.productId)}
-                      className="cart-dropdown__name"
-                      onClick={handleClose}
-                    >
-                      {item.title}
-                    </Link>
+                    {item.slug ? (
+                      <Link
+                        to={links.product(item.slug)}
+                        className="cart-dropdown__name"
+                        onClick={handleClose}
+                      >
+                        {item.title}
+                      </Link>
+                    ) : (
+                      <span className="cart-dropdown__name">{item.title}</span>
+                    )}
                     <span className="cart-dropdown__price">
                       {formatPrice(item.price * item.quantity, CURRENCY, locale)}
                     </span>
                   </div>
-                  <div className="cart-dropdown__qty" aria-label={t('cart.quantity')}>
-                    <button
-                      type="button"
-                      className="cart-dropdown__qty-button"
-                      aria-label="−"
-                      onClick={() =>
-                        dispatch(
-                          setQuantity({ productId: item.productId, quantity: item.quantity - 1 })
-                        )
-                      }
-                    >
-                      −
-                    </button>
-                    <span className="cart-dropdown__qty-value">{item.quantity}</span>
-                    <button
-                      type="button"
-                      className="cart-dropdown__qty-button"
-                      aria-label="+"
-                      onClick={() =>
-                        dispatch(
-                          setQuantity({ productId: item.productId, quantity: item.quantity + 1 })
-                        )
-                      }
-                    >
-                      +
-                    </button>
-                  </div>
+                  <QuantityStepper
+                    value={item.quantity}
+                    size="sm"
+                    onChange={(quantity) =>
+                      dispatch(setQuantity({ productId: item.productId, quantity }))
+                    }
+                  />
                   <button
                     type="button"
                     className="cart-dropdown__remove"

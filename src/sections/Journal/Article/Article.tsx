@@ -4,8 +4,10 @@ import { Link, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useLinks } from '@/app/useLinks';
 import { formatDate, useLocale } from '@/i18n';
+import { errorReasonOf, httpStatusOf } from '@/utils/apiError';
 import { useGetArticleQuery } from '@sections/Journal/api/articlesApi';
 import ArticleBlocks from './components/ArticleBlocks/ArticleBlocks';
+import RelatedProducts from './components/RelatedProducts/RelatedProducts';
 
 const Article = (): ReactElement => {
   const { slug = '' } = useParams();
@@ -15,8 +17,7 @@ const Article = (): ReactElement => {
   const { data, isLoading, isError, error } = useGetArticleQuery(slug);
   const article = data?.article;
 
-  const isNotFound =
-    isError && typeof error === 'object' && 'status' in error && error.status === 404;
+  const isNotFound = errorReasonOf(error)?.endsWith('_NOT_FOUND') || httpStatusOf(error) === 404;
 
   const renderState = (): ReactElement | null => {
     if (isLoading) return <p className="article__state">{t('translation:common.loading')}</p>;
@@ -48,6 +49,7 @@ const Article = (): ReactElement => {
             <img src={article.coverImageUrl} alt="" className="article__cover" />
           )}
           <ArticleBlocks blocks={article.blocks ?? []} />
+          <RelatedProducts productIds={article.relatedProductIds ?? []} />
           <footer className="article__footer">
             <Link to={links.shop} className="article__shop">
               {t('journal.relatedToys')} →

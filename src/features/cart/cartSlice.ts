@@ -1,5 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '@/app/store';
+import type { ICartItemPreview } from '@/types/order';
 import type { IProduct } from '@/types/product';
 
 export interface ICartItem {
@@ -7,6 +8,8 @@ export interface ICartItem {
   quantity: number;
   // Snapshot so the cart renders without refetching every product.
   title: string;
+  /** Absent in carts stored before slugs reached the routes. */
+  slug?: string;
   /** Euro cents, as the catalog prices it. */
   price: number;
   image?: string;
@@ -50,7 +53,8 @@ const cartSlice = createSlice({
         productId: p.id,
         quantity: 1,
         title: p.title,
-        price: p.price ?? 0,
+        slug: p.slug,
+        price: p.priceEuroCents ?? 0,
         image: p.imageUrls?.[0],
       });
     },
@@ -70,10 +74,28 @@ const cartSlice = createSlice({
     clearCart(state) {
       state.items = [];
     },
+    /** Takes prices and quantities from the catalog; gone and sold-out toys leave the cart. */
+    applyCartPreview(state, action: PayloadAction<ICartItemPreview[]>) {
+      const previews = new Map(action.payload.map((preview) => [preview.productId, preview]));
+      state.items = state.items.flatMap((item) => {
+        const current = previews.get(item.productId)?.current;
+        const quantity = current?.purchasableQuantity ?? 0;
+        if (!current || quantity <= 0) return [];
+        return [
+          {
+            ...item,
+            quantity,
+            title: current.title,
+            price: current.unitPriceEuroCents ?? item.price,
+            image: current.imageUrl ?? item.image,
+          },
+        ];
+      });
+    },
   },
 });
 
-export const { addItem, setQuantity, removeItem, clearCart } = cartSlice.actions;
+export const { addItem, setQuantity, removeItem, clearCart, applyCartPreview } = cartSlice.actions;
 export const cartReducer = cartSlice.reducer;
 
 export const selectCartItems = (s: RootState): ICartItem[] => s.cart.items;

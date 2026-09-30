@@ -5,11 +5,12 @@ import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { useLinks } from '@/app/useLinks';
 import { CURRENCY } from '@/constants/productAttributes';
-import { addItem, selectCartItems } from '@/features/cart/cartSlice';
+import { addItem, selectCartItems, setQuantity } from '@/features/cart/cartSlice';
 import { formatPrice, useLocale } from '@/i18n';
 import { useProductLabels } from '@/i18n/productLabels';
 import type { IProduct } from '@/types/product';
 import Button from '@components/Button/Button';
+import QuantityStepper from '@components/QuantityStepper/QuantityStepper';
 
 interface ProductCardProps {
   product: IProduct;
@@ -21,9 +22,9 @@ const ProductCard = ({ product }: ProductCardProps): ReactElement => {
   const links = useLinks();
   const labels = useProductLabels();
   const dispatch = useAppDispatch();
-  const inCart = useAppSelector(selectCartItems).some((item) => item.productId === product.id);
+  const cartItem = useAppSelector(selectCartItems).find((item) => item.productId === product.id);
 
-  const href = links.product(product.id);
+  const href = links.product(product.slug);
   const inStock = (product.availableQuantity ?? 0) > 0;
   const meta = [product.categories?.[0]?.name, labels.ageSpan(product.ageRanges)]
     .filter(Boolean)
@@ -49,16 +50,20 @@ const ProductCard = ({ product }: ProductCardProps): ReactElement => {
         </h3>
         <div className="product-card__bottom">
           <span className="product-card__price">
-            {formatPrice(product.price ?? 0, CURRENCY, locale)}
+            {formatPrice(product.priceEuroCents ?? 0, CURRENCY, locale)}
           </span>
-          <Button
-            variant={inCart ? 'secondary' : 'primary'}
-            size="sm"
-            disabled={!inStock}
-            onClick={() => dispatch(addItem(product))}
-          >
-            {inCart ? t('shop.inCart') : t('translation:common.addToCart')}
-          </Button>
+          {cartItem ? (
+            <QuantityStepper
+              value={cartItem.quantity}
+              max={product.availableQuantity}
+              size="sm"
+              onChange={(quantity) => dispatch(setQuantity({ productId: product.id, quantity }))}
+            />
+          ) : (
+            <Button size="sm" disabled={!inStock} onClick={() => dispatch(addItem(product))}>
+              {t('translation:common.addToCart')}
+            </Button>
+          )}
         </div>
       </div>
     </article>

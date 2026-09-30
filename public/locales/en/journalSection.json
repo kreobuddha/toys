@@ -6,6 +6,7 @@
     "empty": "No articles yet.",
     "back": "Back to journal",
     "notFound": "This article does not exist.",
-    "relatedToys": "Browse toys in the shop"
+    "relatedToys": "Browse toys in the shop",
+    "relatedProducts": "Toys from this article"
   }
 }
