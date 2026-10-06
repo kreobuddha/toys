@@ -18,8 +18,15 @@ const ArticleCard = ({ article }: ArticleCardProps): ReactElement => {
   return (
     <article className="article-card">
       <Link to={href(article.slug)} className="article-card__cover-link">
-        {article.coverImageUrl && (
-          <img src={article.coverImageUrl} alt="" loading="lazy" className="article-card__cover" />
+        {article.cover && (
+          <img
+            src={article.cover.url}
+            alt={article.cover.alt ?? ''}
+            width={article.cover.width}
+            height={article.cover.height}
+            loading="lazy"
+            className="article-card__cover"
+          />
         )}
       </Link>
       <div className="article-card__body">

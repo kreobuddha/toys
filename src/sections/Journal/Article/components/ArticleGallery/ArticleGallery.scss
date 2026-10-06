@@ -1,0 +1,51 @@
+@use '@/styles/mixins' as *;
+
+.article-gallery__list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  @include mobile {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+}
+
+.article-gallery__list--carousel {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+}
+
+.article-gallery__list--before-after {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.article-gallery__item {
+  min-width: 0;
+}
+
+.article-gallery__list--carousel .article-gallery__item {
+  flex: 0 0 70%;
+  scroll-snap-align: start;
+}
+
+.article-gallery__figure {
+  margin: 0;
+}
+
+.article-gallery__image {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  background: #f3f3f3;
+}
+
+.article-gallery__caption {
+  margin-top: 8px;
+  font-size: 14px;
+  color: var(--color-muted);
+}
