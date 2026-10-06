@@ -1,0 +1,37 @@
+.article-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  margin-top: 12px;
+  font-size: 14px;
+  color: var(--color-muted);
+}
+
+.article-meta__author {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.article-meta__photo {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.article-meta__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.article-meta__tag {
+  padding: 2px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+}

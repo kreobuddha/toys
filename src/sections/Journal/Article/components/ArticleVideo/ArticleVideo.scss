@@ -1,0 +1,20 @@
+.article-video {
+  margin: 0;
+}
+
+.article-video__frame,
+.article-video__player {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  border-radius: 12px;
+  background: #000000;
+}
+
+.article-video__caption {
+  margin-top: 8px;
+  font-size: 14px;
+  color: var(--color-muted);
+  text-align: center;
+}
