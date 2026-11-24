@@ -1,20 +1,22 @@
+@use '@/styles/variables' as *;
 @use '@/styles/mixins' as *;
 
+// A white sheet on a slate backdrop, inset like the design's 1920x1080 frame.
 .lightbox {
-  width: min(96vw, 1200px);
-  max-width: none;
-  height: min(94dvh, 1000px);
+  width: calc(100vw - 2 * #{fluid(100px, 16px)});
+  max-width: 1720px;
+  height: calc(100dvh - 64px);
   max-height: none;
   margin: auto;
   padding: 0;
   border: 0;
-  border-radius: 12px;
-  background: var(--color-bg);
+  border-radius: fluid(40px, 20px);
+  background: var(--white);
   color: var(--color-text);
   overflow: hidden;
 
   &::backdrop {
-    background: rgba(0, 0, 0, 0.8);
+    background: var(--slate);
   }
 
   @include mobile {
@@ -34,33 +36,34 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 8px 8px 8px 16px;
+  min-height: fluid(80px, 64px);
+  padding: 0 fluid(24px, 12px);
 }
 
 .lightbox__counter {
-  font-size: 14px;
-  color: var(--color-muted);
+  font-size: fluid(28px, 17px);
+  color: var(--brown);
   font-variant-numeric: tabular-nums;
 }
 
 .lightbox__control {
   display: grid;
   place-items: center;
-  width: 40px;
-  height: 40px;
-  border: 1px solid var(--color-border);
+  width: fluid(56px, 44px);
+  height: fluid(56px, 44px);
+  border: 0;
   border-radius: 50%;
-  background: var(--color-bg);
-  color: var(--color-text);
-  font-size: 18px;
+  background: var(--blue-green);
+  color: var(--white);
+  font-size: fluid(32px, 22px);
   line-height: 1;
 
   &:hover {
-    border-color: var(--color-text);
+    background: color-mix(in srgb, var(--blue-green) 88%, var(--black));
   }
 
   &:focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--blue-green);
     outline-offset: 2px;
   }
 
@@ -76,7 +79,7 @@
   min-height: 0;
   overflow: auto;
   overscroll-behavior: contain;
-  background: #f3f3f3;
+  padding: 0 fluid(100px, 0px);
 }
 
 .lightbox__zoom {
@@ -111,6 +114,7 @@
 .lightbox__nav {
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 16px;
-  padding: 8px;
+  min-height: fluid(80px, 64px);
 }
