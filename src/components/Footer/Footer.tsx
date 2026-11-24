@@ -1,13 +1,19 @@
 import './Footer.scss';
 import type { ReactElement } from 'react';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { LEGAL_PAGES } from '@/app/routes';
+import { useLinks } from '@/app/useLinks';
 
 const EMAIL = 'thekeepers@gmail.com';
+// Placeholders until the shop's Instagram account and review page are known.
+const INSTAGRAM_URL = '#';
+const REVIEW_URL = '#';
 
 /** The shop's card at the bottom of every page: who we are and how to reach us. */
 const Footer = (): ReactElement => {
   const { t } = useTranslation();
-  const legal = t('footer.legal', { returnObjects: true });
+  const links = useLinks();
 
   return (
     <footer className="footer">
@@ -40,27 +46,31 @@ const Footer = (): ReactElement => {
                 <span className="footer__contact-caption">{t('footer.emailCaption')}</span>
               </li>
               <li className="footer__contact">
-                <span className="footer__contact-link">
+                <a href={INSTAGRAM_URL} className="footer__contact-link">
                   <img src="/icons/instagram.svg" alt="" width={32} height={32} />
                   {t('footer.instagram')}
                   <img src="/icons/arrow-right-brown.svg" alt="" width={24} height={24} />
-                </span>
+                </a>
                 <span className="footer__contact-caption">{t('footer.instagramCaption')}</span>
               </li>
               <li className="footer__contact">
-                <span className="footer__contact-link">
+                <a href={REVIEW_URL} className="footer__contact-link">
                   <img src="/icons/star.svg" alt="" width={32} height={32} />
                   {t('footer.review')}
                   <img src="/icons/arrow-right-brown.svg" alt="" width={24} height={24} />
-                </span>
+                </a>
                 <span className="footer__contact-caption">{t('footer.reviewCaption')}</span>
               </li>
             </ul>
           </div>
 
           <ul className="footer__legal">
-            {legal.map((item) => (
-              <li key={item}>{item}</li>
+            {LEGAL_PAGES.map((page) => (
+              <li key={page}>
+                <Link to={links.legal[page]} className="footer__legal-link">
+                  {t(`footer.legal.${page}`)}
+                </Link>
+              </li>
             ))}
           </ul>
         </div>

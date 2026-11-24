@@ -6,7 +6,7 @@ import { DEFAULT_LOCALE } from '@/i18n/locales';
 import Layout from '@components/Layout/Layout';
 import LocaleRoute from './LocaleRoute';
 import PrelaunchGate from './PrelaunchGate';
-import { paths } from './routes';
+import { LEGAL_PAGES, paths } from './routes';
 
 // Pages are code-split per route; Layout renders them inside a Suspense boundary.
 const Home = lazy(() => import('@sections/Common/Home/Home'));
@@ -19,6 +19,7 @@ const Product = lazy(() => import('@sections/Shop/Product/Product'));
 const Checkout = lazy(() => import('@sections/Order/Checkout/Checkout'));
 const Journal = lazy(() => import('@sections/Journal/Journal/Journal'));
 const Article = lazy(() => import('@sections/Journal/Article/Article'));
+const Legal = lazy(() => import('@sections/Legal/Legal/Legal'));
 
 export const router = createBrowserRouter(
   [
@@ -53,6 +54,7 @@ export const router = createBrowserRouter(
             { path: paths.ourStory, element: <OurStory /> },
             { path: paths.journal, element: <Journal /> },
             { path: paths.article(), element: <Article /> },
+            ...LEGAL_PAGES.map((page) => ({ path: paths[page], element: <Legal page={page} /> })),
             { path: '*', element: <NotFound /> },
           ],
         },

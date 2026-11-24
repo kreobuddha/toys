@@ -4,7 +4,9 @@
     "shop": "Shop",
     "sellToUs": "Sell to Us",
     "ourStory": "Our Story",
-    "journal": "Journal"
+    "journal": "Journal",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
   },
   "common": {
     "loading": "Loading…",
@@ -29,14 +31,14 @@
     "instagramCaption": "behind the scenes",
     "review": "Leave a review",
     "reviewCaption": "your feedback helps us grow",
-    "legal": [
-      "Shipping & payment",
-      "Refund policy",
-      "Terms of service",
-      "Company details",
-      "Privacy policy",
-      "Cookie preferences"
-    ]
+    "legal": {
+      "shipping": "Shipping & payment",
+      "refunds": "Refund policy",
+      "terms": "Terms of service",
+      "company": "Company details",
+      "privacy": "Privacy policy",
+      "cookies": "Cookie preferences"
+    }
   },
   "cart": {
     "title": "Your Cart",

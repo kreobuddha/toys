@@ -9,7 +9,7 @@ export { formatDate, formatPrice } from './format';
 
 // Resources live in public/locales/<lng>/<ns>.json and are fetched on demand: shared strings in
 // translation.json, everything else in the namespace of its section (shopSection, orderSection,
-// journalSection, commonSection). A page loads its own namespace with useTranslation.
+// journalSection, commonSection, legalSection). A page loads its own namespace with useTranslation.
 // The active language follows the /:locale route segment (see LocaleRoute).
 void i18n
   .use(HttpBackend)
