@@ -185,6 +185,7 @@ const Checkout = (): ReactElement => {
                 <fieldset className="checkout__fieldset">
                   <legend className="checkout__legend">{t('checkout.contact')}</legend>
                   <Input
+                    reserveError
                     id="name"
                     label={t('checkout.name')}
                     autoComplete="name"
@@ -192,6 +193,7 @@ const Checkout = (): ReactElement => {
                     {...register('name', { required: t('checkout.errors.nameRequired') })}
                   />
                   <Input
+                    reserveError
                     id="email"
                     type="email"
                     label={t('checkout.email')}
@@ -203,6 +205,7 @@ const Checkout = (): ReactElement => {
                     })}
                   />
                   <Input
+                    reserveError
                     id="phone"
                     type="tel"
                     label={t('checkout.phone')}
@@ -215,7 +218,7 @@ const Checkout = (): ReactElement => {
               </div>
 
               {showDetails && (
-                <div className="checkout__card">
+                <div className="checkout__card checkout__card--details">
                   <h2 className="checkout__legend">{t('checkout.details')}</h2>
                   {needsAddress(delivery) ? (
                     <AddressForm areaError={areaError} />
@@ -228,7 +231,7 @@ const Checkout = (): ReactElement => {
               {submitError && <p className="checkout__error">{submitError}</p>}
 
               <div className="checkout__submit">
-                <Button type="submit" disabled={isSubmitting || blocked}>
+                <Button type="submit" disabled={isSubmitting || blocked} aria-busy={isSubmitting}>
                   {isSubmitting ? t('checkout.paying') : t('checkout.pay')}
                 </Button>
                 {problems.length > 0 && (

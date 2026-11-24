@@ -50,8 +50,10 @@
     background: color-mix(in srgb, var(--blue-green) 75%, var(--black));
   }
 
-  &:disabled {
-    background: color-mix(in srgb, var(--blue-green) 35%, var(--light-grey));
+  // Greyed out when it cannot be used; a button busy with a request keeps its colour.
+  &:disabled:not([aria-busy='true']) {
+    background: var(--light-grey);
+    color: var(--black);
   }
 }
 

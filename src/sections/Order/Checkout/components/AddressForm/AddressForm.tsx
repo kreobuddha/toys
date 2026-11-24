@@ -65,6 +65,7 @@ const AddressForm = ({ areaError }: AddressFormProps): ReactElement => {
       <legend className="address-form__title">{t('checkout.address')}</legend>
       <div className="address-form__row">
         <Input
+          reserveError
           id="postcode"
           label={t('checkout.postcode')}
           placeholder={t('checkout.postcodePlaceholder')}
@@ -76,6 +77,7 @@ const AddressForm = ({ areaError }: AddressFormProps): ReactElement => {
           })}
         />
         <Input
+          reserveError
           id="houseNumber"
           label={t('checkout.houseNumber')}
           placeholder={t('checkout.houseNumber')}
@@ -88,6 +90,7 @@ const AddressForm = ({ areaError }: AddressFormProps): ReactElement => {
         />
       </div>
       <Input
+        reserveError
         id="street"
         label={t('checkout.street')}
         placeholder={t('checkout.street')}
@@ -96,6 +99,7 @@ const AddressForm = ({ areaError }: AddressFormProps): ReactElement => {
         {...register('street', { required: t('checkout.errors.streetRequired') })}
       />
       <Input
+        reserveError
         id="city"
         label={t('checkout.city')}
         placeholder={t('checkout.city')}

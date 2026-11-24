@@ -50,6 +50,11 @@
   padding: fluid(48px, 20px);
   border-radius: fluid(40px, 20px);
   background: var(--white);
+
+  // The delivery details card sets its heading 24px above the address, not 48px.
+  &--details {
+    gap: fluid(24px, 16px);
+  }
 }
 
 .checkout__fieldset {
@@ -88,6 +93,11 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 12px;
+}
+
+// The design draws the pay button 480px wide.
+.checkout__submit .button {
+  min-width: min(480px, 100%);
 }
 
 .checkout__blocked {
