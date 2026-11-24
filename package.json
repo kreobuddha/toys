@@ -10,8 +10,7 @@
     "preview": "vite preview",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "typecheck": "tsc -b --noEmit",
-    "postbuild": "node scripts/spa-fallback.mjs"
+    "typecheck": "tsc -b --noEmit"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.12.0",
