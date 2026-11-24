@@ -1,0 +1,13 @@
+.background-shapes {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.background-shapes__shape {
+  position: absolute;
+  max-width: none;
+  height: auto;
+}

@@ -9,7 +9,7 @@ import { addItem, selectCartItems, setQuantity } from '@/features/cart/cartSlice
 import { formatPrice, useLocale } from '@/i18n';
 import { useProductLabels } from '@/i18n/productLabels';
 import type { IProduct } from '@/types/product';
-import Button from '@components/Button/Button';
+import ConditionTag from '@components/ConditionTag/ConditionTag';
 import QuantityStepper from '@components/QuantityStepper/QuantityStepper';
 
 interface ProductCardProps {
@@ -26,45 +26,49 @@ const ProductCard = ({ product }: ProductCardProps): ReactElement => {
 
   const href = links.product(product.slug);
   const inStock = (product.availableQuantity ?? 0) > 0;
-  const meta = [product.categories?.[0]?.name, labels.ageSpan(product.ageRanges)]
-    .filter(Boolean)
-    .join(' · ');
+  const meta = [product.categories?.[0]?.name, labels.ageSpan(product.ageRanges)].filter(Boolean);
 
   return (
     <article className="product-card">
-      <Link to={href} className="product-card__image-link">
-        <img
-          src={product.imageUrls?.[0]}
-          alt={product.title}
-          loading="lazy"
-          className="product-card__image"
+      <Link to={href} className="product-card__image-link" tabIndex={-1} aria-hidden>
+        <img src={product.imageUrls?.[0]} alt="" loading="lazy" className="product-card__image" />
+        <ConditionTag
+          condition={product.condition}
+          soldOut={!inStock}
+          className="product-card__tag"
         />
-        {!inStock && <span className="product-card__badge">{t('shop.outOfStock')}</span>}
       </Link>
-      <div className="product-card__body">
-        <div className="product-card__meta">{meta}</div>
-        <h3 className="product-card__title">
-          <Link to={href} className="product-card__title-link">
-            {product.title}
-          </Link>
-        </h3>
-        <div className="product-card__bottom">
-          <span className="product-card__price">
-            {formatPrice(product.priceEuroCents ?? 0, CURRENCY, locale)}
-          </span>
-          {cartItem ? (
-            <QuantityStepper
-              value={cartItem.quantity}
-              max={product.availableQuantity}
-              size="sm"
-              onChange={(quantity) => dispatch(setQuantity({ productId: product.id, quantity }))}
-            />
-          ) : (
-            <Button size="sm" disabled={!inStock} onClick={() => dispatch(addItem(product))}>
-              {t('translation:common.addToCart')}
-            </Button>
-          )}
-        </div>
+      {meta.length > 0 && <p className="product-card__meta">{meta.join(' · ')}</p>}
+      <h3 className="product-card__title">
+        <Link to={href} className="product-card__title-link">
+          {product.title}
+        </Link>
+      </h3>
+      <div className="product-card__footer">
+        <span className="product-card__price">
+          {formatPrice(product.priceEuroCents ?? 0, CURRENCY, locale)}
+        </span>
+        {cartItem ? (
+          <QuantityStepper
+            value={cartItem.quantity}
+            max={product.availableQuantity}
+            size="sm"
+            onChange={(quantity) => dispatch(setQuantity({ productId: product.id, quantity }))}
+          />
+        ) : (
+          <button
+            type="button"
+            className="product-card__add"
+            aria-label={t('translation:common.addToCart')}
+            disabled={!inStock}
+            onClick={() => dispatch(addItem(product))}
+          >
+            <span className="product-card__add-icon" aria-hidden />
+            <span className="product-card__add-label" aria-hidden>
+              {t('shop.addShort')}
+            </span>
+          </button>
+        )}
       </div>
     </article>
   );

@@ -9,10 +9,17 @@ import { addItem, selectCartItems, setQuantity } from '@/features/cart/cartSlice
 import { formatPrice, useLocale } from '@/i18n';
 import { useProductLabels } from '@/i18n/productLabels';
 import { errorReasonOf, httpStatusOf } from '@/utils/apiError';
+import BackgroundShapes from '@components/BackgroundShapes/BackgroundShapes';
 import Button from '@components/Button/Button';
 import QuantityStepper from '@components/QuantityStepper/QuantityStepper';
 import { useGetProductQuery } from '@sections/Shop/api/productsApi';
 import ProductGallery from './components/ProductGallery/ProductGallery';
+import RelatedArticles from './components/RelatedArticles/RelatedArticles';
+
+interface IFact {
+  label: string;
+  value: string;
+}
 
 const Product = (): ReactElement => {
   const { slug = '' } = useParams();
@@ -43,75 +50,122 @@ const Product = (): ReactElement => {
     return null;
   };
 
-  const facts = product
-    ? [
+  const onlyFilled = (facts: IFact[]): IFact[] => facts.filter((fact) => fact.value);
+
+  const summary = product
+    ? onlyFilled([
+        {
+          label: t('product.age'),
+          value: (product.ageRanges ?? [])
+            .filter((range) => range !== 'PRODUCT_AGE_RANGE_UNSPECIFIED')
+            .map(labels.ageOption)
+            .join('; '),
+        },
         {
           label: t('product.category'),
-          value: (product.categories ?? []).map((category) => category.name).join(', '),
+          value: (product.categories ?? []).map((category) => category.name).join('; '),
         },
+      ])
+    : [];
+
+  const details = product
+    ? onlyFilled([
         {
           label: t('product.brand'),
           // "Others" is the catalog's placeholder for a toy without a public brand.
           value: product.brand?.slug === OTHERS_BRAND_SLUG ? '' : (product.brand?.name ?? ''),
         },
-        { label: t('product.age'), value: labels.ageSpan(product.ageRanges) },
         { label: t('product.condition'), value: labels.condition(product.condition) },
-      ].filter((f): f is { label: string; value: string } => Boolean(f.value))
+      ])
     : [];
 
+  const renderFacts = (facts: IFact[]): ReactElement => (
+    <ul className="product__facts">
+      {facts.map((fact) => (
+        <li key={fact.label} className="product__fact">
+          <span className="product__fact-label">{fact.label}:</span> {fact.value}
+        </li>
+      ))}
+    </ul>
+  );
+
   return (
-    <section className="container product">
-      <Link to={links.shop} className="product__back">
-        ← {t('product.backToShop')}
-      </Link>
+    <div className="product">
+      <BackgroundShapes layout="product" />
+      <section className="container product__main">
+        <Link to={links.shop} className="product__back">
+          <img src="/icons/arrow-left.svg" alt="" className="product__back-icon" />
+          {t('product.backToShop')}
+        </Link>
 
-      {renderState()}
+        {renderState()}
 
-      {product && (
-        <div className="product__layout">
-          <ProductGallery key={product.id} images={product.imageUrls ?? []} alt={product.title} />
+        {product && (
+          <div className="product__layout">
+            <ProductGallery
+              key={product.id}
+              images={product.imageUrls ?? []}
+              alt={product.title}
+              condition={product.condition}
+              soldOut={!inStock}
+            />
 
-          <div className="product__details">
-            <h1 className="product__title">{product.title}</h1>
-            <p className="product__price">
-              {formatPrice(product.priceEuroCents ?? 0, CURRENCY, locale)}
-              {!inStock && <span className="product__stock">{t('product.outOfStock')}</span>}
-            </p>
-
-            <dl className="product__facts">
-              {facts.map((f) => (
-                <div key={f.label} className="product__fact">
-                  <dt className="product__fact-label">{f.label}</dt>
-                  <dd className="product__fact-value">{f.value}</dd>
+            <div className="product__info">
+              <div className="product__purchase">
+                <div className="product__heading">
+                  <h1 className="product__title">{product.title}</h1>
+                  <p className="product__price">
+                    {formatPrice(product.priceEuroCents ?? 0, CURRENCY, locale)}
+                  </p>
+                  {summary.length > 0 && renderFacts(summary)}
                 </div>
-              ))}
-            </dl>
 
-            {cartItem ? (
-              <QuantityStepper
-                value={cartItem.quantity}
-                max={product.availableQuantity}
-                onChange={handleQuantity}
-                className="product__quantity"
-              />
-            ) : (
-              <Button disabled={!inStock} onClick={handleAdd}>
-                {t('translation:common.addToCart')}
-              </Button>
-            )}
+                <div className="product__actions">
+                  {cartItem ? (
+                    <QuantityStepper
+                      value={cartItem.quantity}
+                      max={product.availableQuantity}
+                      onChange={handleQuantity}
+                      className="product__quantity"
+                    />
+                  ) : (
+                    <Button disabled={!inStock} onClick={handleAdd}>
+                      {inStock ? t('product.addToCart') : t('product.outOfStock')}
+                    </Button>
+                  )}
+                  <div className="product__buyback">
+                    <p className="product__buyback-text">{t('product.buyback')}</p>
+                    <Link to={links.sellToUs} className="product__buyback-link">
+                      {t('product.buybackLink')}
+                      <img src="/icons/arrow-up-right.svg" alt="" width={24} height={24} />
+                    </Link>
+                  </div>
+                </div>
+              </div>
 
-            <h2 className="product__subtitle">{t('product.description')}</h2>
-            <p className="product__description">{product.description}</p>
+              {product.description && (
+                <section className="product__section">
+                  <h2 className="product__section-title">{t('product.description')}</h2>
+                  <p className="product__description">{product.description}</p>
+                </section>
+              )}
 
-            {product.relatedArticleSlug && (
-              <Link to={links.article(product.relatedArticleSlug)} className="product__article">
-                {t('product.readArticle')}
-              </Link>
-            )}
+              {details.length > 0 && (
+                <details className="product__section product__details" open>
+                  <summary className="product__section-title product__summary">
+                    {t('product.details')}
+                    <img src="/icons/chevron-down.svg" alt="" className="product__chevron" />
+                  </summary>
+                  {renderFacts(details)}
+                </details>
+              )}
+            </div>
           </div>
-        </div>
-      )}
-    </section>
+        )}
+      </section>
+
+      {product && <RelatedArticles articleSlug={product.relatedArticleSlug} />}
+    </div>
   );
 };
 

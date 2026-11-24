@@ -14,7 +14,7 @@ const CONDITION_LABELS = {
 } as const satisfies Record<ProductCondition, string>;
 
 export interface ProductLabels {
-  /** Age filter option in years: "0–0.5", "3+". */
+  /** Age filter option: months under a year, years above it: "0–6m", "1–1.5y", "3+". */
   ageOption: (range: ProductAgeRange) => string;
   /** Ages a product suits, spanning all of its ranges: "1–2 years", "3+ years". */
   ageSpan: (ranges?: readonly ProductAgeRange[]) => string;
@@ -31,9 +31,9 @@ export const useProductLabels = (): ProductLabels => {
 
   const ageOption = (range: ProductAgeRange): string => {
     const { from, to } = AGE_RANGE_MONTHS[range];
-    return to === undefined
-      ? t('age.groupOpen', { from: years(from) })
-      : t('age.group', { from: years(from), to: years(to) });
+    if (to === undefined) return t('age.groupOpen', { from: years(from) });
+    if (to <= 12) return t('age.groupMonths', { from, to });
+    return t('age.group', { from: years(from), to: years(to) });
   };
 
   const ageSpan = (ranges?: readonly ProductAgeRange[]): string => {

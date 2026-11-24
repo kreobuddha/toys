@@ -14,7 +14,7 @@ import {
 } from '@/features/cart/cartSlice';
 import { CURRENCY } from '@/constants/productAttributes';
 import { formatPrice, useLocale } from '@/i18n';
-import Button from '@components/Button/Button';
+import ButtonLink from '@components/ButtonLink/ButtonLink';
 import QuantityStepper from '@components/QuantityStepper/QuantityStepper';
 
 /** Header cart: a toggle with a badge and a dropdown panel listing the items. */
@@ -66,9 +66,22 @@ const CartDropdown = (): ReactElement => {
       <div
         className={clsx('cart-dropdown__panel', open && 'cart-dropdown__panel--open')}
         role="dialog"
-        aria-label={t('cart.title')}
+        aria-labelledby="cart-dropdown-title"
         hidden={!open}
       >
+        <div className="cart-dropdown__header">
+          <h2 id="cart-dropdown-title" className="cart-dropdown__title">
+            {t('cart.title')}
+          </h2>
+          <button
+            type="button"
+            className="cart-dropdown__round cart-dropdown__close"
+            aria-label={t('cart.close')}
+            onClick={handleClose}
+          >
+            <img src="/icons/close.svg" alt="" />
+          </button>
+        </div>
         {items.length === 0 ? (
           <p className="cart-dropdown__empty">{t('cart.empty')}</p>
         ) : (
@@ -92,34 +105,43 @@ const CartDropdown = (): ReactElement => {
                       <span className="cart-dropdown__name">{item.title}</span>
                     )}
                     <span className="cart-dropdown__price">
-                      {formatPrice(item.price * item.quantity, CURRENCY, locale)}
+                      {formatPrice(item.price, CURRENCY, locale)}
                     </span>
                   </div>
-                  <QuantityStepper
-                    value={item.quantity}
-                    size="sm"
-                    onChange={(quantity) =>
-                      dispatch(setQuantity({ productId: item.productId, quantity }))
-                    }
-                  />
-                  <button
-                    type="button"
-                    className="cart-dropdown__remove"
-                    aria-label={t('cart.remove')}
-                    onClick={() => dispatch(removeItem(item.productId))}
-                  >
-                    ×
-                  </button>
+                  <div className="cart-dropdown__controls">
+                    <button
+                      type="button"
+                      className="cart-dropdown__round cart-dropdown__remove"
+                      aria-label={t('cart.remove')}
+                      onClick={() => dispatch(removeItem(item.productId))}
+                    >
+                      <img src="/icons/trash.svg" alt="" />
+                    </button>
+                    <QuantityStepper
+                      value={item.quantity}
+                      size="sm"
+                      onChange={(quantity) =>
+                        dispatch(setQuantity({ productId: item.productId, quantity }))
+                      }
+                    />
+                  </div>
                 </li>
               ))}
             </ul>
             <div className="cart-dropdown__footer">
-              <span className="cart-dropdown__total">
-                {t('cart.total')}: <strong>{formatPrice(total, CURRENCY, locale)}</strong>
-              </span>
-              <Link to={links.checkout} onClick={handleClose}>
-                <Button size="sm">{t('cart.checkout')}</Button>
-              </Link>
+              <p className="cart-dropdown__total">
+                {t('cart.total')}
+                <strong className="cart-dropdown__total-value">
+                  {formatPrice(total, CURRENCY, locale)}
+                </strong>
+              </p>
+              <ButtonLink
+                to={links.checkout}
+                className="cart-dropdown__checkout"
+                onClick={handleClose}
+              >
+                {t('cart.checkout')}
+              </ButtonLink>
             </div>
           </>
         )}

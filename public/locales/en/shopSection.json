@@ -5,7 +5,7 @@
     "filtersCount": "Filters ({{count}})",
     "category": "Category",
     "brand": "Brand",
-    "age": "Age (years)",
+    "age": "Age",
     "condition": "Condition",
     "price": "Price",
     "priceMin": "Minimum price",
@@ -17,8 +17,11 @@
     "reset": "Reset all",
     "results_one": "{{count}} toy",
     "results_other": "{{count}} toys",
-    "empty": "Nothing found. Try different filters.",
-    "outOfStock": "Sold out"
+    "outOfStock": "Sold out",
+    "addShort": "Add",
+    "emptyTitle": "No toys match these filters.",
+    "emptyText": "Try changing a filter to see what else is in the shop.",
+    "emptyAction": "Clear filters"
   },
   "product": {
     "backToShop": "Back to shop",
@@ -28,18 +31,23 @@
     "condition": "Condition",
     "outOfStock": "Sold out",
     "description": "Description",
-    "readArticle": "Read our article about this toy",
     "notFound": "This toy is no longer available.",
     "gallery": "Product images",
     "showImage": "Show image {{index}}",
-    "enlarge": "Enlarge image"
+    "enlarge": "Enlarge image",
+    "buyback": "Sell it back to us later and get some of your money back.",
+    "buybackLink": "How buyback works",
+    "details": "Product details",
+    "relatedArticles": "Related articles",
+    "addToCart": "Add to cart"
   },
   "condition": {
     "new": "New",
-    "preloved": "Preloved"
+    "preloved": "Pre-loved"
   },
   "age": {
-    "group": "{{from}}–{{to}}",
+    "groupMonths": "{{from}}–{{to}}m",
+    "group": "{{from}}–{{to}}y",
     "groupOpen": "{{from}}+",
     "range": "{{from}}–{{to}} years",
     "rangeOpen": "{{from}}+ years"

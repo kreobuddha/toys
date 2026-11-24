@@ -1,43 +1,61 @@
+@use '@/styles/variables' as *;
+
 .pagination {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  margin: 32px 0;
+  gap: 12px;
+  margin-top: fluid(40px, 24px);
 }
 
 .pagination__list {
   display: flex;
-  gap: 4px;
-  list-style: none;
+  gap: 12px;
   margin: 0;
   padding: 0;
+  list-style: none;
 }
 
+// Previous, Next and the page numbers share the grey pill.
+.pagination__step,
 .pagination__page {
-  min-width: 32px;
-  height: 32px;
-  padding: 0 8px;
-  border: 1px solid transparent;
-  border-radius: 8px;
-  background: transparent;
-  color: var(--color-muted);
+  min-width: fluid(58px, 40px);
+  height: fluid(58px, 40px);
+  padding: 0 fluid(20px, 12px);
+  border: 0;
+  border-radius: 100px;
+  background: var(--light-grey);
+  color: var(--black);
+  font-size: fluid(28px, 16px);
+  line-height: 1;
 
-  &:hover {
-    color: var(--color-text);
+  &:not(:disabled):hover {
+    background: color-mix(in srgb, var(--light-grey) 85%, var(--black));
   }
 
-  &--current {
-    border-color: var(--color-accent);
-    color: var(--color-accent);
-    font-weight: 600;
+  &:focus-visible {
+    outline: 2px solid var(--blue-green);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: default;
+  }
+}
+
+.pagination__page--current {
+  background: var(--blue-green);
+  color: var(--white);
+
+  &:not(:disabled):hover {
+    background: var(--blue-green);
   }
 }
 
 .pagination__gap {
   display: inline-block;
-  min-width: 32px;
+  min-width: fluid(32px, 24px);
+  line-height: fluid(58px, 40px);
   text-align: center;
-  line-height: 32px;
-  color: var(--color-muted);
 }
