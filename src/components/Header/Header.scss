@@ -11,37 +11,69 @@
 .header__inner {
   display: flex;
   align-items: center;
-  gap: fluid(80px, 24px);
-  padding-block: fluid(20px, 12px);
+  gap: 80px;
+  padding-block: 20px;
+
+  @include tablet {
+    gap: 32px;
+  }
 
   @include mobile {
     gap: 16px;
+    padding-block: 12px;
   }
 }
 
 .header__logo {
   flex-shrink: 0;
 
+  // The nav leaves the row on phones: the cart and the burger move to the right edge.
+  @include mobile {
+    margin-right: auto;
+  }
+
   img {
-    width: fluid(46px, 32px);
+    width: 46px;
+
+    @include mobile {
+      width: 32px;
+    }
     height: auto;
   }
 }
 
 .header__nav {
   display: flex;
-  gap: fluid(40px, 16px);
+  gap: 40px;
   flex: 1;
 
-  // Four links plus logo and cart do not fit a phone: scroll instead of wrapping.
+  @include tablet {
+    gap: 24px;
+  }
+
+  // On phones the links drop down under the header as a full-width list.
   @include mobile {
-    overflow-x: auto;
-    scrollbar-width: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    display: none;
+    flex-direction: column;
+    gap: 0;
+    padding: 8px $container-pad 24px;
+    background: var(--sky);
+    box-shadow: 0 12px 24px rgba(58, 60, 62, 0.12);
+  }
+}
+
+.header__nav--open {
+  @include mobile {
+    display: flex;
   }
 }
 
 .header__link {
-  font-size: fluid(28px, 15px);
+  font-size: font-size(28px);
   color: var(--brown);
   text-decoration: none;
   text-transform: uppercase;
@@ -53,6 +85,36 @@
   }
 
   &--active {
-    font-weight: 600;
+    font-weight: 700;
+  }
+
+  @include mobile {
+    padding-block: 14px;
+    border-bottom: 1px solid rgba(110, 53, 2, 0.15);
+    font-size: 20px;
+
+    &:last-child {
+      border-bottom: 0;
+    }
+  }
+}
+
+.header__burger {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  background: none;
+
+  img {
+    width: 32px;
+    height: 32px;
+  }
+
+  @include mobile {
+    display: inline-flex;
   }
 }

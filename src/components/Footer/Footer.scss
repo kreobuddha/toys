@@ -69,7 +69,7 @@
   margin: 0;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: fluid(50px, 24px);
+  font-size: font-size(50px);
   line-height: 1;
 }
 
@@ -78,7 +78,8 @@
   align-items: flex-end;
   gap: 4px;
   margin: 0;
-  font-size: fluid(28px, 16px);
+  font-size: font-size(28px);
+  line-height: 1;
   color: var(--brown);
 
   img {
@@ -107,9 +108,19 @@
   gap: 8px;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: fluid(28px, 18px);
+  font-size: font-size(28px);
+  line-height: 50px;
   color: var(--brown);
   text-decoration: none;
+  text-underline-offset: 6px;
+
+  @include mobile {
+    line-height: normal;
+  }
+
+  &:hover {
+    text-decoration: underline;
+  }
 
   img:first-child {
     width: fluid(32px, 24px);
@@ -120,7 +131,7 @@
 
 .footer__contact-caption {
   padding-left: fluid(52px, 44px);
-  font-size: fluid(20px, 14px);
+  font-size: font-size(20px);
 }
 
 .footer__legal {
@@ -131,10 +142,20 @@
   padding: fluid(40px, 20px) 0 0;
   border-top: 1px solid var(--brown);
   list-style: none;
-  font-size: fluid(20px, 14px);
+  font-size: font-size(20px);
 
   li:not(:last-child)::after {
     content: '·';
     margin-left: 12px;
+  }
+}
+
+.footer__legal-link {
+  color: inherit;
+  text-decoration: none;
+  text-underline-offset: 4px;
+
+  &:hover {
+    text-decoration: underline;
   }
 }

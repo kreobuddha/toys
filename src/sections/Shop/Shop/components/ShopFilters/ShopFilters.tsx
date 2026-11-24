@@ -5,7 +5,9 @@ import clsx from 'clsx';
 import { useProductLabels } from '@/i18n/productLabels';
 import type { IGetProductFacetsResponse, IPriceRange } from '@/types/product';
 import Button from '@components/Button/Button';
-import FilterGroup from '@sections/Shop/Shop/components/FilterGroup/FilterGroup';
+import FilterGroup, {
+  type IFilterOption,
+} from '@sections/Shop/Shop/components/FilterGroup/FilterGroup';
 import PriceFilter from '@sections/Shop/Shop/components/PriceFilter/PriceFilter';
 import type { ShopParams, UpdateOptions } from '@sections/Shop/Shop/useShopParams';
 
@@ -21,9 +23,20 @@ interface ShopFiltersProps {
   onReset: () => void;
 }
 
-/** Values with no products behind them are left out: the catalog counts them for us. */
-const inStock = <T,>(facet: { productCount?: number }, option: T): T[] =>
-  (facet.productCount ?? 0) > 0 ? [option] : [];
+/**
+ * A filter value as the catalog sends it: its name and order come from GetProductFacets. A value
+ * with no products behind it stays listed but cannot be picked, unless it is already picked.
+ */
+const toOption = <T extends string>(
+  value: T,
+  label: string,
+  productCount: number | undefined,
+  selected: readonly T[]
+): IFilterOption<T> => ({
+  value,
+  label,
+  disabled: (productCount ?? 0) === 0 && !selected.includes(value),
+});
 
 const ShopFilters = ({
   params,
@@ -39,17 +52,28 @@ const ShopFilters = ({
   // Below 1024px the panel folds behind the toggle; wider screens always show it.
   const [open, setOpen] = useState(false);
 
-  const categoryOptions = (facets?.categories ?? []).flatMap((facet) =>
-    inStock(facet, { value: facet.category.slug, label: facet.category.name })
+  const categoryOptions = (facets?.categories ?? []).map((facet) =>
+    toOption(facet.category.slug, facet.category.name, facet.productCount, params.categories)
   );
-  const brandOptions = (facets?.brands ?? []).flatMap((facet) =>
-    inStock(facet, { value: facet.brand.slug, label: facet.brand.name })
+  const brandOptions = (facets?.brands ?? []).map((facet) =>
+    toOption(facet.brand.slug, facet.brand.name, facet.productCount, params.brands)
   );
-  const ageOptions = (facets?.ageRanges ?? []).flatMap((facet) =>
-    inStock(facet, { value: facet.ageRange, label: labels.ageOption(facet.ageRange) })
+  // Age and condition are enums: the catalog names them, our labels only fill a missing name.
+  const ageOptions = (facets?.ageRanges ?? []).map((facet) =>
+    toOption(
+      facet.ageRange,
+      facet.name ?? labels.ageOption(facet.ageRange),
+      facet.productCount,
+      params.ageRanges
+    )
   );
-  const conditionOptions = (facets?.conditions ?? []).flatMap((facet) =>
-    inStock(facet, { value: facet.condition, label: labels.condition(facet.condition) })
+  const conditionOptions = (facets?.conditions ?? []).map((facet) =>
+    toOption(
+      facet.condition,
+      facet.name ?? labels.condition(facet.condition),
+      facet.productCount,
+      params.conditions
+    )
   );
 
   const handlePriceChange = (minPrice?: number, maxPrice?: number): void => {

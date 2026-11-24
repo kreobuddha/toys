@@ -29,7 +29,7 @@ See [README.md](README.md) for setup and scripts.
 - `src/features/` — redux slices (cart).
 - `src/components/` — shared UI, one folder per component. The cart is a header dropdown
   (`CartDropdown`), not a page.
-- `src/sections/` — pages grouped by section: `Shop/` (Shop, Product), `Order/` (Checkout), `Journal/` (Journal, Article), `Common/` (Home, OurStory, SellToUs, Success, NotFound). One
+- `src/sections/` — pages grouped by section: `Shop/` (Shop, Product), `Order/` (Checkout), `Journal/` (Journal, Article), `Legal/` (Legal: the footer's text pages), `Common/` (Home, OurStory, SellToUs, Success, NotFound). One
   folder per page; a page's own sub-components go in `<Page>/components/`.
 - `src/i18n/` — i18next setup and locale list; strings live in `public/locales/<lng>/`, split into
   `translation.json` (shared) and one file per section (`shopSection.json`, ...).

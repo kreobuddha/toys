@@ -20,8 +20,8 @@
 .shop__title {
   margin: 0;
   color: var(--brown);
-  font-size: fluid(80px, 40px);
-  line-height: 1.1;
+  font-size: font-size(80px);
+  line-height: normal;
 }
 
 .shop__toolbar {
@@ -31,7 +31,7 @@
 }
 
 .shop__count {
-  font-size: fluid(28px, 16px);
+  font-size: font-size(28px);
   font-weight: 600;
   white-space: nowrap;
 }
@@ -93,12 +93,12 @@
 .shop__empty-title {
   margin: 0;
   color: var(--brown);
-  font-size: fluid(64px, 30px);
+  font-size: font-size(64px);
   line-height: 1.1;
 }
 
 .shop__empty-text {
   margin: 0 0 fluid(12px, 4px);
-  font-size: fluid(28px, 17px);
+  font-size: font-size(28px);
   line-height: 1.35;
 }

@@ -47,14 +47,14 @@
 .site-unavailable__eyebrow {
   margin: 0;
   color: var(--brown);
-  font-size: fluid(24px, 14px);
+  font-size: font-size(24px);
   text-transform: uppercase;
 }
 
 .site-unavailable__title {
   margin: 0;
   color: var(--brown);
-  font-size: fluid(80px, 38px);
+  font-size: font-size(80px);
   line-height: 1.05;
   white-space: pre-line;
 }
@@ -62,7 +62,7 @@
 .site-unavailable__text {
   max-width: 760px;
   margin: 0;
-  font-size: fluid(28px, 17px);
+  font-size: font-size(28px);
   line-height: 1.35;
 }
 
@@ -76,7 +76,7 @@
 
 .site-unavailable__hint {
   margin: 0;
-  font-size: fluid(22px, 14px);
+  font-size: font-size(22px);
 }
 
 .site-unavailable__image {

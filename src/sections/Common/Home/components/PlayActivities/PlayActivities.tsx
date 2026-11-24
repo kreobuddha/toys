@@ -1,21 +1,22 @@
 import './PlayActivities.scss';
-import { useState, type ReactElement } from 'react';
+import { useState, type CSSProperties, type ReactElement } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { useLinks } from '@/app/useLinks';
+import { useGetProductFacetsQuery } from '@sections/Shop/api/productsApi';
 
 type Stage = '0-6' | '6-12' | '12-24' | '24-36' | '36-plus';
 
 const STAGES: readonly Stage[] = ['0-6', '6-12', '12-24', '24-36', '36-plus'];
 
-/** Toy illustrations from `public/toys/`, one per activity in the stage's order. */
+/** Toy illustrations from `public/toys/`, one per play type in the stage's order. */
 const ILLUSTRATIONS: Record<Stage, readonly string[]> = {
-  '0-6': ['rattle', 'teether', 'soft-book'],
-  '6-12': ['cups', 'top', 'drum'],
-  '12-24': ['pyramid', 'elephant', 'blocks'],
-  '24-36': ['shape-puzzle', 'domino', 'balance-board'],
-  '36-plus': ['puzzle-piece', 'lacing', 'drum'],
+  '0-6': ['soft-book', 'teether', 'rattle'],
+  '6-12': ['sorter', 'cups', 'top'],
+  '12-24': ['shape-puzzle', 'pyramid', 'elephant', 'drum'],
+  '24-36': ['blocks', 'puzzle-piece', 'lacing', 'teapot'],
+  '36-plus': ['balance-board', 'domino', 'house-and-car', 'abc-blocks'],
 };
 
 /** The shop URL's age aliases behind each stage; a year spans two of the catalog's ranges. */
@@ -27,12 +28,56 @@ const SHOP_AGES: Record<Stage, string> = {
   '36-plus': '36-plus',
 };
 
+/**
+ * The shop category behind each play type, by its name in the design's filter list. Names, not
+ * slugs: the catalog owns the slugs, and one it lacks leaves the card filtering by age alone.
+ */
+const CATEGORIES: Record<Stage, readonly string[]> = {
+  '0-6': ['Sensory exploration', 'Reaching & grasping', 'Sound & music'],
+  '6-12': ['Put in & take out', 'Stacking & building', 'Push, pull & rolling toys'],
+  '12-24': [
+    'Puzzles, sorting & matching',
+    'Stacking & building',
+    'Push, pull & rolling toys',
+    'Sound & music',
+  ],
+  '24-36': [
+    'Stacking & building',
+    'Puzzles, sorting & matching',
+    'Threading & lacing',
+    'Stories & pretend play',
+  ],
+  '36-plus': [
+    'Balance & coordination',
+    'First games',
+    'Stories & pretend play',
+    'Letters & numbers',
+  ],
+};
+
+const normalize = (name: string): string => name.trim().toLowerCase();
+
+/**
+ * Play types per age. Hovering a card shows what the play means; the card opens the shop on the
+ * stage's age and, when the catalog has it, the matching category.
+ */
 const PlayActivities = (): ReactElement => {
   const { t } = useTranslation('commonSection');
   const links = useLinks();
   const [stage, setStage] = useState<Stage>('0-6');
   const ages = t('home.ages', { returnObjects: true });
   const activities = t('home.activities', { returnObjects: true })[stage];
+
+  const { data: facets } = useGetProductFacetsQuery();
+  const slugByName = new Map(
+    (facets?.categories ?? []).map(({ category }) => [normalize(category.name), category.slug])
+  );
+
+  const shopUrl = (index: number): string => {
+    const slug = slugByName.get(normalize(CATEGORIES[stage][index] ?? ''));
+    const category = slug ? `category=${encodeURIComponent(slug)}&` : '';
+    return `${links.shop}?${category}age=${SHOP_AGES[stage]}`;
+  };
 
   return (
     <section className="container play-activities">
@@ -58,16 +103,40 @@ const PlayActivities = (): ReactElement => {
           ))}
         </div>
 
-        <ul id="play-activities-panel" role="tabpanel" className="play-activities__list">
+        <ul
+          id="play-activities-panel"
+          role="tabpanel"
+          className="play-activities__list"
+          style={{ '--columns': activities.length } as CSSProperties}
+        >
           {activities.map((activity, index) => (
-            <li key={activity.title} className="play-activities__item">
-              <img
-                src={`/toys/${ILLUSTRATIONS[stage][index]}.svg`}
-                alt=""
-                className="play-activities__image"
-              />
-              <h3 className="play-activities__item-title">{activity.title}</h3>
-              <p className="play-activities__item-text">{activity.text}</p>
+            <li key={activity.title}>
+              {/* Both faces share one grid cell and stay laid out, so showing the explanation
+                  never changes the card's size. */}
+              <Link to={shopUrl(index)} className="play-activities__item">
+                <span className="play-activities__face play-activities__face--rest">
+                  <img
+                    src={`/toys/${ILLUSTRATIONS[stage][index]}.svg`}
+                    alt=""
+                    className="play-activities__image"
+                  />
+                  <span className="play-activities__item-title">{activity.title}</span>
+                </span>
+                <span className="play-activities__face play-activities__face--hover">
+                  <img
+                    src={`/toys/hover/${ILLUSTRATIONS[stage][index]}.svg`}
+                    alt=""
+                    className="play-activities__image play-activities__image--hover"
+                  />
+                  <span
+                    className="play-activities__item-title play-activities__item-title--hover"
+                    aria-hidden="true"
+                  >
+                    {activity.title}
+                  </span>
+                  <span className="play-activities__item-text">{activity.text}</span>
+                </span>
+              </Link>
             </li>
           ))}
         </ul>

@@ -1,0 +1,314 @@
+{
+  "pages": {
+    "shipping": {
+      "title": "Shipping & payment",
+      "intro": "We currently deliver only within the Netherlands.",
+      "sections": [
+        {
+          "title": "Delivery options",
+          "paragraphs": [],
+          "items": [
+            "Pickup: collect your order from our pickup point. [Address, opening hours and cost to be confirmed.]",
+            "Our delivery in Amsterdam — €3 per order. Available during our first few months.",
+            "PostNL home delivery. [Rate to be confirmed.]",
+            "PostNL pickup point: collect your parcel from a PostNL pickup point. [Rate to be confirmed.]"
+          ]
+        },
+        {
+          "title": "Delivery cost",
+          "paragraphs": ["The delivery cost is shown at checkout before payment."]
+        },
+        {
+          "title": "Timing",
+          "paragraphs": [
+            "[To be confirmed: we dispatch orders within 2–3 working days.]",
+            "[To be confirmed: delivery usually takes 1–3 working days after dispatch.]",
+            "If delivery is delayed, we will let you know and help resolve the issue. If your parcel is lost or a toy is damaged in transit, email skplaystudio@gmail.com — we will arrange a solution with the carrier."
+          ]
+        },
+        {
+          "title": "Payment",
+          "paragraphs": [
+            "Choose from the payment methods available at checkout. [Payment methods to be confirmed.] Before confirming your order, you will see the cost of the toys, shipping and the total amount in euros.",
+            "After you place your order, we will email you a confirmation with your order details, order number, total amount and terms."
+          ]
+        },
+        {
+          "title": "VAT",
+          "paragraphs": ["We do not charge VAT under the Dutch small businesses scheme (KOR)."]
+        },
+        {
+          "title": "Questions",
+          "paragraphs": [
+            "Email skplaystudio@gmail.com. For information about returns, see our Refund policy."
+          ]
+        }
+      ]
+    },
+    "refunds": {
+      "title": "Refund policy",
+      "sections": [
+        {
+          "title": "Changed your mind?",
+          "paragraphs": [
+            "You can cancel your online purchase without giving a reason within 14 days of receiving your toys. This applies to both new and second-hand toys. If an order arrives in separate parcels, this period starts when you receive the last item.",
+            "Let us know by email at skplaystudio@gmail.com. You may use the form below, but you do not have to: a clear statement that you wish to cancel, identifying the relevant order, is enough."
+          ]
+        },
+        {
+          "title": "How to return your toys",
+          "paragraphs": [
+            "Send the toys back within 14 days of telling us that you wish to cancel.",
+            "Return address: SK Play Studio, Esther de Boer-van Rijkstraat 136, 1065 GS Amsterdam, Netherlands.",
+            "Pack the toys securely to prevent damage in transit and keep proof of postage. You do not need the original packaging to make a return.",
+            "You may inspect a toy as you would in a shop. If handling beyond what is necessary to inspect it reduces its value, we may deduct that loss in value and explain how we calculated it.",
+            "[To be confirmed: if you have simply changed your mind, you pay the return shipping costs charged by your chosen carrier. For a valid claim involving a defect or an error on our part, we cover the necessary costs.]"
+          ]
+        },
+        {
+          "title": "When you will receive your refund",
+          "paragraphs": [
+            "We will refund you within 14 days of being notified of your cancellation. We may withhold the refund until we receive the toys or evidence that you have sent them back, whichever happens first.",
+            "If you return the entire order, we also refund the original standard delivery cost. Any extra cost for a more expensive delivery option you selected is not refundable. For a partial return, we will recalculate the delivery cost based on the items you keep.",
+            "We will use your original payment method unless you agree to another method, and we will not charge a refund fee."
+          ]
+        },
+        {
+          "title": "Faulty items and incorrect orders",
+          "paragraphs": [
+            "If a toy is faulty, does not match its description or is not the item you ordered, email skplaystudio@gmail.com with your order details and a description of the problem. Photos will help us understand what happened.",
+            "The 14-day cancellation limit does not apply to these claims. A second-hand toy must also match its description and meet reasonable expectations, taking its age, condition and price into account.",
+            "Depending on the circumstances, we will arrange a repair or replacement free of charge. If this is not possible or does not resolve the problem within a reasonable time and without significant inconvenience, you may be entitled to a price reduction or cancellation of the purchase under applicable law. A minor defect does not always entitle you to cancel the contract. We cover the necessary costs of a valid claim."
+          ]
+        },
+        {
+          "title": "Complaints",
+          "paragraphs": [
+            "Email skplaystudio@gmail.com. We will respond within 3 working days [to be confirmed]. If we need more time, we will explain why and tell you when to expect a resolution."
+          ]
+        },
+        {
+          "title": "Cancellation form",
+          "paragraphs": [
+            "Complete this form only if you wish to cancel your purchase.",
+            "To: SK Play Studio, Esther de Boer-van Rijkstraat 136, 1065 GS Amsterdam, Netherlands, skplaystudio@gmail.com.",
+            "I/We hereby give notice that I/we withdraw from the contract of sale for the following goods:"
+          ],
+          "items": [
+            "Goods:",
+            "Date ordered / date received:",
+            "Customer name:",
+            "Customer address:",
+            "Date:",
+            "Signature — only if submitting this form on paper."
+          ]
+        }
+      ]
+    },
+    "terms": {
+      "title": "Terms of service",
+      "intro": "Last updated: [to be confirmed before publication].",
+      "sections": [
+        {
+          "title": "Who we are",
+          "paragraphs": [
+            "The SK Play Studio shop is operated by SK Play Studio, VOF. Address: Esther de Boer-van Rijkstraat 136, 1065 GS Amsterdam, Netherlands. Phone: +31 6 15079494. KVK number: 42124623. Email: skplaystudio@gmail.com. Full business details: Company details.",
+            "These terms cover buying toys from us and selling your toys to us through our buyback service. “Buying from us” applies to consumer orders delivered within the Netherlands; “Selling toys to us” applies to our purchases of toys from private individuals."
+          ]
+        },
+        {
+          "title": "Buying from us",
+          "paragraphs": []
+        },
+        {
+          "title": "Toys and their condition",
+          "paragraphs": [
+            "We sell both new and second-hand toys. Each product listing states whether the toy is new or second-hand and describes its condition, what is included and any known signs of use or imperfections. Please read the description, view the photos and check the age guidance and warnings before buying.",
+            "Follow the age restrictions, instructions and safety warnings provided with the toy, and ensure appropriate adult supervision. If the toy becomes damaged or any parts become loose in a way that could create a safety risk, stop using it and keep it out of children’s reach. Contact us if you have concerns about a toy purchased from us.",
+            "These precautions do not limit our legal obligations or your statutory consumer rights. Your statutory rights apply to both new and second-hand toys, including if a toy is faulty or does not match its description."
+          ],
+          "level": 3
+        },
+        {
+          "title": "Orders and payment",
+          "paragraphs": [
+            "Before confirming your order, you can check the items, contact details, delivery information and total amount. The order button clearly indicates an obligation to pay.",
+            "[To be confirmed: when the contract is concluded.]",
+            "We will email you your order details and terms. If you notice an error in your details, please contact us.",
+            "Prices are in euros. Shipping costs and any other applicable charges are shown before you confirm your order. For payment methods, payment deadlines and delivery terms, see Shipping & payment."
+          ],
+          "level": 3
+        },
+        {
+          "title": "Delivery",
+          "paragraphs": [
+            "We deliver within the agreed timeframe. If no specific timeframe has been agreed, the statutory deadline of no more than 30 days applies.",
+            "If delivery is delayed, you retain your statutory rights, including the right to set an additional reasonable deadline and, where the law allows, cancel the contract for a refund.",
+            "When delivery is carried out by a carrier we offer, we remain responsible for the goods until you or your designated recipient receives them."
+          ],
+          "level": 3
+        },
+        {
+          "title": "Returns and quality",
+          "paragraphs": [
+            "You may cancel your online purchase within 14 days of receiving the goods. The procedure, cancellation form, refund arrangements and information about faulty items are set out in our Refund policy.",
+            "These terms do not limit your legal guarantee or other mandatory consumer rights."
+          ],
+          "level": 3
+        },
+        {
+          "title": "Selling toys to us",
+          "paragraphs": [
+            "Our buyback service is currently available only within the Netherlands. Home visits are available only in Amsterdam.",
+            "You can offer us your toys through Sell to Us. Submitting a request does not oblige you to sell your toys or guarantee that we will buy them.",
+            "We assess the toys’ condition and completeness and agree a price with you before buying them. Details of handover, assessment, payment and what happens if the buyback does not proceed are set out in the Buyback terms in Sell to Us."
+          ]
+        },
+        {
+          "title": "General provisions",
+          "paragraphs": []
+        },
+        {
+          "title": "How we collect reviews",
+          "paragraphs": ["[To be described before reviews are published.]"],
+          "level": 3
+        },
+        {
+          "title": "Personal data",
+          "paragraphs": ["For information about how we process your data, see our Privacy policy."],
+          "level": 3
+        },
+        {
+          "title": "Questions and applicable law",
+          "paragraphs": [
+            "For questions about purchases, buyback or complaints, email skplaystudio@gmail.com.",
+            "Dutch law applies. This does not deprive you of mandatory protection under applicable consumer law or your right to bring a claim before a competent court.",
+            "The version of these terms in effect when a purchase or buyback contract is concluded applies to that contract. Later changes do not alter an existing contract."
+          ],
+          "level": 3
+        }
+      ]
+    },
+    "company": {
+      "title": "Company details",
+      "sections": [
+        {
+          "title": "",
+          "paragraphs": [],
+          "items": [
+            "Store name: SK Play Studio.",
+            "Registered business name: SK Play Studio.",
+            "Legal structure: general partnership — vennootschap onder firma (VOF).",
+            "Business address: Esther de Boer-van Rijkstraat 136, 1065 GS Amsterdam, Netherlands.",
+            "KVK number: 42124623.",
+            "VAT identification number (btw-id): NL869837151B01.",
+            "Email: skplaystudio@gmail.com.",
+            "Phone / WhatsApp: +31 6 15079494."
+          ]
+        },
+        {
+          "title": "",
+          "paragraphs": [
+            "For questions about orders, returns or complaints, email skplaystudio@gmail.com.",
+            "Return address: SK Play Studio, Esther de Boer-van Rijkstraat 136, 1065 GS Amsterdam, Netherlands."
+          ]
+        }
+      ]
+    },
+    "privacy": {
+      "title": "Privacy policy",
+      "intro": "Last updated: [to be confirmed before publication].",
+      "sections": [
+        {
+          "title": "Who is responsible for your data",
+          "paragraphs": [
+            "The data controller is SK Play Studio, VOF, Esther de Boer-van Rijkstraat 136, 1065 GS Amsterdam, Netherlands. KVK number: 42124623. For privacy questions, email skplaystudio@gmail.com or call +31 6 15079494."
+          ]
+        },
+        {
+          "title": "What we collect and why",
+          "paragraphs": [],
+          "items": [
+            "Purchases: your name, contact details, delivery address, order details and payment information — to fulfil our contract and handle returns.",
+            "Toy buyback: contact details, toy descriptions and photos, your preferred handover method, the agreed price and payment details — to assess your request, enter into and fulfil a buyback agreement. Please do not include children or other people in your photos.",
+            "Correspondence: messages and relevant order details — to answer questions, resolve complaints and protect legal rights. Our basis is the contract or our legitimate interest in handling enquiries and disputes.",
+            "Accounting: records of sales and purchases — to meet our tax obligations.",
+            "Website operation: necessary technical data — for security and preventing misuse, based on our legitimate interest. [Data collected to be confirmed.]"
+          ]
+        },
+        {
+          "title": "",
+          "paragraphs": [
+            "Required fields are marked in our forms. Without the necessary information, we cannot fulfil your order or assess your request. Additional information is optional."
+          ]
+        },
+        {
+          "title": "Who receives your data",
+          "paragraphs": [
+            "We use payment, delivery, hosting, email and accounting service providers. We share the information needed for their respective tasks and provide information to public authorities when required by law.",
+            "[Providers, processing countries and transfer safeguards to be confirmed.]"
+          ]
+        },
+        {
+          "title": "How long we keep your data",
+          "paragraphs": [
+            "Mandatory accounting records are generally kept for 7 years. We keep other data only for as long as needed for its stated purpose:"
+          ],
+          "items": [
+            "[To be confirmed: incomplete buyback requests and photos — 3 months after the last contact if no agreement is concluded.]",
+            "[To be confirmed: routine correspondence — 12 months after an enquiry is closed; documents needed for guarantees, disputes or accounting are retained for the applicable period.]",
+            "[To be confirmed: technical logs — 30 days, except incident records needed for an investigation.]",
+            "[To be confirmed: evidence of consent.]"
+          ]
+        },
+        {
+          "title": "",
+          "paragraphs": [
+            "Where there is a dispute, we may retain relevant information until it is resolved and the applicable limitation period has expired."
+          ]
+        },
+        {
+          "title": "Cookies",
+          "paragraphs": [
+            "Necessary cookies support the operation of our website. Optional cookies are enabled according to your choices. You can change these through Cookie preferences in the footer. Rejecting optional cookies does not prevent you from making a purchase.",
+            "[List of cookies to be added.]"
+          ]
+        },
+        {
+          "title": "Your rights",
+          "paragraphs": [
+            "You can request access to, correction or deletion of your data, restriction of processing and, where applicable, data portability. You can also object to processing based on legitimate interests.",
+            "Where processing relies on consent, you can withdraw it. This does not affect the lawfulness of processing before withdrawal. We cannot delete information we are legally required to retain.",
+            "Email skplaystudio@gmail.com. We normally respond within one month. If a legally permitted extension is needed, we will tell you and explain why.",
+            "You may also lodge a complaint with the Autoriteit Persoonsgegevens, the Dutch data protection authority."
+          ]
+        },
+        {
+          "title": "Updates",
+          "paragraphs": [
+            "We publish a revised policy with an updated date when changes are made. We provide additional notice of significant changes where necessary."
+          ]
+        }
+      ]
+    },
+    "cookies": {
+      "title": "Cookie preferences",
+      "intro": "We use necessary cookies to make our website work. With your permission, we may also use optional cookies for analytics and advertising. You can accept them, reject them or choose individual categories. You can change your choices at any time through Cookie preferences in the footer.",
+      "sections": [
+        {
+          "title": "Categories",
+          "paragraphs": [],
+          "items": [
+            "Necessary — always active. Enable essential website functions, such as the shopping cart and remembering your cookie choices.",
+            "Analytics. Help us understand how visitors use our website and improve it.",
+            "Marketing. Used to show personalised advertising and measure its effectiveness."
+          ]
+        },
+        {
+          "title": "",
+          "paragraphs": ["For more about how we handle your data, see our Privacy policy."]
+        }
+      ]
+    }
+  }
+}

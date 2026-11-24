@@ -1,7 +1,7 @@
 {
   "home": {
-    "heroEyebrow": "Pre-loved & new toys · ages 0–4",
-    "heroTitle": "Good toys deserve another childhood",
+    "heroEyebrow": "Pre-loved + new toys · ages 0–4",
+    "heroTitle": "Good toys deserve another childhood.",
     "heroText": "Choose what fits now — pass it on later.",
     "heroShop": "Shop",
     "heroSell": "Sell to us",
@@ -20,12 +20,12 @@
       },
       {
         "title": "We check and clean them",
-        "text": "So every pre-loved toy arrives ready to play.",
+        "text": "So your toy arrives clean, safe and ready to play.",
         "link": "How we care"
       },
       {
         "title": "Choose a toy that fits now",
-        "text": "Discover toys by age or type of play.",
+        "text": "Discover toys for what your child is learning and loving right now.",
         "link": "Explore toys"
       },
       {
@@ -47,11 +47,11 @@
       "0-6": [
         {
           "title": "Sensory discovery",
-          "text": "Soft colours and gentle sounds to look at, touch and follow."
+          "text": "Exploring textures, patterns and reflections through looking and touching."
         },
         {
           "title": "Reaching & grasping",
-          "text": "Rings and rattles that are easy to hold and pass from hand to hand."
+          "text": "Reaching for toys, holding them and turning them in little hands."
         },
         {
           "title": "Sound & movement",
@@ -60,58 +60,70 @@
       ],
       "6-12": [
         {
+          "title": "Put in & take out",
+          "text": "Putting objects in, taking them out and discovering where they go."
+        },
+        {
           "title": "Stacking & nesting",
-          "text": "Cups that stack up, tumble down and fit inside each other."
+          "text": "Putting things on top of each other or inside one another."
         },
         {
-          "title": "Watching things move",
-          "text": "Spinning and rolling toys that keep little eyes busy."
-        },
-        {
-          "title": "Cause & effect",
-          "text": "Tap it, hear it: the first “I did that!” moments."
+          "title": "Rolling & movement",
+          "text": "Rolling, pushing and following objects as they move."
         }
       ],
       "12-24": [
         {
-          "title": "Sizes & order",
-          "text": "Rings from big to small, with no wrong way to start."
+          "title": "Puzzles, sorting & matching",
+          "text": "Matching shapes, sorting pieces and finding where they fit."
         },
         {
-          "title": "Push & pull",
-          "text": "Toys on wheels that follow every new step."
+          "title": "Stacking & building",
+          "text": "Stacking rings, building towers and putting pieces together."
         },
         {
-          "title": "First building",
-          "text": "A few solid blocks are enough to start a tower."
+          "title": "Push, pull & slide",
+          "text": "Pushing and pulling toys, or sliding pieces along a track."
+        },
+        {
+          "title": "Sound & music",
+          "text": "Tapping and shaking simple instruments to explore sounds and rhythms."
         }
       ],
       "24-36": [
         {
-          "title": "Shapes & fitting",
-          "text": "Each piece has its place — and finding it feels great."
+          "title": "Building & open-ended play",
+          "text": "Building, taking apart and creating something new with the same pieces."
         },
         {
-          "title": "Matching pictures",
-          "text": "Spotting pairs builds attention and memory."
+          "title": "Puzzles & challenges",
+          "text": "Exploring shapes and patterns, trying things out and solving little puzzles."
         },
         {
-          "title": "Building & balance",
-          "text": "Taller towers, bridges and the joy of knocking them down."
+          "title": "Threading & lacing",
+          "text": "Threading beads onto a cord and passing laces through holes."
+        },
+        {
+          "title": "Pretend play",
+          "text": "Acting out everyday moments, from cooking dinner to caring for a doll."
         }
       ],
       "36-plus": [
         {
-          "title": "Problem solving",
-          "text": "Puzzles that ask for a plan, not just a lucky guess."
+          "title": "Balancing & coordination",
+          "text": "Placing pieces carefully, finding balance and keeping a steady hand."
         },
         {
-          "title": "Counting games",
-          "text": "Dots, numbers and taking turns with a friend."
+          "title": "First games & matching",
+          "text": "Following simple rules, finding matches and beginning to take turns."
         },
         {
-          "title": "Making music",
-          "text": "Rhythms to copy, invent and play together."
+          "title": "Stories & pretend play",
+          "text": "Making up stories and adventures with characters and imaginary worlds."
+        },
+        {
+          "title": "Letters & numbers",
+          "text": "Exploring letters and numbers, counting objects and matching them to numerals."
         }
       ]
     },

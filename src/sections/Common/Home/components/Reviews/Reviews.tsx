@@ -46,7 +46,7 @@ const Reviews = (): ReactElement => {
       <div className="reviews__carousel">
         <button
           type="button"
-          className="reviews__arrow"
+          className="reviews__arrow reviews__arrow--left"
           aria-label={t('home.reviewsPrevious')}
           disabled={page === 0}
           onClick={() => goTo(page - 1)}
@@ -63,7 +63,7 @@ const Reviews = (): ReactElement => {
         </ul>
         <button
           type="button"
-          className="reviews__arrow"
+          className="reviews__arrow reviews__arrow--right"
           aria-label={t('home.reviewsNext')}
           disabled={page >= pages - 1}
           onClick={() => goTo(page + 1)}

@@ -12,7 +12,25 @@ export const paths = {
   ourStory: 'our-story',
   journal: 'journal',
   article: (slug = ':slug'): string => `journal/${slug}`,
+  shipping: 'shipping-and-payment',
+  refunds: 'refund-policy',
+  terms: 'terms-of-service',
+  company: 'company-details',
+  privacy: 'privacy-policy',
+  cookies: 'cookie-preferences',
 } as const;
+
+/** The legal and service pages linked from the footer; each key is a route in `paths`. */
+export const LEGAL_PAGES = [
+  'shipping',
+  'refunds',
+  'terms',
+  'company',
+  'privacy',
+  'cookies',
+] as const;
+
+export type LegalPage = (typeof LEGAL_PAGES)[number];
 
 export const localePath = (locale: Locale, path = ''): string =>
   path ? `/${locale}/${path}` : `/${locale}`;
@@ -27,6 +45,7 @@ export interface Links {
   ourStory: string;
   journal: string;
   article: (slug: string) => string;
+  legal: Record<LegalPage, string>;
 }
 
 export const buildLinks = (locale: Locale): Links => {
@@ -41,5 +60,13 @@ export const buildLinks = (locale: Locale): Links => {
     ourStory: to(paths.ourStory),
     journal: to(paths.journal),
     article: (slug) => to(paths.article(slug)),
+    legal: {
+      shipping: to(paths.shipping),
+      refunds: to(paths.refunds),
+      terms: to(paths.terms),
+      company: to(paths.company),
+      privacy: to(paths.privacy),
+      cookies: to(paths.cookies),
+    },
   };
 };

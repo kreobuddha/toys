@@ -1,5 +1,6 @@
 import './Home.scss';
 import type { ReactElement } from 'react';
+import { FEATURES } from '@/app/features';
 import BackgroundShapes from '@components/BackgroundShapes/BackgroundShapes';
 import HomeHero from './components/HomeHero/HomeHero';
 import HowItWorks from './components/HowItWorks/HowItWorks';
@@ -15,7 +16,7 @@ const Home = (): ReactElement => {
       <TrustStrip />
       <HowItWorks />
       <PlayActivities />
-      <Reviews />
+      {FEATURES.reviews && <Reviews />}
     </div>
   );
 };
