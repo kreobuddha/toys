@@ -88,7 +88,7 @@ export interface IProductBrandFacet {
 
 export interface IProductAgeRangeFacet {
   ageRange: ProductAgeRange;
-  /** The backend's own name; the shop shows its own localized label instead. */
+  /** The catalog's name for the range; the filter panel shows it as is. */
   name?: string;
   productCount?: number;
 }

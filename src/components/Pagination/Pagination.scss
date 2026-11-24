@@ -1,4 +1,5 @@
 @use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
 
 .pagination {
   display: flex;
@@ -19,18 +20,18 @@
 // Previous, Next and the page numbers share the grey pill.
 .pagination__step,
 .pagination__page {
-  min-width: fluid(58px, 40px);
-  height: fluid(58px, 40px);
-  padding: 0 fluid(20px, 12px);
-  border: 0;
+  min-width: 58px;
+  height: 58px;
+  padding: 0 20px;
+  border: 1px solid var(--light-grey);
   border-radius: 100px;
-  background: var(--light-grey);
+  background: var(--white);
   color: var(--black);
   font-size: font-size(28px);
   line-height: 1;
 
   &:not(:disabled):hover {
-    background: color-mix(in srgb, var(--light-grey) 85%, var(--black));
+    background: var(--light-grey);
   }
 
   &:focus-visible {
@@ -38,18 +39,26 @@
     outline-offset: 2px;
   }
 
+  // The design greys out the step that leads nowhere.
   &:disabled {
-    opacity: 0.45;
+    background: var(--light-grey);
     cursor: default;
+  }
+
+  @include mobile {
+    min-width: 40px;
+    height: 40px;
+    padding: 0 12px;
   }
 }
 
 .pagination__page--current {
-  background: var(--blue-green);
+  border-color: var(--dark-pink);
+  background: var(--dark-pink);
   color: var(--white);
 
   &:not(:disabled):hover {
-    background: var(--blue-green);
+    background: var(--dark-pink);
   }
 }
 

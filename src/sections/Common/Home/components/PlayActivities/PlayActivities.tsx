@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { useLinks } from '@/app/useLinks';
+import { useGetProductFacetsQuery } from '@sections/Shop/api/productsApi';
 
 type Stage = '0-6' | '6-12' | '12-24' | '24-36' | '36-plus';
 
@@ -28,20 +29,54 @@ const SHOP_AGES: Record<Stage, string> = {
 };
 
 /**
- * Play types per age. The cards only explain (hover, or a tap on touch screens, shows what the
- * play means); the one link to the shop is the stage's "Explore" below them, as the team decided.
+ * The shop category behind each play type, by its name in the design's filter list. Names, not
+ * slugs: the catalog owns the slugs, and one it lacks leaves the card filtering by age alone.
+ */
+const CATEGORIES: Record<Stage, readonly string[]> = {
+  '0-6': ['Sensory exploration', 'Reaching & grasping', 'Sound & music'],
+  '6-12': ['Put in & take out', 'Stacking & building', 'Push, pull & rolling toys'],
+  '12-24': [
+    'Puzzles, sorting & matching',
+    'Stacking & building',
+    'Push, pull & rolling toys',
+    'Sound & music',
+  ],
+  '24-36': [
+    'Stacking & building',
+    'Puzzles, sorting & matching',
+    'Threading & lacing',
+    'Stories & pretend play',
+  ],
+  '36-plus': [
+    'Balance & coordination',
+    'First games',
+    'Stories & pretend play',
+    'Letters & numbers',
+  ],
+};
+
+const normalize = (name: string): string => name.trim().toLowerCase();
+
+/**
+ * Play types per age. Hovering a card shows what the play means; the card opens the shop on the
+ * stage's age and, when the catalog has it, the matching category.
  */
 const PlayActivities = (): ReactElement => {
   const { t } = useTranslation('commonSection');
   const links = useLinks();
   const [stage, setStage] = useState<Stage>('0-6');
-  const [opened, setOpened] = useState<number | null>(null);
   const ages = t('home.ages', { returnObjects: true });
   const activities = t('home.activities', { returnObjects: true })[stage];
 
-  const chooseStage = (value: Stage): void => {
-    setStage(value);
-    setOpened(null);
+  const { data: facets } = useGetProductFacetsQuery();
+  const slugByName = new Map(
+    (facets?.categories ?? []).map(({ category }) => [normalize(category.name), category.slug])
+  );
+
+  const shopUrl = (index: number): string => {
+    const slug = slugByName.get(normalize(CATEGORIES[stage][index] ?? ''));
+    const category = slug ? `category=${encodeURIComponent(slug)}&` : '';
+    return `${links.shop}?${category}age=${SHOP_AGES[stage]}`;
   };
 
   return (
@@ -61,7 +96,7 @@ const PlayActivities = (): ReactElement => {
                 'play-activities__tab',
                 stage === value && 'play-activities__tab--active'
               )}
-              onClick={() => chooseStage(value)}
+              onClick={() => setStage(value)}
             >
               {ages[value]}
             </button>
@@ -78,15 +113,7 @@ const PlayActivities = (): ReactElement => {
             <li key={activity.title}>
               {/* Both faces share one grid cell and stay laid out, so showing the explanation
                   never changes the card's size. */}
-              <button
-                type="button"
-                className={clsx(
-                  'play-activities__item',
-                  opened === index && 'play-activities__item--open'
-                )}
-                aria-expanded={opened === index}
-                onClick={() => setOpened(opened === index ? null : index)}
-              >
+              <Link to={shopUrl(index)} className="play-activities__item">
                 <span className="play-activities__face play-activities__face--rest">
                   <img
                     src={`/toys/${ILLUSTRATIONS[stage][index]}.svg`}
@@ -109,7 +136,7 @@ const PlayActivities = (): ReactElement => {
                   </span>
                   <span className="play-activities__item-text">{activity.text}</span>
                 </span>
-              </button>
+              </Link>
             </li>
           ))}
         </ul>

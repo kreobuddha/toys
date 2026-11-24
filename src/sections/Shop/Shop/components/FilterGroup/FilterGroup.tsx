@@ -2,9 +2,16 @@ import './FilterGroup.scss';
 import { useId, useState, type ReactElement } from 'react';
 import Checkbox from '@components/Checkbox/Checkbox';
 
+export interface IFilterOption<T extends string> {
+  value: T;
+  label: string;
+  /** Nothing in the catalog behind it right now. */
+  disabled?: boolean;
+}
+
 interface FilterGroupProps<T extends string> {
   legend: string;
-  options: readonly { value: T; label: string }[];
+  options: readonly IFilterOption<T>[];
   selected: readonly T[];
   onChange: (selected: T[]) => void;
 }
@@ -50,6 +57,7 @@ const FilterGroup = <T extends string>({
             <Checkbox
               label={option.label}
               checked={selected.includes(option.value)}
+              disabled={option.disabled}
               onChange={(event) => handleToggle(option.value, event.target.checked)}
             />
           </li>
