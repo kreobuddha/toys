@@ -48,7 +48,11 @@ export interface IGetPaymentStatusResponse {
 }
 
 export interface IDeliveryOptionsRequest {
-  address: IAddress;
+  /**
+   * The customer's address. Without a postcode and house number the backend answers with the
+   * methods that need no address only.
+   */
+  address?: Partial<IAddress>;
 }
 
 export interface IDeliveryOption {
@@ -62,7 +66,8 @@ export interface IDeliveryOptionsResponse {
 }
 
 export interface IPickupPointsRequest {
-  searchAddress: IAddress;
+  /** A postcode is enough to search around. */
+  searchAddress: Pick<IAddress, 'postalCode'> & Partial<IAddress>;
 }
 
 export interface IPickupPoint {

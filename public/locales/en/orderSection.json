@@ -5,30 +5,102 @@
     "goToShop": "Go to shop",
     "contact": "Contact details",
     "name": "Full name",
-    "email": "Email",
-    "phone": "Phone (optional)",
-    "delivery": "Delivery",
-    "deliveryPickup": "Pickup",
-    "deliveryPickupHint": "Collect from our point in Amsterdam",
-    "deliveryCourier": "Courier",
-    "deliveryCourierHint": "1–2 days within the Netherlands",
-    "deliveryPost": "Post",
-    "deliveryPostHint": "3–5 days, tracked",
+    "email": "Email address",
+    "phone": "Phone number (optional)",
+    "delivery": "Delivery options",
     "free": "Free",
+    "methods": {
+      "local": {
+        "name": "The Keepers delivery",
+        "hint": "Within Amsterdam · 1–2 days"
+      },
+      "pickupPoint": {
+        "name": "PostNL: Pickup point",
+        "hint": "Within the Netherlands · 3–5 days"
+      },
+      "home": {
+        "name": "PostNL: Home delivery",
+        "hint": "Within the Netherlands · 3–5 days"
+      },
+      "customerPickup": {
+        "name": "Pick up in Amsterdam",
+        "hint": "Collect from our point in Amsterdam"
+      }
+    },
+    "details": "Delivery details",
+    "address": "Delivery address",
+    "postcode": "Postcode",
+    "postcodePlaceholder": "1234 AB",
+    "houseNumber": "House number",
+    "street": "Street",
+    "city": "City",
+    "pickupTitle": "Choose a pickup point",
+    "pickupGuidance": "Enter a postcode to find PostNL pickup points nearby.",
+    "pickupSearch": "Find pickup points",
+    "pickupSearching": "Finding pickup points…",
+    "pickupResults": "Nearby pickup points",
+    "pickupNotFound": "We couldn’t find any pickup points. Try again or enter a different postcode.",
+    "errors": {
+      "nameRequired": "Enter your full name.",
+      "emailRequired": "Enter your email address.",
+      "emailInvalid": "Enter a valid email address, for example name@example.com.",
+      "postcodeRequired": "Enter your postcode.",
+      "postcodeInvalid": "Enter a Dutch postcode, for example 1012 AB.",
+      "houseNumberRequired": "Enter your house number.",
+      "houseNumberInvalid": "Enter the house number, for example 12 or 12A.",
+      "streetRequired": "Enter your street name.",
+      "cityRequired": "Enter your city.",
+      "deliveryRequired": "Choose a delivery option.",
+      "pickupRequired": "Choose a pickup point.",
+      "outsideAmsterdam": "This address is outside our Amsterdam delivery area. Choose a PostNL option to continue.",
+      "addressNotServed": "We can’t deliver to this address with this option. Choose another one."
+    },
     "summary": "Your order",
+    "quantity": "Quantity: {{count}}",
     "subtotal": "Subtotal",
+    "previousSubtotal": "Previous subtotal",
     "deliveryCost": "Delivery",
     "total": "Total",
+    "previousTotal": "Previous total",
+    "vatNote": "We don’t charge VAT under the Dutch small businesses scheme (KOR).",
+    "backToShop": "Back to shop",
+    "notice": {
+      "gone": {
+        "title": "A toy is no longer available",
+        "text": "Remove the highlighted toy from your order to continue."
+      },
+      "outOfStock": {
+        "title": "A toy has sold out",
+        "text": "Remove the highlighted toy from your order to continue."
+      },
+      "quantity": {
+        "title": "Some quantities need updating",
+        "text": "Update the highlighted item to continue."
+      },
+      "price": {
+        "title": "A price has changed",
+        "text": "Review the new price for the highlighted toy to continue."
+      },
+      "several": {
+        "title": "Your order needs a few updates",
+        "text": "Resolve the highlighted items to continue."
+      }
+    },
+    "problem": {
+      "goneTitle": "No longer available",
+      "outOfStockTitle": "Sold out",
+      "removeText": "Remove this toy from your order to continue.",
+      "quantityTitle": "Only {{count}} available",
+      "quantityText": "You have {{requested}} in your order. Update the quantity to {{count}} to continue.",
+      "priceTitle": "Price updated",
+      "priceText": "The price is now {{price}}. Accept it to continue, or remove this toy from your order.",
+      "remove": "Remove item",
+      "updateQuantity": "Update quantity to {{count}}",
+      "acceptPrice": "Accept new price"
+    },
+    "blocked": "Resolve the highlighted item in your order before proceeding to payment.",
     "pay": "Proceed to payment",
     "paying": "Redirecting to payment…",
-    "required": "This field is required",
-    "invalidEmail": "Enter a valid email address",
-    "submitError": "Could not create the order. Please try again.",
-    "cartChanged": "The catalog has changed since you filled your cart:",
-    "cartProblemGone": "This toy is no longer in the catalog and will be removed.",
-    "cartProblemOutOfStock": "Sold out — it will be removed from your cart.",
-    "cartProblemQuantity": "Only {{quantity}} left of the {{requested}} you asked for.",
-    "cartProblemPrice": "The price is now {{price}} instead of {{previousPrice}}.",
-    "cartUpdate": "Update the cart"
+    "submitError": "Could not create the order. Please try again."
   }
 }

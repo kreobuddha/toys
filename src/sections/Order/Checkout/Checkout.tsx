@@ -3,57 +3,60 @@ import { useMemo, useState, type ReactElement } from 'react';
 import { Link } from 'react-router-dom';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import clsx from 'clsx';
 import { skipToken } from '@reduxjs/toolkit/query/react';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { useLinks } from '@/app/useLinks';
-import { CURRENCY } from '@/constants/productAttributes';
-import { applyCartPreview, selectCartItems, selectCartTotal } from '@/features/cart/cartSlice';
-import { formatPrice, useLocale } from '@/i18n';
+import {
+  removeItem,
+  selectCartItems,
+  selectCartTotal,
+  setPrice,
+  setQuantity,
+} from '@/features/cart/cartSlice';
 import { useErrorMessage, useValidationMessage } from '@/i18n/errorLabels';
+import type { IAddress } from '@/types/address';
 import type { ICreateOrderRequest, IPreviewCartRequest } from '@/types/order';
 import { errorReasonOf, fieldViolationsOf } from '@/utils/apiError';
+import { isNlPostcode, normalizePostcode } from '@/utils/nlAddress';
+import BackgroundShapes from '@components/BackgroundShapes/BackgroundShapes';
 import Button from '@components/Button/Button';
 import Input from '@components/Input/Input';
-import { useCreateOrderMutation, usePreviewCartQuery } from '@sections/Order/api/ordersApi';
-import AddressFields, { type AddressFormValues } from '@components/AddressFields/AddressFields';
-import { toAddress } from '@components/AddressFields/toAddress';
-import { DEFAULT_CITY, loadSavedCity } from '@components/AddressFields/savedCity';
+import { useDebouncedValue } from '@components/AddressFields/useDebouncedValue';
+import {
+  useCreateOrderMutation,
+  useGetDeliveryOptionsQuery,
+  usePreviewCartQuery,
+} from '@sections/Order/api/ordersApi';
+import { problemOf } from './cartProblems';
+import {
+  CHECKOUT_DEFAULTS,
+  parseHouseNumber,
+  toCheckoutAddress,
+  type CheckoutFormValues,
+} from './checkoutForm';
+import { needsAddress, toDeliveryChoices, toOrderDelivery } from './deliveryOptions';
+import AddressForm from './components/AddressForm/AddressForm';
 import CartNotice from './components/CartNotice/CartNotice';
+import DeliveryOptionList from './components/DeliveryOptionList/DeliveryOptionList';
 import OrderSummary from './components/OrderSummary/OrderSummary';
-import { DELIVERY_OPTIONS, toOrderDelivery, type DeliveryMethod } from './deliveryOptions';
-
-interface CheckoutForm extends AddressFormValues {
-  name: string;
-  email: string;
-  phone: string;
-  delivery: DeliveryMethod;
-}
+import PickupPointPicker from './components/PickupPointPicker/PickupPointPicker';
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const ADDRESS_CHECK_DELAY_MS = 400;
 
 /** Rejected fields the form can point at; anything else reads as a general failure. */
 const FORM_FIELDS = ['name', 'email', 'phone'] as const;
-
-// Explicit map so the keys stay type-checked against the translation file.
-const DELIVERY_LABELS = {
-  pickup: { name: 'checkout.deliveryPickup', hint: 'checkout.deliveryPickupHint' },
-  courier: { name: 'checkout.deliveryCourier', hint: 'checkout.deliveryCourierHint' },
-  post: { name: 'checkout.deliveryPost', hint: 'checkout.deliveryPostHint' },
-} as const satisfies Record<DeliveryMethod, { name: string; hint: string }>;
 
 const Checkout = (): ReactElement => {
   const { t } = useTranslation(['orderSection', 'translation']);
   const validationMessage = useValidationMessage();
   const errorMessage = useErrorMessage();
-  const locale = useLocale();
   const links = useLinks();
   const dispatch = useAppDispatch();
   const items = useAppSelector(selectCartItems);
   const subtotal = useAppSelector(selectCartTotal);
   const [createOrder] = useCreateOrderMutation();
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [initialCity] = useState(() => loadSavedCity() ?? DEFAULT_CITY);
 
   const previewRequest = useMemo(
     (): IPreviewCartRequest => ({
@@ -67,22 +70,15 @@ const Checkout = (): ReactElement => {
   );
   const { data: preview } = usePreviewCartQuery(items.length > 0 ? previewRequest : skipToken);
   const previews = preview?.items ?? [];
-  const cartChanged = previews.some((item) => (item.problemCodes ?? []).length > 0);
+  const problems = items.flatMap((item) => {
+    const problem = problemOf(previews.find((p) => p.productId === item.productId));
+    return problem ? [problem] : [];
+  });
 
-  const form = useForm<CheckoutForm>({
-    defaultValues: {
-      name: '',
-      email: '',
-      phone: '',
-      delivery: 'pickup',
-      city: initialCity.name,
-      cityPick: initialCity,
-      addressLine: '',
-      addressPick: null,
-      apartment: '',
-      postcode: '',
-      postcodeAuto: '',
-    },
+  // shouldUnregister drops the fields of a hidden block, so their rules stop applying.
+  const form = useForm<CheckoutFormValues>({
+    defaultValues: CHECKOUT_DEFAULTS,
+    shouldUnregister: true,
   });
   const {
     register,
@@ -90,20 +86,60 @@ const Checkout = (): ReactElement => {
     control,
     formState: { errors, isSubmitting },
   } = form;
+  const [delivery = '', postcode = '', houseNumber = ''] = useWatch({
+    control,
+    name: ['delivery', 'postcode', 'houseNumber'],
+  });
 
-  const deliveryMethod = useWatch({ control, name: 'delivery' });
-  const delivery = DELIVERY_OPTIONS.find((o) => o.method === deliveryMethod) ?? DELIVERY_OPTIONS[0];
+  // Everything the shop offers, then what serves the customer's address once it is complete.
+  const { data: offered } = useGetDeliveryOptionsQuery({});
+  const house = parseHouseNumber(houseNumber);
+  const addressKey =
+    needsAddress(delivery) && isNlPostcode(postcode) && house
+      ? `${normalizePostcode(postcode)}|${house.number}|${house.addition ?? ''}`
+      : '';
+  const debouncedKey = useDebouncedValue(addressKey, ADDRESS_CHECK_DELAY_MS);
+  const addressRequest = useMemo((): Partial<IAddress> | undefined => {
+    if (!debouncedKey) return undefined;
+    const [postalCode, number, addition] = debouncedKey.split('|');
+    return { postalCode, houseNumber: number, houseNumberAddition: addition || undefined };
+  }, [debouncedKey]);
+  const forAddress = useGetDeliveryOptionsQuery(
+    addressRequest ? { address: addressRequest } : skipToken
+  );
 
-  const onSubmit = async (values: CheckoutForm): Promise<void> => {
+  const choices = toDeliveryChoices(offered?.options, forAddress.data?.options);
+  const chosen = choices.find((choice) => choice.type === delivery);
+  // Only a settled answer for the address as typed can say the method does not serve it.
+  const addressChecked =
+    Boolean(addressKey) && addressKey === debouncedKey && !forAddress.isFetching;
+  const notServed =
+    addressChecked &&
+    forAddress.data !== undefined &&
+    !forAddress.data.options?.some((option) => option.type === delivery);
+  const areaError = notServed
+    ? delivery === 'DELIVERY_OPTION_TYPE_LOCAL_DELIVERY'
+      ? t('checkout.errors.outsideAmsterdam')
+      : t('checkout.errors.addressNotServed')
+    : undefined;
+
+  const blocked = problems.length > 0 || notServed;
+
+  const onSubmit = async (values: CheckoutFormValues): Promise<void> => {
     setSubmitError(null);
-    const address = delivery.needsAddress ? toAddress(values) : undefined;
-    if (delivery.needsAddress && !address) return;
+    if (!values.delivery) return;
+    const address = needsAddress(values.delivery) ? toCheckoutAddress(values) : undefined;
+    if (needsAddress(values.delivery) && !address) return;
+    if (values.delivery === 'DELIVERY_OPTION_TYPE_POSTNL_PICKUP_POINT' && !values.pickupPoint) {
+      form.setError('pickupPoint', { message: t('checkout.errors.pickupRequired') });
+      return;
+    }
     const order: ICreateOrderRequest = {
       items: items.map((item) => ({ productId: item.productId, quantity: item.quantity })),
       name: values.name,
       email: values.email,
       phone: values.phone || undefined,
-      delivery: toOrderDelivery(values.delivery, address),
+      delivery: toOrderDelivery(values.delivery, address, values.pickupPoint),
     };
     try {
       const { checkoutUrl } = await createOrder(order).unwrap();
@@ -131,110 +167,87 @@ const Checkout = (): ReactElement => {
     );
   }
 
+  const showDetails =
+    needsAddress(delivery) || delivery === 'DELIVERY_OPTION_TYPE_POSTNL_PICKUP_POINT';
+
   return (
-    <section className="container checkout">
-      <h1 className="checkout__title">{t('checkout.title')}</h1>
-      <CartNotice
-        previews={previews}
-        items={items}
-        onApply={() => dispatch(applyCartPreview(previews))}
-      />
-      <div className="checkout__layout">
-        <FormProvider {...form}>
-          <form className="checkout__form" onSubmit={handleSubmit(onSubmit)} noValidate>
-            <fieldset className="checkout__fieldset">
-              <legend className="checkout__legend">{t('checkout.contact')}</legend>
-              <div className="checkout__field">
-                <Input
-                  id="name"
-                  label={t('checkout.name')}
-                  autoComplete="name"
-                  aria-invalid={Boolean(errors.name)}
-                  {...register('name', { required: t('checkout.required') })}
-                />
-                {errors.name && <span className="checkout__error">{errors.name.message}</span>}
+    <div className="checkout-page">
+      <BackgroundShapes layout="empty" />
+      <section className="container checkout">
+        <h1 className="checkout__title">{t('checkout.title')}</h1>
+        <CartNotice problems={problems} />
+        <div className="checkout__layout">
+          <FormProvider {...form}>
+            <form className="checkout__form" onSubmit={handleSubmit(onSubmit)} noValidate>
+              <div className="checkout__card">
+                <fieldset className="checkout__fieldset">
+                  <legend className="checkout__legend">{t('checkout.contact')}</legend>
+                  <Input
+                    id="name"
+                    label={t('checkout.name')}
+                    autoComplete="name"
+                    error={errors.name?.message}
+                    {...register('name', { required: t('checkout.errors.nameRequired') })}
+                  />
+                  <Input
+                    id="email"
+                    type="email"
+                    label={t('checkout.email')}
+                    autoComplete="email"
+                    error={errors.email?.message}
+                    {...register('email', {
+                      required: t('checkout.errors.emailRequired'),
+                      pattern: { value: EMAIL_PATTERN, message: t('checkout.errors.emailInvalid') },
+                    })}
+                  />
+                  <Input
+                    id="phone"
+                    type="tel"
+                    label={t('checkout.phone')}
+                    autoComplete="tel"
+                    error={errors.phone?.message}
+                    {...register('phone')}
+                  />
+                </fieldset>
+                <DeliveryOptionList choices={choices} />
               </div>
-              <div className="checkout__field">
-                <Input
-                  id="email"
-                  type="email"
-                  label={t('checkout.email')}
-                  autoComplete="email"
-                  aria-invalid={Boolean(errors.email)}
-                  {...register('email', {
-                    required: t('checkout.required'),
-                    pattern: { value: EMAIL_PATTERN, message: t('checkout.invalidEmail') },
-                  })}
-                />
-                {errors.email && <span className="checkout__error">{errors.email.message}</span>}
+
+              {showDetails && (
+                <div className="checkout__card">
+                  <h2 className="checkout__legend">{t('checkout.details')}</h2>
+                  {needsAddress(delivery) ? (
+                    <AddressForm areaError={areaError} />
+                  ) : (
+                    <PickupPointPicker />
+                  )}
+                </div>
+              )}
+
+              {submitError && <p className="checkout__error">{submitError}</p>}
+
+              <div className="checkout__submit">
+                <Button type="submit" disabled={isSubmitting || blocked}>
+                  {isSubmitting ? t('checkout.paying') : t('checkout.pay')}
+                </Button>
+                {problems.length > 0 && (
+                  <p className="checkout__blocked">{t('checkout.blocked')}</p>
+                )}
               </div>
-              <div className="checkout__field">
-                <Input
-                  id="phone"
-                  type="tel"
-                  label={t('checkout.phone')}
-                  autoComplete="tel"
-                  {...register('phone')}
-                />
-              </div>
-            </fieldset>
+            </form>
+          </FormProvider>
 
-            <fieldset className="checkout__fieldset">
-              <legend className="checkout__legend">{t('checkout.delivery')}</legend>
-              <div className="checkout__options">
-                {DELIVERY_OPTIONS.map((option) => (
-                  <label
-                    key={option.method}
-                    className={clsx(
-                      'checkout__option',
-                      delivery.method === option.method && 'checkout__option--selected'
-                    )}
-                  >
-                    <input
-                      type="radio"
-                      value={option.method}
-                      className="checkout__radio"
-                      {...register('delivery')}
-                    />
-                    <span className="checkout__option-body">
-                      <span className="checkout__option-name">
-                        {t(DELIVERY_LABELS[option.method].name)}
-                      </span>
-                      <span className="checkout__option-hint">
-                        {t(DELIVERY_LABELS[option.method].hint)}
-                      </span>
-                    </span>
-                    <span className="checkout__option-price">
-                      {option.price === 0
-                        ? t('checkout.free')
-                        : formatPrice(option.price, CURRENCY, locale)}
-                    </span>
-                  </label>
-                ))}
-              </div>
-              {delivery.needsAddress && <AddressFields />}
-            </fieldset>
-
-            {submitError && <p className="checkout__error">{submitError}</p>}
-
-            <Button
-              type="submit"
-              disabled={isSubmitting || cartChanged}
-              className="checkout__submit"
-            >
-              {isSubmitting ? t('checkout.paying') : t('checkout.pay')}
-            </Button>
-          </form>
-        </FormProvider>
-
-        <OrderSummary
-          items={items}
-          subtotal={subtotal}
-          deliveryCost={delivery.price}
-          currency={CURRENCY}
-        />
-      </div>
-    </section>
+          <OrderSummary
+            items={items}
+            previews={previews}
+            subtotal={subtotal}
+            deliveryCost={chosen?.price}
+            onRemove={(productId) => dispatch(removeItem(productId))}
+            onSetQuantity={(productId, quantity) => dispatch(setQuantity({ productId, quantity }))}
+            onAcceptPrice={(productId, price) => dispatch(setPrice({ productId, price }))}
+          />
+        </div>
+      </section>
+    </div>
   );
 };
 
