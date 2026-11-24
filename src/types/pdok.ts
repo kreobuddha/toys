@@ -41,3 +41,19 @@ export interface IPdokStreet {
   huisnummer?: number;
   postcode?: string;
 }
+
+export interface INlAddressQuery {
+  /** Normalised: "1012JS". */
+  postcode: string;
+  houseNumber: number;
+}
+
+export interface INlAddressLookup {
+  street: string;
+  city: string;
+}
+
+export interface IPdokAddress {
+  straatnaam: string;
+  woonplaatsnaam: string;
+}
