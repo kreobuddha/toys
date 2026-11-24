@@ -1,4 +1,7 @@
+@use 'sass:list';
+@use 'sass:math';
 @use 'variables' as *;
+@use 'mixins' as *;
 
 :root {
   // Palette, named as the design's variables.
@@ -29,6 +32,30 @@
 
   --font-body: 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-display: 'Vollkorn', Georgia, 'Times New Roman', serif;
+  // The design sets the reviews, and only them, in Inter.
+  --font-quote: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  @each $size, $steps in $font-sizes {
+    --font-size-#{math.div($size, 1px)}: #{$size};
+  }
+
+  @include laptop {
+    @each $size, $steps in $font-sizes {
+      --font-size-#{math.div($size, 1px)}: #{list.nth($steps, 1)};
+    }
+  }
+
+  @include tablet {
+    @each $size, $steps in $font-sizes {
+      --font-size-#{math.div($size, 1px)}: #{list.nth($steps, 2)};
+    }
+  }
+
+  @include mobile {
+    @each $size, $steps in $font-sizes {
+      --font-size-#{math.div($size, 1px)}: #{list.nth($steps, 3)};
+    }
+  }
 }
 
 *,
@@ -48,7 +75,8 @@ body {
   font-size: 18px;
   color: var(--color-text);
   background: var(--color-bg);
-  line-height: 1.5;
+  // The design sets text to auto line height; blocks with a set leading declare it.
+  line-height: normal;
 }
 
 h1,
@@ -73,10 +101,10 @@ button {
   cursor: pointer;
 }
 
-// A page block sharing an element with .container sets vertical padding only: a `padding`
-// shorthand in the page stylesheet loads later and wipes the side padding on phones.
+// Side padding only, so a block sharing an element with .container keeps its own
+// `padding-block`. Use `padding-block`, not the `padding` shorthand, on such blocks.
 .container {
   max-width: $design-width;
-  margin: 0 auto;
-  padding: 0 $container-pad;
+  margin-inline: auto;
+  padding-inline: $container-pad;
 }

@@ -41,7 +41,7 @@
 }
 
 .lightbox__counter {
-  font-size: fluid(28px, 17px);
+  font-size: font-size(28px);
   color: var(--brown);
   font-variant-numeric: tabular-nums;
 }
@@ -55,7 +55,7 @@
   border-radius: 50%;
   background: var(--blue-green);
   color: var(--white);
-  font-size: fluid(32px, 22px);
+  font-size: font-size(32px);
   line-height: 1;
 
   &:hover {

@@ -17,7 +17,7 @@
 .checkout__title {
   margin: 0;
   color: var(--brown);
-  font-size: fluid(80px, 40px);
+  font-size: font-size(80px);
   line-height: 1.1;
 }
 
@@ -69,7 +69,7 @@
   padding: 0;
   color: var(--brown);
   font-family: var(--font-display);
-  font-size: fluid(40px, 24px);
+  font-size: font-size(40px);
   font-weight: 700;
   line-height: 1.2;
 }
@@ -92,6 +92,6 @@
 
 .checkout__blocked {
   margin: 0;
-  font-size: fluid(20px, 14px);
+  font-size: font-size(20px);
   line-height: 1.35;
 }

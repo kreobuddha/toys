@@ -9,7 +9,7 @@
   background: var(--yellow);
   overflow: hidden;
 
-  @include mobile {
+  @include tablet {
     flex-direction: column;
     align-items: stretch;
     min-height: 0;
@@ -36,9 +36,13 @@
   object-position: right center;
   pointer-events: none;
 
-  @include mobile {
+  @include tablet {
     position: static;
     order: 2;
+    height: 420px;
+  }
+
+  @include mobile {
     height: 320px;
   }
 }
@@ -49,8 +53,9 @@
   display: flex;
   flex-direction: column;
   gap: fluid(225px, 32px);
+  padding-block: 40px;
 
-  @include mobile {
+  @include tablet {
     padding-block: 40px 24px;
   }
 }
@@ -61,14 +66,14 @@
   gap: fluid(30px, 12px);
   max-width: fluid(923px, 320px);
 
-  @include mobile {
+  @include tablet {
     max-width: none;
   }
 }
 
 .home-hero__eyebrow {
   margin: 0 0 fluid(30px, 4px);
-  font-size: fluid(32px, 16px);
+  font-size: font-size(32px);
   font-weight: 700;
   line-height: 0.8;
   color: var(--brown);
@@ -77,14 +82,14 @@
 .home-hero__title {
   margin: 0;
   font-weight: 900;
-  font-size: fluid(98px, 40px);
+  font-size: font-size(98px);
   line-height: 1;
   color: var(--brown);
 }
 
 .home-hero__lead {
   margin: 0;
-  font-size: fluid(32px, 18px);
+  font-size: font-size(32px);
   line-height: 1.1;
 }
 
