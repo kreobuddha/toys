@@ -36,3 +36,57 @@
   background: #eaf6ec;
   color: #1f6b34;
 }
+
+.sell-form__fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.sell-form__legend {
+  padding: 0;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.sell-form__options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sell-form__option {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.sell-form__option--selected {
+  border-color: var(--color-accent);
+}
+
+.sell-form__option-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sell-form__option-name {
+  font-weight: 500;
+}
+
+.sell-form__option-hint {
+  font-size: 14px;
+  color: var(--color-muted);
+}
+
+.sell-form__address {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}

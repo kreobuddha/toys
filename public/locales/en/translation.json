@@ -56,5 +56,18 @@
     "articleNotFound": "This article does not exist.",
     "orderNotFound": "We cannot find this order.",
     "cartTotalTooLarge": "This order is too large to pay for online. Remove a few toys and try again."
+  },
+  "address": {
+    "city": "City",
+    "addressLine": "Street and house number",
+    "addressLinePlaceholder": "e.g. Herengracht 611",
+    "apartment": "Apartment (optional)",
+    "postcode": "Postcode",
+    "country": "Country",
+    "countryNetherlands": "Netherlands",
+    "invalidAddressLine": "Enter the street and house number, like Herengracht 611.",
+    "invalidPostcode": "Enter a Dutch postcode, like 1012 AB.",
+    "nlOnly": "We deliver within the Netherlands only.",
+    "required": "This field is required"
   }
 }
