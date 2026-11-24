@@ -1,7 +1,7 @@
 {
   "name": "toys",
   "private": true,
-  "version": "0.6.0",
+  "version": "0.7.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,8 +10,7 @@
     "preview": "vite preview",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "typecheck": "tsc -b --noEmit",
-    "postbuild": "node scripts/spa-fallback.mjs"
+    "typecheck": "tsc -b --noEmit"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.12.0",

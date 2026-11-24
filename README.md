@@ -94,16 +94,47 @@ language: add the code to `SUPPORTED_LOCALES` in `src/i18n/locales.ts` and creat
 `public/locales/<lng>/` with the namespace files it should serve — a section can be translated on
 its own, the rest falls back to English.
 
-## Deploy (GitHub Pages)
+## Docker
 
-`.github/workflows/pages.yml` builds with `BASE_PATH=/toys/` and publishes `dist/` to GitHub Pages
-at <https://kreobuddha.github.io/toys/>. It runs on demand only: the demo used to be served by
-in-browser mocks, and the app no longer carries them, so the deployed build needs a public backend
-first. `postbuild` copies `index.html` to `404.html` so deep links work without server-side
-rewrites.
+The shop ships as one container: nginx serves the built files and proxies the API, so the browser
+talks to a single origin and needs no CORS.
 
-One-time setup: the repository must be public (Pages is not available for private repositories on
-the Free plan), and _Settings → Pages → Source_ must be set to **GitHub Actions**.
+```bash
+docker compose up --build        # http://localhost:8081
+```
 
-When the backend is reachable publicly, point `VITE_API_URL` in the workflow at it, restore the
-`push` trigger, and make sure the API allows CORS from `kreobuddha.github.io`.
+Compose points the container at a backend running on the host (`http://host.docker.internal:8080`).
+On a server the two containers sit on the same network and `API_URL` becomes the backend's service
+name:
+
+```yaml
+services:
+  api:
+    image: ghcr.io/ulya-sidorina/the-keepers-toys/backend:latest
+    environment:
+      PUBLIC_BASE_URL: https://shop.example.com # so image URLs point at the public origin
+  web:
+    image: ghcr.io/kreobuddha/toys-web:latest
+    ports: ['80:80']
+    environment:
+      API_URL: http://api:8080
+```
+
+| Variable  | Default           | What it does                               |
+| --------- | ----------------- | ------------------------------------------ |
+| `API_URL` | `http://api:8080` | Backend the container proxies `/api/` to   |
+| `PORT`    | `80`              | Port nginx listens on inside the container |
+
+Both are read when the container starts, not when the image is built: nginx renders
+`docker/nginx.conf.template` with `envsubst`, so the same image runs against any backend. The
+bundle itself calls `/api/v1`, a relative path, and `/assets/products/` and `/assets/articles/`
+are proxied through so the backend's images load from the same origin.
+
+## Publishing the image
+
+`.github/workflows/docker.yaml` builds the image and pushes it to
+`ghcr.io/kreobuddha/the-keepers-toys/frontend`, tagged with the version from `package.json` and
+with `latest`, then tags the commit `v<version>`. It runs on demand: _Actions → Docker image → Run
+workflow_, after the release pull request is merged.
+
+The backend publishes the same way, so a server runs the two images side by side.

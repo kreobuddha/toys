@@ -1,0 +1,44 @@
+# nginx:alpine renders every /etc/nginx/templates/*.template with envsubst at startup, so
+# API_URL and PORT are read when the container starts, not when the image is built.
+
+server {
+    listen       ${PORT};
+    server_name  _;
+
+    root   /usr/share/nginx/html;
+    index  index.html;
+
+    # Hashed assets never change under their name; the shell must not be cached.
+    location /assets/ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+        try_files $uri =404;
+    }
+
+    location = /index.html {
+        add_header Cache-Control "no-cache";
+    }
+
+    # Every route is served by the same shell; the router takes over in the browser.
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    # The API and its images, same origin as the app, so the browser needs no CORS.
+    location /api/ {
+        proxy_pass         ${API_URL}/api/;
+        proxy_http_version 1.1;
+        proxy_set_header   Host              $host;
+        proxy_set_header   X-Real-IP         $remote_addr;
+        proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header   X-Forwarded-Proto $scheme;
+    }
+
+    location /assets/products/ {
+        proxy_pass ${API_URL}/assets/products/;
+    }
+
+    location /assets/articles/ {
+        proxy_pass ${API_URL}/assets/articles/;
+    }
+}
