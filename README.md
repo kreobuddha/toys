@@ -73,10 +73,14 @@ own price bounds. Values with no products behind them are left out of the panel.
 names come from the catalog; age and condition names live on the frontend, in `shopSection.json`,
 because they are protobuf enums and the interface is localized.
 
-Gaps in the contract the UI still works around, all of them raised with the backend: a product has
-no link to its journal article; errors carry no machine-readable reason, so a form cannot point at
-the field it broke; and the order payload has no locale, so the payment provider cannot return the
-customer to a localized page.
+An article arrives as a list of typed blocks (`oneof`): heading, text, image, gallery, quote, list,
+video, products, callout and divider, each with a width and an optional anchor. `ArticleBlocks`
+renders them and skips a type this version does not know, so the backend can add one without
+breaking the page. A products block hydrates through the catalog's product-ids filter.
+
+Gaps in the contract the UI still works around, both raised with the backend: the order payload has
+no locale, so the payment provider cannot return the customer to a localized page, and `CreateOrder`
+has no way to confirm the price the customer was shown.
 
 ## Localization
 

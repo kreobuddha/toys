@@ -7,7 +7,9 @@ import { formatDate, useLocale } from '@/i18n';
 import { errorReasonOf, httpStatusOf } from '@/utils/apiError';
 import { useGetArticleQuery } from '@sections/Journal/api/articlesApi';
 import ArticleBlocks from './components/ArticleBlocks/ArticleBlocks';
+import ArticleMeta from './components/ArticleMeta/ArticleMeta';
 import RelatedProducts from './components/RelatedProducts/RelatedProducts';
+import { useArticleSeo } from './useArticleSeo';
 
 const Article = (): ReactElement => {
   const { slug = '' } = useParams();
@@ -16,6 +18,8 @@ const Article = (): ReactElement => {
   const links = useLinks();
   const { data, isLoading, isError, error } = useGetArticleQuery(slug);
   const article = data?.article;
+
+  useArticleSeo(article);
 
   const isNotFound = errorReasonOf(error)?.endsWith('_NOT_FOUND') || httpStatusOf(error) === 404;
 
@@ -35,7 +39,7 @@ const Article = (): ReactElement => {
       {renderState()}
 
       {article && (
-        <article className="article__body">
+        <article className="article__body" lang={article.locale}>
           <header className="article__header">
             {article.publishedAt && (
               <time dateTime={article.publishedAt} className="article__date">
@@ -44,9 +48,16 @@ const Article = (): ReactElement => {
             )}
             <h1 className="article__title">{article.title}</h1>
             <p className="article__excerpt">{article.excerpt}</p>
+            <ArticleMeta article={article} />
           </header>
-          {article.coverImageUrl && (
-            <img src={article.coverImageUrl} alt="" className="article__cover" />
+          {article.cover && (
+            <img
+              src={article.cover.url}
+              alt={article.cover.alt ?? ''}
+              width={article.cover.width}
+              height={article.cover.height}
+              className="article__cover"
+            />
           )}
           <ArticleBlocks blocks={article.blocks ?? []} />
           <RelatedProducts productIds={article.relatedProductIds ?? []} />

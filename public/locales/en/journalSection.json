@@ -7,6 +7,10 @@
     "back": "Back to journal",
     "notFound": "This article does not exist.",
     "relatedToys": "Browse toys in the shop",
-    "relatedProducts": "Toys from this article"
+    "relatedProducts": "Toys from this article",
+    "readingMinutes_one": "{{count}} min read",
+    "readingMinutes_other": "{{count}} min read",
+    "updated": "Updated {{date}}",
+    "video": "Video"
   }
 }

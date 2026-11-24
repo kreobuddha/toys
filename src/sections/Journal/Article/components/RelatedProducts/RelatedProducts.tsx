@@ -7,10 +7,12 @@ import { useGetProductsQuery } from '@sections/Shop/api/productsApi';
 
 interface RelatedProductsProps {
   productIds: number[];
+  /** Heading the article chose; without one the section names itself. */
+  title?: string;
 }
 
 /** Toys an article is about: one request, and the catalog keeps the order it was given. */
-const RelatedProducts = ({ productIds }: RelatedProductsProps): ReactElement | null => {
+const RelatedProducts = ({ productIds, title }: RelatedProductsProps): ReactElement | null => {
   const { t } = useTranslation('journalSection');
   const { data } = useGetProductsQuery(
     productIds.length > 0
@@ -23,7 +25,7 @@ const RelatedProducts = ({ productIds }: RelatedProductsProps): ReactElement | n
 
   return (
     <section className="related-products">
-      <h2 className="related-products__title">{t('journal.relatedProducts')}</h2>
+      <h2 className="related-products__title">{title || t('journal.relatedProducts')}</h2>
       <div className="related-products__grid">
         {products.map((product) => (
           <ProductCard key={product.id} product={product} />
