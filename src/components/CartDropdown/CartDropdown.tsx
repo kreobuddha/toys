@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { getRuntimeConfig } from '@/app/runtimeConfig';
 import { useLinks } from '@/app/useLinks';
 import {
   removeItem,
@@ -57,6 +58,8 @@ const CartDropdown = (): ReactElement => {
         aria-haspopup="dialog"
         aria-expanded={open}
         aria-label={t('cart.open')}
+        // Nothing can be bought before the launch.
+        disabled={getRuntimeConfig().prelaunch}
         onClick={handleToggle}
       >
         <img src="/icons/cart.svg" alt="" width={32} height={32} className="cart-dropdown__icon" />

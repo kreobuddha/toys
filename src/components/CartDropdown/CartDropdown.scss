@@ -13,6 +13,11 @@
   border: 0;
   padding: 0;
   color: inherit;
+
+  &:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
 }
 
 .cart-dropdown__icon {
