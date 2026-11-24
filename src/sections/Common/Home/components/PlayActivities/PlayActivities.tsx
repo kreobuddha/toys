@@ -9,12 +9,13 @@ type Stage = '0-6' | '6-12' | '12-24' | '24-36' | '36-plus';
 
 const STAGES: readonly Stage[] = ['0-6', '6-12', '12-24', '24-36', '36-plus'];
 
+/** Toy illustrations from `public/toys/`, one per activity in the stage's order. */
 const ILLUSTRATIONS: Record<Stage, readonly string[]> = {
-  '0-6': ['toy-rattle', 'toy-teether', 'toy-soft-book'],
-  '6-12': ['toy-cups', 'toy-top', 'toy-drum'],
-  '12-24': ['toy-pyramid', 'toy-elephant', 'toy-blocks'],
-  '24-36': ['toy-shape-puzzle', 'toy-domino', 'toy-blocks'],
-  '36-plus': ['toy-shape-puzzle', 'toy-domino', 'toy-drum'],
+  '0-6': ['rattle', 'teether', 'soft-book'],
+  '6-12': ['cups', 'top', 'drum'],
+  '12-24': ['pyramid', 'elephant', 'blocks'],
+  '24-36': ['shape-puzzle', 'domino', 'balance-board'],
+  '36-plus': ['puzzle-piece', 'lacing', 'drum'],
 };
 
 /** The shop URL's age aliases behind each stage; a year spans two of the catalog's ranges. */
@@ -61,7 +62,7 @@ const PlayActivities = (): ReactElement => {
           {activities.map((activity, index) => (
             <li key={activity.title} className="play-activities__item">
               <img
-                src={`/home/${ILLUSTRATIONS[stage][index]}.svg`}
+                src={`/toys/${ILLUSTRATIONS[stage][index]}.svg`}
                 alt=""
                 className="play-activities__image"
               />
