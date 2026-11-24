@@ -1,6 +1,5 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '@/app/store';
-import type { ICartItemPreview } from '@/types/order';
 import type { IProduct } from '@/types/product';
 
 export interface ICartItem {
@@ -74,28 +73,15 @@ const cartSlice = createSlice({
     clearCart(state) {
       state.items = [];
     },
-    /** Takes prices and quantities from the catalog; gone and sold-out toys leave the cart. */
-    applyCartPreview(state, action: PayloadAction<ICartItemPreview[]>) {
-      const previews = new Map(action.payload.map((preview) => [preview.productId, preview]));
-      state.items = state.items.flatMap((item) => {
-        const current = previews.get(item.productId)?.current;
-        const quantity = current?.purchasableQuantity ?? 0;
-        if (!current || quantity <= 0) return [];
-        return [
-          {
-            ...item,
-            quantity,
-            title: current.title,
-            price: current.unitPriceEuroCents ?? item.price,
-            image: current.imageUrl ?? item.image,
-          },
-        ];
-      });
+    /** The customer accepts the catalog's current price for one toy. */
+    setPrice(state, action: PayloadAction<{ productId: number; price: number }>) {
+      const item = state.items.find((i) => i.productId === action.payload.productId);
+      if (item) item.price = action.payload.price;
     },
   },
 });
 
-export const { addItem, setQuantity, removeItem, clearCart, applyCartPreview } = cartSlice.actions;
+export const { addItem, setQuantity, setPrice, removeItem, clearCart } = cartSlice.actions;
 export const cartReducer = cartSlice.reducer;
 
 export const selectCartItems = (s: RootState): ICartItem[] => s.cart.items;

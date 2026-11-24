@@ -1,31 +1,61 @@
 import type { IAddress } from '@/types/address';
-import type { IOrderDelivery } from '@/types/order';
+import type { DeliveryOptionType, IDeliveryOption, IOrderDelivery } from '@/types/order';
 
-/** Delivery methods the checkout offers. */
-export type DeliveryMethod = 'pickup' | 'courier' | 'post';
+export type DeliveryType = Exclude<DeliveryOptionType, 'DELIVERY_OPTION_TYPE_UNSPECIFIED'>;
 
-export interface IDeliveryOption {
-  method: DeliveryMethod;
-  price: number; // euro cents
-  needsAddress: boolean;
-}
-
-// Until the checkout asks the backend for delivery options and their prices
-// (OrderService.GetAvailableDeliveryOptions), they live here.
-export const DELIVERY_OPTIONS: IDeliveryOption[] = [
-  { method: 'pickup', price: 0, needsAddress: false },
-  { method: 'courier', price: 500, needsAddress: true },
-  { method: 'post', price: 700, needsAddress: true },
+/** The order the checkout lists the methods in, whatever order the backend sends. */
+export const DELIVERY_ORDER: readonly DeliveryType[] = [
+  'DELIVERY_OPTION_TYPE_LOCAL_DELIVERY',
+  'DELIVERY_OPTION_TYPE_POSTNL_PICKUP_POINT',
+  'DELIVERY_OPTION_TYPE_POSTNL_HOME',
+  'DELIVERY_OPTION_TYPE_CUSTOMER_PICKUP',
 ];
 
+export interface IDeliveryChoice {
+  type: DeliveryType;
+  /** Euro cents. */
+  price: number;
+}
+
+const isKnownType = (type: DeliveryOptionType): type is DeliveryType =>
+  DELIVERY_ORDER.includes(type as DeliveryType);
+
+/** Methods delivering to the customer's own address. */
+export const needsAddress = (type: DeliveryType | ''): boolean =>
+  type === 'DELIVERY_OPTION_TYPE_LOCAL_DELIVERY' || type === 'DELIVERY_OPTION_TYPE_POSTNL_HOME';
+
+/**
+ * Methods to list: everything the shop offers, priced for the customer's address once the
+ * backend has seen it. `forAddress` wins on price, since it is the more specific answer.
+ */
+export const toDeliveryChoices = (
+  offered: IDeliveryOption[] = [],
+  forAddress: IDeliveryOption[] = []
+): IDeliveryChoice[] => {
+  const prices = new Map<DeliveryType, number>();
+  for (const option of [...offered, ...forAddress]) {
+    if (isKnownType(option.type)) prices.set(option.type, option.priceEuroCents ?? 0);
+  }
+  return DELIVERY_ORDER.flatMap((type) => {
+    const price = prices.get(type);
+    return price === undefined ? [] : [{ type, price }];
+  });
+};
+
 /** The chosen method as the order carries it: the contract uses one member per method. */
-export const toOrderDelivery = (method: DeliveryMethod, address?: IAddress): IOrderDelivery => {
-  switch (method) {
-    case 'courier':
+export const toOrderDelivery = (
+  type: DeliveryType,
+  address?: IAddress,
+  locationCode?: string
+): IOrderDelivery => {
+  switch (type) {
+    case 'DELIVERY_OPTION_TYPE_LOCAL_DELIVERY':
       return address ? { localDelivery: { address } } : {};
-    case 'post':
+    case 'DELIVERY_OPTION_TYPE_POSTNL_HOME':
       return address ? { postnlHomeDelivery: { address } } : {};
-    case 'pickup':
+    case 'DELIVERY_OPTION_TYPE_POSTNL_PICKUP_POINT':
+      return locationCode ? { postnlPickupPointDelivery: { locationCode } } : {};
+    case 'DELIVERY_OPTION_TYPE_CUSTOMER_PICKUP':
     default:
       return { customerPickup: {} };
   }
