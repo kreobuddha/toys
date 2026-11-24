@@ -72,20 +72,15 @@ const ShopFilters = ({
         id="shop-filters-panel"
         className={clsx('shop-filters__panel', open && 'shop-filters__panel--open')}
       >
-        {categoryOptions.length > 0 && (
-          <FilterGroup
-            legend={t('shop.category')}
-            options={categoryOptions}
-            selected={params.categories}
-            onChange={(categories) => onChange({ categories })}
-          />
-        )}
-        {brandOptions.length > 0 && (
-          <FilterGroup
-            legend={t('shop.brand')}
-            options={brandOptions}
-            selected={params.brands}
-            onChange={(brands) => onChange({ brands })}
+        <h2 className="shop-filters__title">
+          {activeCount > 0 ? t('shop.filtersCount', { count: activeCount }) : t('shop.filters')}
+        </h2>
+        {priceBounds && priceBounds.max > priceBounds.min && (
+          <PriceFilter
+            bounds={priceBounds}
+            min={params.minPrice}
+            max={params.maxPrice}
+            onChange={handlePriceChange}
           />
         )}
         {ageOptions.length > 0 && (
@@ -96,6 +91,14 @@ const ShopFilters = ({
             onChange={(ageRanges) => onChange({ ageRanges })}
           />
         )}
+        {categoryOptions.length > 0 && (
+          <FilterGroup
+            legend={t('shop.category')}
+            options={categoryOptions}
+            selected={params.categories}
+            onChange={(categories) => onChange({ categories })}
+          />
+        )}
         {conditionOptions.length > 0 && (
           <FilterGroup
             legend={t('shop.condition')}
@@ -104,18 +107,19 @@ const ShopFilters = ({
             onChange={(conditions) => onChange({ conditions })}
           />
         )}
-        {priceBounds && priceBounds.max > priceBounds.min && (
-          <PriceFilter
-            bounds={priceBounds}
-            min={params.minPrice}
-            max={params.maxPrice}
-            onChange={handlePriceChange}
+        {brandOptions.length > 0 && (
+          <FilterGroup
+            legend={t('shop.brand')}
+            options={brandOptions}
+            selected={params.brands}
+            onChange={(brands) => onChange({ brands })}
           />
         )}
         {canReset && (
-          <Button variant="ghost" size="sm" className="shop-filters__reset" onClick={onReset}>
+          <button type="button" className="shop-filters__reset" onClick={onReset}>
+            <img src="/icons/reset.svg" alt="" className="shop-filters__reset-icon" />
             {t('shop.reset')}
-          </Button>
+          </button>
         )}
       </div>
     </aside>

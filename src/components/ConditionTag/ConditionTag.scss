@@ -1,0 +1,32 @@
+@use '@/styles/variables' as *;
+
+// Pre-loved by default; New and Sold out recolour it.
+.condition-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: fluid(8px, 4px) fluid(14px, 10px);
+  border-radius: 100px;
+  background: var(--yellow);
+  color: var(--brown);
+  font-size: fluid(20px, 14px);
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+
+  &--new {
+    background: var(--cornflower);
+    color: var(--white);
+  }
+
+  &--sold-out {
+    background: var(--light-grey);
+    color: var(--black);
+  }
+
+  &--lg {
+    padding: fluid(8px, 4px) fluid(18px, 12px);
+    font-size: fluid(32px, 16px);
+    font-weight: 400;
+    text-transform: lowercase;
+  }
+}

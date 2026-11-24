@@ -57,7 +57,8 @@ const PriceFilter = ({ bounds, min, max, onChange }: PriceFilterProps): ReactEle
     <fieldset className="price-filter">
       <legend className="price-filter__legend">{t('shop.price')}</legend>
       <p className="price-filter__values">
-        {price(low)} – {price(high)}
+        <span>{price(low)}</span>
+        <span>{price(high)}</span>
       </p>
       <RangeSlider
         min={bounds.min}
