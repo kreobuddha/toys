@@ -21,5 +21,7 @@ COPY --from=builder /app/dist /usr/share/nginx/html
 # Backend the /api/ path is proxied to. Override it when the API lives elsewhere.
 ENV API_URL=http://api:8080
 ENV PORT=80
+# true shows the "shop opens soon" announcement instead of the catalog.
+ENV PRELAUNCH=false
 
 EXPOSE 80

@@ -9,5 +9,7 @@ services:
       # Where this container reaches the backend. On a server the two run side by side and
       # this becomes the backend's service name, for example http://api:8080.
       API_URL: '${API_URL:-http://host.docker.internal:8080}'
+      # `PRELAUNCH=true docker compose up` shows the launch announcement; no rebuild needed.
+      PRELAUNCH: '${PRELAUNCH:-false}'
     extra_hosts:
       - 'host.docker.internal:host-gateway'

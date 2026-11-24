@@ -230,9 +230,14 @@
     "error": "Could not send the request. Please try again."
   },
   "success": {
-    "title": "Thank you for your order!",
-    "text": "We've sent a confirmation to your email. Your toys are on the way.",
-    "order": "Order number",
-    "backHome": "Back to home"
+    "checkingTitle": "Checking your payment…",
+    "checkingText": "This usually takes a few seconds.",
+    "paidTitle": "Thanks for your order!",
+    "paidText": "Your order {{order}} is confirmed. We’ll email the details to {{email}}.",
+    "paidTextNoEmail": "Your order {{order}} is confirmed. We’ll email you the details.",
+    "continue": "Continue shopping",
+    "failedTitle": "Payment wasn’t completed",
+    "failedText": "Oops, your order hasn’t been placed. You can go back to your cart and try again.",
+    "backToCart": "Back to cart"
   }
 }

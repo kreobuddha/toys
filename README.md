@@ -120,12 +120,13 @@ services:
       API_URL: http://api:8080
 ```
 
-| Variable  | Default           | What it does                               |
-| --------- | ----------------- | ------------------------------------------ |
-| `API_URL` | `http://api:8080` | Backend the container proxies `/api/` to   |
-| `PORT`    | `80`              | Port nginx listens on inside the container |
+| Variable    | Default           | What it does                                                           |
+| ----------- | ----------------- | ---------------------------------------------------------------------- |
+| `API_URL`   | `http://api:8080` | Backend the container proxies `/api/` to                               |
+| `PORT`      | `80`              | Port nginx listens on inside the container                             |
+| `PRELAUNCH` | `false`           | `true` shows the "shop opens soon" announcement instead of the catalog |
 
-Both are read when the container starts, not when the image is built: nginx renders
+All three are read when the container starts, not when the image is built: nginx renders
 `docker/nginx.conf.template` with `envsubst`, so the same image runs against any backend. The
 bundle itself calls `/api/v1`, a relative path, and `/assets/products/` and `/assets/articles/`
 are proxied through so the backend's images load from the same origin.
