@@ -3,9 +3,9 @@
 .price-filter {
   min-width: 0;
   margin: 0;
-  padding: fluid(24px, 16px) 0;
+  // The first block under the title: no rule above it, unlike the groups that follow.
+  padding: 0 0 24px;
   border: 0;
-  border-top: 1px solid var(--light-grey);
 }
 
 .price-filter__legend {
@@ -22,7 +22,7 @@
   display: flex;
   justify-content: space-between;
   margin: 0;
-  padding: fluid(12px, 8px) 0;
+  padding: 12px 0;
   font-size: font-size(20px);
   line-height: 1.2;
   font-variant-numeric: tabular-nums;
