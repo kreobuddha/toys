@@ -10,8 +10,8 @@
   left: 0;
   height: 4px;
   margin-top: -2px;
-  border-radius: 2px;
-  background: var(--color-border);
+  border-radius: 100px;
+  background: var(--light-grey);
 }
 
 .range-slider__fill {
@@ -44,9 +44,9 @@
     width: 18px;
     height: 18px;
     margin-top: 3px;
-    border: 2px solid var(--color-accent);
+    border: 2px solid var(--white);
     border-radius: 50%;
-    background: var(--color-bg);
+    background: var(--blue-green);
     appearance: none;
     cursor: pointer;
     pointer-events: auto;
@@ -60,9 +60,9 @@
     box-sizing: border-box;
     width: 18px;
     height: 18px;
-    border: 2px solid var(--color-accent);
+    border: 2px solid var(--white);
     border-radius: 50%;
-    background: var(--color-bg);
+    background: var(--blue-green);
     cursor: pointer;
     pointer-events: auto;
   }

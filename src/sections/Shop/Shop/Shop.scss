@@ -1,50 +1,68 @@
+@use '@/styles/variables' as *;
 @use '@/styles/mixins' as *;
 
+.shop {
+  position: relative;
+  isolation: isolate;
+  padding-top: fluid(100px, 32px);
+  padding-bottom: fluid(140px, 64px);
+}
+
+.shop__heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 24px;
+  margin-bottom: fluid(60px, 24px);
+}
+
 .shop__title {
-  margin: 32px 0 24px;
-}
-
-.shop__layout {
-  display: grid;
-  grid-template-columns: 240px 1fr;
-  gap: 32px;
-  align-items: start;
-
-  @include tablet {
-    grid-template-columns: 1fr;
-  }
-}
-
-.shop__content {
-  min-width: 0;
+  margin: 0;
+  color: var(--brown);
+  font-size: fluid(80px, 40px);
+  line-height: 1.1;
 }
 
 .shop__toolbar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 16px;
+  gap: fluid(24px, 12px);
 }
 
 .shop__count {
-  color: var(--color-muted);
+  font-size: fluid(28px, 16px);
+  font-weight: 600;
   white-space: nowrap;
+}
+
+.shop__layout {
+  display: grid;
+  grid-template-columns: fluid(340px, 260px) minmax(0, 1fr);
+  gap: fluid(60px, 24px);
+  align-items: start;
+
+  @include tablet {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 .shop__grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: fluid(40px, 16px) fluid(32px, 12px);
   transition: opacity 0.15s;
 
   &[aria-busy='true'] {
     opacity: 0.6;
   }
 
-  @include mobile {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+  @media (max-width: 1279px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (max-width: 479px) {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -52,4 +70,35 @@
   padding: 48px 0;
   text-align: center;
   color: var(--color-muted);
+}
+
+.shop__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: fluid(24px, 16px);
+  padding: fluid(50px, 32px) fluid(90px, 20px);
+  border-radius: fluid(40px, 20px);
+  background: rgba(255, 255, 255, 0.8);
+  text-align: center;
+}
+
+.shop__empty-image {
+  width: fluid(320px, 180px);
+  height: fluid(320px, 180px);
+  padding: fluid(20px, 12px) fluid(50px, 28px);
+  object-fit: contain;
+}
+
+.shop__empty-title {
+  margin: 0;
+  color: var(--brown);
+  font-size: fluid(64px, 30px);
+  line-height: 1.1;
+}
+
+.shop__empty-text {
+  margin: 0 0 fluid(12px, 4px);
+  font-size: fluid(28px, 17px);
+  line-height: 1.35;
 }

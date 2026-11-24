@@ -94,6 +94,8 @@
 .play-activities__image {
   width: fluid(320px, 180px);
   height: fluid(320px, 180px);
+  // The illustrations are cropped to the drawing; the padding restores the design's 320px frame.
+  padding: fluid(40px, 22px);
   object-fit: contain;
   transition:
     width 0.2s,

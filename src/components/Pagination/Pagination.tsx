@@ -1,7 +1,6 @@
 import './Pagination.scss';
 import type { ReactElement } from 'react';
 import clsx from 'clsx';
-import Button from '@components/Button/Button';
 import { useTranslation } from 'react-i18next';
 
 interface PaginationProps {
@@ -31,9 +30,14 @@ const Pagination = ({ page, pageCount, onChange }: PaginationProps): ReactElemen
 
   return (
     <nav className="pagination" aria-label="Pagination">
-      <Button variant="secondary" size="sm" disabled={page <= 1} onClick={() => onChange(page - 1)}>
+      <button
+        type="button"
+        className="pagination__step"
+        disabled={page <= 1}
+        onClick={() => onChange(page - 1)}
+      >
         {t('pagination.prev')}
-      </Button>
+      </button>
       <ul className="pagination__list">
         {pageItems(page, pageCount).map((item, i) => (
           <li key={`${item}-${i}`}>
@@ -52,14 +56,14 @@ const Pagination = ({ page, pageCount, onChange }: PaginationProps): ReactElemen
           </li>
         ))}
       </ul>
-      <Button
-        variant="secondary"
-        size="sm"
+      <button
+        type="button"
+        className="pagination__step"
         disabled={page >= pageCount}
         onClick={() => onChange(page + 1)}
       >
         {t('pagination.next')}
-      </Button>
+      </button>
     </nav>
   );
 };

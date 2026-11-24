@@ -1,4 +1,20 @@
-.sort-select {
-  width: 220px;
-  max-width: 100%;
+@use '@/styles/variables' as *;
+
+// The shared select restyled as the design's pill with a chevron.
+.sort-select .select__control {
+  height: auto;
+  padding: fluid(14px, 10px) fluid(56px, 44px) fluid(14px, 10px) fluid(20px, 16px);
+  border: 1px solid var(--light-grey);
+  border-radius: 100px;
+  background: var(--white) url('/icons/chevron-down.svg') right fluid(20px, 14px) center /
+    fluid(24px, 20px) no-repeat;
+  font-size: fluid(28px, 16px);
+  line-height: 1.2;
+  appearance: none;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--blue-green);
+    outline-offset: 2px;
+  }
 }

@@ -2,6 +2,8 @@ import './Shop.scss';
 import { useMemo, type ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toPriceBounds } from '@/constants/productAttributes';
+import BackgroundShapes from '@components/BackgroundShapes/BackgroundShapes';
+import Button from '@components/Button/Button';
 import Pagination from '@components/Pagination/Pagination';
 import ProductCard from '@components/ProductCard/ProductCard';
 import { useGetProductFacetsQuery, useGetProductsQuery } from '@sections/Shop/api/productsApi';
@@ -28,9 +30,22 @@ const Shop = (): ReactElement => {
     window.scrollTo({ top: 0 });
   };
 
+  const isEmpty = Boolean(data) && products.length === 0;
+
   return (
     <section className="container shop">
-      <h1 className="shop__title">{t('shop.title')}</h1>
+      <BackgroundShapes layout={isEmpty ? 'empty' : 'shop'} />
+      <div className="shop__heading">
+        <h1 className="shop__title">{t('shop.title')}</h1>
+        <div className="shop__toolbar">
+          <span className="shop__count">{data ? t('shop.results', { count: total }) : ' '}</span>
+          <SortSelect
+            value={params.sort}
+            defaultValue={DEFAULT_SORT}
+            onChange={(sort) => update({ sort })}
+          />
+        </div>
+      </div>
       <div className="shop__layout">
         <ShopFilters
           params={params}
@@ -42,18 +57,17 @@ const Shop = (): ReactElement => {
           onReset={reset}
         />
         <div className="shop__content">
-          <div className="shop__toolbar">
-            <span className="shop__count">{data ? t('shop.results', { count: total }) : ' '}</span>
-            <SortSelect
-              value={params.sort}
-              defaultValue={DEFAULT_SORT}
-              onChange={(sort) => update({ sort })}
-            />
-          </div>
-
           {isError && <p className="shop__state">{t('translation:common.error')}</p>}
           {isLoading && <p className="shop__state">{t('translation:common.loading')}</p>}
-          {data && products.length === 0 && <p className="shop__state">{t('shop.empty')}</p>}
+
+          {isEmpty && (
+            <div className="shop__empty">
+              <img src="/toys/puzzle-piece.svg" alt="" className="shop__empty-image" />
+              <h2 className="shop__empty-title">{t('shop.emptyTitle')}</h2>
+              <p className="shop__empty-text">{t('shop.emptyText')}</p>
+              {activeCount > 0 && <Button onClick={reset}>{t('shop.emptyAction')}</Button>}
+            </div>
+          )}
 
           {products.length > 0 && (
             <div className="shop__grid" aria-busy={isFetching}>
