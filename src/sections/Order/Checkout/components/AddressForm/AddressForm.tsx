@@ -11,17 +11,12 @@ import { parseHouseNumber, type CheckoutFormValues } from '@sections/Order/Check
 
 const LOOKUP_DELAY_MS = 300;
 
-interface AddressFormProps {
-  /** The address is fine, but the chosen method does not serve it. */
-  areaError?: string;
-}
-
 /**
  * Postcode and house number first, as Dutch addresses go. Once both are valid the register fills
  * in the street and the city; the customer can still overwrite them, and a missing lookup never
  * blocks the order.
  */
-const AddressForm = ({ areaError }: AddressFormProps): ReactElement => {
+const AddressForm = (): ReactElement => {
   const { t } = useTranslation('orderSection');
   const {
     register,
@@ -104,9 +99,21 @@ const AddressForm = ({ areaError }: AddressFormProps): ReactElement => {
         label={t('checkout.city')}
         placeholder={t('checkout.city')}
         autoComplete="address-level2"
-        error={errors.city?.message ?? areaError}
+        error={errors.city?.message}
         {...register('city', { required: t('checkout.errors.cityRequired') })}
       />
+      <div className="input">
+        <label className="input__label" htmlFor="deliveryNotes">
+          {t('checkout.deliveryNotes')}
+        </label>
+        <textarea
+          id="deliveryNotes"
+          rows={2}
+          placeholder={t('checkout.deliveryNotesPlaceholder')}
+          className="input__control input__control--multiline"
+          {...register('deliveryNotes')}
+        />
+      </div>
     </fieldset>
   );
 };

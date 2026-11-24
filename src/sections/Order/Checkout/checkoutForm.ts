@@ -13,6 +13,8 @@ export interface CheckoutFormValues {
   houseNumber: string;
   street: string;
   city: string;
+  /** Apartment, floor or instructions. The order contract has no field for it yet. */
+  deliveryNotes: string;
   /** Postcode typed into the pickup point search. */
   pickupPostcode: string;
   /** Location code of the chosen PostNL pickup point. */
@@ -23,11 +25,13 @@ export const CHECKOUT_DEFAULTS: CheckoutFormValues = {
   name: '',
   email: '',
   phone: '',
-  delivery: '',
+  // The design opens with The Keepers delivery chosen.
+  delivery: 'DELIVERY_OPTION_TYPE_LOCAL_DELIVERY',
   postcode: '',
   houseNumber: '',
   street: '',
   city: '',
+  deliveryNotes: '',
   pickupPostcode: '',
   pickupPoint: '',
 };
