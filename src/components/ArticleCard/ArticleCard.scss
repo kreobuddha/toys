@@ -33,7 +33,7 @@
 
 .article-card__date {
   color: var(--blue-green);
-  font-size: fluid(20px, 13px);
+  font-size: font-size(20px);
   line-height: 1.2;
   text-transform: uppercase;
 }
@@ -41,7 +41,7 @@
 .article-card__title {
   margin: 0;
   color: var(--brown);
-  font-size: fluid(32px, 20px);
+  font-size: font-size(32px);
   line-height: 1.2;
 }
 
@@ -55,13 +55,13 @@
 
 .article-card__excerpt {
   margin: 0;
-  font-size: fluid(24px, 15px);
+  font-size: font-size(24px);
   line-height: 1.33;
 }
 
 .article-card__more {
   margin-top: auto;
   color: var(--blue-green);
-  font-size: fluid(24px, 15px);
+  font-size: font-size(24px);
   line-height: 1.2;
 }

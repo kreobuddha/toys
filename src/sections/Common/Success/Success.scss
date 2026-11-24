@@ -40,13 +40,13 @@
 .success__title {
   margin: 0;
   color: var(--brown);
-  font-size: fluid(64px, 32px);
+  font-size: font-size(64px);
   line-height: 1.1;
 }
 
 .success__text {
   max-width: 1040px;
   margin: 0;
-  font-size: fluid(28px, 17px);
+  font-size: font-size(28px);
   line-height: 1.4;
 }
