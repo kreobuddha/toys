@@ -1,9 +1,12 @@
 import { fetchBaseQuery, type FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
 import { api } from '@/api/api';
 import type {
+  INlAddressLookup,
+  INlAddressQuery,
   INlCitySuggestion,
   INlStreetQuery,
   INlStreetSuggestion,
+  IPdokAddress,
   IPdokCity,
   IPdokResponse,
   IPdokStreet,
@@ -124,8 +127,29 @@ export const pdokApi = api.injectEndpoints({
         return { data: byNumber ? toHouseNumbers(docs) : toStreetNames(docs) };
       },
     }),
+    /** Street and city of a postcode and house number; null when the register has no match. */
+    lookupNlAddress: build.query<INlAddressLookup | null, INlAddressQuery>({
+      queryFn: async ({ postcode, houseNumber }, queryApi, extraOptions) => {
+        const params = new URLSearchParams({
+          q: `postcode:${postcode} AND huisnummer:${houseNumber}`,
+          fq: 'type:adres',
+          fl: 'straatnaam,woonplaatsnaam',
+          rows: '1',
+        });
+        const result = await pdokBaseQuery(`/free?${params}`, queryApi, extraOptions);
+        if (result.error) return { error: result.error };
+        const docs = (result.data as IPdokResponse<IPdokAddress>).response?.docs;
+        if (!docs) return { error: UNEXPECTED_RESPONSE };
+        const doc = docs[0];
+        return { data: doc ? { street: doc.straatnaam, city: doc.woonplaatsnaam } : null };
+      },
+    }),
   }),
 });
 
-export const { useSuggestNlCitiesQuery, useLazySuggestNlCitiesQuery, useSuggestNlStreetsQuery } =
-  pdokApi;
+export const {
+  useSuggestNlCitiesQuery,
+  useLazySuggestNlCitiesQuery,
+  useSuggestNlStreetsQuery,
+  useLookupNlAddressQuery,
+} = pdokApi;
