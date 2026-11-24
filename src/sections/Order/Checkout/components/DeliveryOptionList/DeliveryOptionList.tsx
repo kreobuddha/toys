@@ -9,7 +9,7 @@ import type { CheckoutFormValues } from '@sections/Order/Checkout/checkoutForm';
 import type { DeliveryType, IDeliveryChoice } from '@sections/Order/Checkout/deliveryOptions';
 
 interface DeliveryOptionListProps {
-  choices: IDeliveryChoice[];
+  choices: readonly IDeliveryChoice[];
 }
 
 // Explicit map so the keys stay type-checked against the translation file.

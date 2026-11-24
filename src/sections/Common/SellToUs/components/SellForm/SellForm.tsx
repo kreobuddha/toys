@@ -256,7 +256,7 @@ const SellForm = (): ReactElement => {
 
         {submitError && <p className="sell-form__error">{submitError}</p>}
 
-        <Button type="submit" disabled={isLoading}>
+        <Button type="submit" disabled={isLoading} aria-busy={isLoading}>
           {isLoading ? t('sellToUs.sending') : t('sellToUs.submit')}
         </Button>
       </form>

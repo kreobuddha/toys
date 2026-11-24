@@ -242,11 +242,10 @@
     "error": "Could not send the request. Please try again."
   },
   "success": {
-    "checkingTitle": "Checking your payment…",
-    "checkingText": "This usually takes a few seconds.",
     "paidTitle": "Thanks for your order!",
     "paidText": "Your order {{order}} is confirmed. We’ll email the details to {{email}}.",
     "paidTextNoEmail": "Your order {{order}} is confirmed. We’ll email you the details.",
+    "paidTextNoOrder": "Your order is confirmed. We’ll email you the details.",
     "continue": "Continue shopping",
     "failedTitle": "Payment wasn’t completed",
     "failedText": "Oops, your order hasn’t been placed. You can go back to your cart and try again.",

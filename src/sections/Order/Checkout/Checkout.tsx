@@ -14,28 +14,16 @@ import {
   setQuantity,
 } from '@/features/cart/cartSlice';
 import { useErrorMessage, useValidationMessage } from '@/i18n/errorLabels';
-import type { IAddress } from '@/types/address';
 import type { ICreateOrderRequest, IPreviewCartRequest } from '@/types/order';
 import { errorReasonOf, fieldViolationsOf } from '@/utils/apiError';
-import { isNlPostcode, normalizePostcode } from '@/utils/nlAddress';
 import BackgroundShapes from '@components/BackgroundShapes/BackgroundShapes';
 import Button from '@components/Button/Button';
 import Input from '@components/Input/Input';
-import { useDebouncedValue } from '@components/AddressFields/useDebouncedValue';
-import {
-  useCreateOrderMutation,
-  useGetDeliveryOptionsQuery,
-  usePreviewCartQuery,
-} from '@sections/Order/api/ordersApi';
+import { useCreateOrderMutation, usePreviewCartQuery } from '@sections/Order/api/ordersApi';
 import { saveLastOrder } from '@sections/Order/lastOrder';
 import { problemOf } from './cartProblems';
-import {
-  CHECKOUT_DEFAULTS,
-  parseHouseNumber,
-  toCheckoutAddress,
-  type CheckoutFormValues,
-} from './checkoutForm';
-import { needsAddress, toDeliveryChoices, toOrderDelivery } from './deliveryOptions';
+import { CHECKOUT_DEFAULTS, toCheckoutAddress, type CheckoutFormValues } from './checkoutForm';
+import { DESIGN_DELIVERY_CHOICES, needsAddress, toOrderDelivery } from './deliveryOptions';
 import AddressForm from './components/AddressForm/AddressForm';
 import CartNotice from './components/CartNotice/CartNotice';
 import DeliveryOptionList from './components/DeliveryOptionList/DeliveryOptionList';
@@ -43,7 +31,6 @@ import OrderSummary from './components/OrderSummary/OrderSummary';
 import PickupPointPicker from './components/PickupPointPicker/PickupPointPicker';
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const ADDRESS_CHECK_DELAY_MS = 400;
 
 /** Rejected fields the form can point at; anything else reads as a general failure. */
 const FORM_FIELDS = ['name', 'email', 'phone'] as const;
@@ -87,44 +74,11 @@ const Checkout = (): ReactElement => {
     control,
     formState: { errors, isSubmitting },
   } = form;
-  const [delivery = '', postcode = '', houseNumber = ''] = useWatch({
-    control,
-    name: ['delivery', 'postcode', 'houseNumber'],
-  });
+  const delivery = useWatch({ control, name: 'delivery' }) ?? '';
 
-  // Everything the shop offers, then what serves the customer's address once it is complete.
-  const { data: offered } = useGetDeliveryOptionsQuery({});
-  const house = parseHouseNumber(houseNumber);
-  const addressKey =
-    needsAddress(delivery) && isNlPostcode(postcode) && house
-      ? `${normalizePostcode(postcode)}|${house.number}|${house.addition ?? ''}`
-      : '';
-  const debouncedKey = useDebouncedValue(addressKey, ADDRESS_CHECK_DELAY_MS);
-  const addressRequest = useMemo((): Partial<IAddress> | undefined => {
-    if (!debouncedKey) return undefined;
-    const [postalCode, number, addition] = debouncedKey.split('|');
-    return { postalCode, houseNumber: number, houseNumberAddition: addition || undefined };
-  }, [debouncedKey]);
-  const forAddress = useGetDeliveryOptionsQuery(
-    addressRequest ? { address: addressRequest } : skipToken
-  );
-
-  const choices = toDeliveryChoices(offered?.options, forAddress.data?.options);
+  const choices = DESIGN_DELIVERY_CHOICES;
   const chosen = choices.find((choice) => choice.type === delivery);
-  // Only a settled answer for the address as typed can say the method does not serve it.
-  const addressChecked =
-    Boolean(addressKey) && addressKey === debouncedKey && !forAddress.isFetching;
-  const notServed =
-    addressChecked &&
-    forAddress.data !== undefined &&
-    !forAddress.data.options?.some((option) => option.type === delivery);
-  const areaError = notServed
-    ? delivery === 'DELIVERY_OPTION_TYPE_LOCAL_DELIVERY'
-      ? t('checkout.errors.outsideAmsterdam')
-      : t('checkout.errors.addressNotServed')
-    : undefined;
-
-  const blocked = problems.length > 0 || notServed;
+  const blocked = problems.length > 0;
 
   const onSubmit = async (values: CheckoutFormValues): Promise<void> => {
     setSubmitError(null);
@@ -185,6 +139,7 @@ const Checkout = (): ReactElement => {
                 <fieldset className="checkout__fieldset">
                   <legend className="checkout__legend">{t('checkout.contact')}</legend>
                   <Input
+                    reserveError
                     id="name"
                     label={t('checkout.name')}
                     autoComplete="name"
@@ -192,6 +147,7 @@ const Checkout = (): ReactElement => {
                     {...register('name', { required: t('checkout.errors.nameRequired') })}
                   />
                   <Input
+                    reserveError
                     id="email"
                     type="email"
                     label={t('checkout.email')}
@@ -203,6 +159,7 @@ const Checkout = (): ReactElement => {
                     })}
                   />
                   <Input
+                    reserveError
                     id="phone"
                     type="tel"
                     label={t('checkout.phone')}
@@ -215,20 +172,16 @@ const Checkout = (): ReactElement => {
               </div>
 
               {showDetails && (
-                <div className="checkout__card">
+                <div className="checkout__card checkout__card--details">
                   <h2 className="checkout__legend">{t('checkout.details')}</h2>
-                  {needsAddress(delivery) ? (
-                    <AddressForm areaError={areaError} />
-                  ) : (
-                    <PickupPointPicker />
-                  )}
+                  {needsAddress(delivery) ? <AddressForm /> : <PickupPointPicker />}
                 </div>
               )}
 
               {submitError && <p className="checkout__error">{submitError}</p>}
 
               <div className="checkout__submit">
-                <Button type="submit" disabled={isSubmitting || blocked}>
+                <Button type="submit" disabled={isSubmitting || blocked} aria-busy={isSubmitting}>
                   {isSubmitting ? t('checkout.paying') : t('checkout.pay')}
                 </Button>
                 {problems.length > 0 && (

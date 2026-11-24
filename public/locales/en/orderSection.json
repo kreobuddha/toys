@@ -34,6 +34,8 @@
     "houseNumber": "House number",
     "street": "Street",
     "city": "City",
+    "deliveryNotes": "Delivery notes (optional)",
+    "deliveryNotesPlaceholder": "Apartment, floor or delivery instructions",
     "pickupTitle": "Choose a pickup point",
     "pickupGuidance": "Enter a postcode to find PostNL pickup points nearby.",
     "pickupSearch": "Find pickup points",
