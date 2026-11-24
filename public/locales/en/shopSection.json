@@ -51,5 +51,18 @@
     "groupOpen": "{{from}}+",
     "range": "{{from}}–{{to}} years",
     "rangeOpen": "{{from}}+ years"
+  },
+  "launch": {
+    "title": "The shop opens in January 2027",
+    "text": "Leave your email and we’ll let you know when the shop opens.",
+    "email": "Email address",
+    "submit": "Notify me",
+    "sending": "Sending…",
+    "done": "You’re on the list. We’ll email you when the shop opens.",
+    "error": "We couldn’t sign you up. Please try again.",
+    "sellQuestion": "Have toys your child has outgrown?",
+    "sellLink": "You can already sell them to us.",
+    "emailRequired": "Enter your email address.",
+    "emailInvalid": "Enter a valid email address, for example name@example.com."
   }
 }

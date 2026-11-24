@@ -5,6 +5,7 @@ import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { DEFAULT_LOCALE } from '@/i18n/locales';
 import Layout from '@components/Layout/Layout';
 import LocaleRoute from './LocaleRoute';
+import PrelaunchGate from './PrelaunchGate';
 import { paths } from './routes';
 
 // Pages are code-split per route; Layout renders them inside a Suspense boundary.
@@ -31,8 +32,22 @@ export const router = createBrowserRouter(
           children: [
             { index: true, element: <Home /> },
             { path: paths.shop, element: <Shop /> },
-            { path: paths.product(), element: <Product /> },
-            { path: paths.checkout, element: <Checkout /> },
+            {
+              path: paths.product(),
+              element: (
+                <PrelaunchGate>
+                  <Product />
+                </PrelaunchGate>
+              ),
+            },
+            {
+              path: paths.checkout,
+              element: (
+                <PrelaunchGate>
+                  <Checkout />
+                </PrelaunchGate>
+              ),
+            },
             { path: paths.orderSuccess, element: <Success /> },
             { path: paths.sellToUs, element: <SellToUs /> },
             { path: paths.ourStory, element: <OurStory /> },

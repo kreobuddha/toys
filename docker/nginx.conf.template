@@ -19,6 +19,14 @@ server {
         add_header Cache-Control "no-cache";
     }
 
+    # Runtime settings for the app, from the container's environment: flipping PRELAUNCH needs
+    # a restart, not a rebuild.
+    location = /config.json {
+        default_type application/json;
+        add_header Cache-Control "no-cache";
+        return 200 '{ "prelaunch": ${PRELAUNCH} }';
+    }
+
     # Every route is served by the same shell; the router takes over in the browser.
     location / {
         try_files $uri $uri/ /index.html;

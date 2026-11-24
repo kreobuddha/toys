@@ -5,6 +5,7 @@ import {
   type FetchBaseQueryError,
   type FetchBaseQueryMeta,
 } from '@reduxjs/toolkit/query/react';
+import { markApiUnavailable } from '@/features/apiStatus/apiStatusSlice';
 
 export type QueryParamValue = string | number | boolean | undefined | (string | number)[];
 
@@ -36,18 +37,27 @@ const toSearch = (params: Record<string, QueryParamValue>): string => {
   return search.toString();
 };
 
+// No answer at all, or the gateway in front of the backend saying it cannot reach it. Errors the
+// backend itself returns (validation, not found) are the page's business.
+const OUTAGE_STATUSES = new Set<FetchBaseQueryError['status']>([502, 503, 504]);
+
+const isOutage = (error: FetchBaseQueryError): boolean =>
+  error.status === 'FETCH_ERROR' || OUTAGE_STATUSES.has(error.status);
+
 export const baseQuery: BaseQueryFn<
   IRequest,
   unknown,
   FetchBaseQueryError,
   object,
   FetchBaseQueryMeta
-> = (request, queryApi, extraOptions) => {
+> = async (request, queryApi, extraOptions) => {
   const search = request.params ? toSearch(request.params) : '';
   const args: FetchArgs = {
     url: search ? `${request.url}?${search}` : request.url,
     method: request.method.toUpperCase() as FetchArgs['method'],
     body: request.data,
   };
-  return rawBaseQuery(args, queryApi, extraOptions);
+  const result = await rawBaseQuery(args, queryApi, extraOptions);
+  if (result.error && isOutage(result.error)) queryApi.dispatch(markApiUnavailable());
+  return result;
 };

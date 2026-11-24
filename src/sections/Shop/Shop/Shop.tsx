@@ -1,17 +1,20 @@
 import './Shop.scss';
 import { useMemo, type ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
+import { getRuntimeConfig } from '@/app/runtimeConfig';
 import { toPriceBounds } from '@/constants/productAttributes';
 import BackgroundShapes from '@components/BackgroundShapes/BackgroundShapes';
 import Button from '@components/Button/Button';
 import Pagination from '@components/Pagination/Pagination';
 import ProductCard from '@components/ProductCard/ProductCard';
 import { useGetProductFacetsQuery, useGetProductsQuery } from '@sections/Shop/api/productsApi';
+import LaunchSignup from './components/LaunchSignup/LaunchSignup';
 import ShopFilters from './components/ShopFilters/ShopFilters';
 import SortSelect from './components/SortSelect/SortSelect';
 import { DEFAULT_SORT, PER_PAGE, useShopParams } from './useShopParams';
 
-const Shop = (): ReactElement => {
+/** The catalog with its filters, as it runs once the shop is open. */
+const Catalog = (): ReactElement => {
   const { t } = useTranslation(['shopSection', 'translation']);
   const { data: facets } = useGetProductFacetsQuery();
   const priceBounds = useMemo(
@@ -83,5 +86,21 @@ const Shop = (): ReactElement => {
     </section>
   );
 };
+
+/** Before the launch the shop page announces the opening date instead of the catalog. */
+const Launch = (): ReactElement => {
+  const { t } = useTranslation('shopSection');
+  return (
+    <section className="container shop">
+      <BackgroundShapes layout="empty" />
+      <div className="shop__heading">
+        <h1 className="shop__title">{t('shop.title')}</h1>
+      </div>
+      <LaunchSignup />
+    </section>
+  );
+};
+
+const Shop = (): ReactElement => (getRuntimeConfig().prelaunch ? <Launch /> : <Catalog />);
 
 export default Shop;

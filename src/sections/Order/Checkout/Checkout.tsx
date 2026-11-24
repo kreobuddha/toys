@@ -27,6 +27,7 @@ import {
   useGetDeliveryOptionsQuery,
   usePreviewCartQuery,
 } from '@sections/Order/api/ordersApi';
+import { saveLastOrder } from '@sections/Order/lastOrder';
 import { problemOf } from './cartProblems';
 import {
   CHECKOUT_DEFAULTS,
@@ -142,7 +143,8 @@ const Checkout = (): ReactElement => {
       delivery: toOrderDelivery(values.delivery, address, values.pickupPoint),
     };
     try {
-      const { checkoutUrl } = await createOrder(order).unwrap();
+      const { orderId, checkoutUrl } = await createOrder(order).unwrap();
+      saveLastOrder({ orderId, email: values.email });
       // Stripe Checkout is hosted off-site, so a full navigation is intended.
       window.location.assign(checkoutUrl);
     } catch (error) {

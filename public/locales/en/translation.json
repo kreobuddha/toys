@@ -88,5 +88,12 @@
   "brand": {
     "name": "The Keepers",
     "home": "The Keepers — home"
+  },
+  "unavailable": {
+    "eyebrow": "A little pause in play",
+    "title": "We couldn’t load\nthe site.",
+    "text": "Something went wrong while loading The Keepers. Please try again.",
+    "retry": "Try again",
+    "hint": "Still not loading? Check your connection and give it another go."
   }
 }
