@@ -39,7 +39,7 @@
     ]
   },
   "cart": {
-    "title": "Cart",
+    "title": "Your Cart",
     "open": "Open cart",
     "close": "Close",
     "empty": "Your cart is empty.",
