@@ -16,12 +16,12 @@ export const saveLastOrder = (order: ILastOrder): void => {
   }
 };
 
-/** The saved order when it is the one the URL names. */
-export const loadLastOrder = (orderId: string): ILastOrder | undefined => {
+/** The saved order; when the URL names an order, only if it is that one. */
+export const loadLastOrder = (orderId?: string): ILastOrder | undefined => {
   try {
     const raw = sessionStorage.getItem(STORAGE_KEY);
     const order = raw ? (JSON.parse(raw) as ILastOrder) : undefined;
-    return order?.orderId === orderId ? order : undefined;
+    return !orderId || order?.orderId === orderId ? order : undefined;
   } catch {
     return undefined;
   }

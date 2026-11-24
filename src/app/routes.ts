@@ -7,7 +7,9 @@ export const paths = {
   shop: 'shop',
   product: (slug = ':slug'): string => `shop/${slug}`,
   checkout: 'checkout',
-  orderSuccess: 'order/success',
+  // The payment provider returns the customer to one of these two.
+  success: 'success',
+  paymentError: 'payment-error',
   sellToUs: 'sell-to-us',
   ourStory: 'our-story',
   journal: 'journal',
@@ -40,7 +42,8 @@ export interface Links {
   shop: string;
   product: (slug: string) => string;
   checkout: string;
-  orderSuccess: string;
+  success: string;
+  paymentError: string;
   sellToUs: string;
   ourStory: string;
   journal: string;
@@ -55,7 +58,8 @@ export const buildLinks = (locale: Locale): Links => {
     shop: to(paths.shop),
     product: (slug) => to(paths.product(slug)),
     checkout: to(paths.checkout),
-    orderSuccess: to(paths.orderSuccess),
+    success: to(paths.success),
+    paymentError: to(paths.paymentError),
     sellToUs: to(paths.sellToUs),
     ourStory: to(paths.ourStory),
     journal: to(paths.journal),
