@@ -61,7 +61,7 @@ const LaunchSignup = (): ReactElement => {
                 pattern: { value: EMAIL_PATTERN, message: t('launch.emailInvalid') },
               })}
             />
-            <Button type="submit" disabled={isSubmitting}>
+            <Button type="submit" disabled={isSubmitting} aria-busy={isSubmitting}>
               {isSubmitting ? t('launch.sending') : t('launch.submit')}
             </Button>
           </form>

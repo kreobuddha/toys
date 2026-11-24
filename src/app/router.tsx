@@ -13,6 +13,7 @@ const Home = lazy(() => import('@sections/Common/Home/Home'));
 const OurStory = lazy(() => import('@sections/Common/OurStory/OurStory'));
 const SellToUs = lazy(() => import('@sections/Common/SellToUs/SellToUs'));
 const Success = lazy(() => import('@sections/Common/Success/Success'));
+const PaymentError = lazy(() => import('@sections/Common/PaymentError/PaymentError'));
 const NotFound = lazy(() => import('@sections/Common/NotFound/NotFound'));
 const Shop = lazy(() => import('@sections/Shop/Shop/Shop'));
 const Product = lazy(() => import('@sections/Shop/Product/Product'));
@@ -49,7 +50,8 @@ export const router = createBrowserRouter(
                 </PrelaunchGate>
               ),
             },
-            { path: paths.orderSuccess, element: <Success /> },
+            { path: paths.success, element: <Success /> },
+            { path: paths.paymentError, element: <PaymentError /> },
             { path: paths.sellToUs, element: <SellToUs /> },
             { path: paths.ourStory, element: <OurStory /> },
             { path: paths.journal, element: <Journal /> },

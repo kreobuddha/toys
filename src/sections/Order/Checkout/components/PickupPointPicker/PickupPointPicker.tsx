@@ -53,6 +53,7 @@ const PickupPointPicker = (): ReactElement => {
       </div>
       <div className="pickup-picker__search">
         <Input
+          reserveError
           id="pickupPostcode"
           label={t('checkout.postcode')}
           placeholder={t('checkout.postcodePlaceholder')}
@@ -80,12 +81,12 @@ const PickupPointPicker = (): ReactElement => {
           {isFetching && <span className="pickup-picker__spinner" aria-hidden />}
           {isFetching ? t('checkout.pickupSearching') : t('checkout.pickupSearch')}
         </Button>
+        {notFound && !errors.pickupPostcode && (
+          <p className="pickup-picker__error" role="alert">
+            {t('checkout.pickupNotFound')}
+          </p>
+        )}
       </div>
-      {notFound && (
-        <p className="pickup-picker__error" role="alert">
-          {t('checkout.pickupNotFound')}
-        </p>
-      )}
 
       {!isFetching && points.length > 0 && (
         <fieldset className="pickup-picker__results">

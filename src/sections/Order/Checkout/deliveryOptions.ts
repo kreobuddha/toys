@@ -17,6 +17,16 @@ export interface IDeliveryChoice {
   price: number;
 }
 
+/**
+ * The three methods and prices the design shows. Temporary: the checkout lists these instead of
+ * asking GetAvailableDeliveryOptions until the backend answers it as the design needs.
+ */
+export const DESIGN_DELIVERY_CHOICES: readonly IDeliveryChoice[] = [
+  { type: 'DELIVERY_OPTION_TYPE_LOCAL_DELIVERY', price: 500 },
+  { type: 'DELIVERY_OPTION_TYPE_POSTNL_PICKUP_POINT', price: 700 },
+  { type: 'DELIVERY_OPTION_TYPE_POSTNL_HOME', price: 700 },
+];
+
 const isKnownType = (type: DeliveryOptionType): type is DeliveryType =>
   DELIVERY_ORDER.includes(type as DeliveryType);
 

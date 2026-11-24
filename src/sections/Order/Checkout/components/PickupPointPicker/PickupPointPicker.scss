@@ -26,19 +26,50 @@
   line-height: 1.33;
 }
 
+// Label across the top, the postcode and the button side by side, then one line for a message
+// (the field's own error or "nothing found"), as the design lays it out.
 .pickup-picker__search {
-  display: flex;
-  align-items: flex-end;
-  gap: fluid(24px, 12px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    'label label'
+    'field button'
+    'message message';
+  column-gap: 24px;
+  row-gap: 12px;
 
   @include mobile {
-    flex-direction: column;
-    align-items: stretch;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'label'
+      'field'
+      'button'
+      'message';
   }
 }
 
+// The Input's own parts join the grid above.
 .pickup-picker__search > .input {
-  flex: 1;
+  display: contents;
+}
+
+.pickup-picker__search .input__label {
+  grid-area: label;
+}
+
+.pickup-picker__search .input__control {
+  grid-area: field;
+}
+
+.pickup-picker__search .input__error,
+.pickup-picker__search .pickup-picker__error {
+  grid-area: message;
+}
+
+// Scoped to the row: the shared Button stylesheet loads after this one.
+.pickup-picker__search .pickup-picker__button {
+  grid-area: button;
+  height: fluid(72px, 48px);
 }
 
 .pickup-picker__spinner {
