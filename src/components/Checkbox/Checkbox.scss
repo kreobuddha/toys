@@ -7,6 +7,11 @@
   font-size: font-size(20px);
   line-height: 1.25;
   cursor: pointer;
+
+  &:has(.checkbox__input:disabled) {
+    color: var(--color-muted);
+    cursor: default;
+  }
 }
 
 // A drawn box: 18px outline in a 24px cell, filled with a tick when checked.
@@ -30,6 +35,11 @@
   &:focus-visible {
     outline: 2px solid var(--blue-green);
     outline-offset: 2px;
+  }
+
+  &:disabled {
+    border-color: var(--color-border);
+    cursor: default;
   }
 }
 
