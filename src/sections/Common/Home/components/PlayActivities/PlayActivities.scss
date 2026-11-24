@@ -2,39 +2,70 @@
 @use '@/styles/mixins' as *;
 
 .play-activities {
-  padding-block: fluid(20px, 8px);
+  padding-block: 20px;
+
+  @include mobile {
+    padding-block: 8px;
+  }
 }
 
-// A tilted sheet with a strip of tape on its corner, like the footer card.
+// A tilted sheet (1720 × 1021 in the design) with a strip of tape across its top edge.
 .play-activities__card {
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: fluid(40px, 20px);
-  padding: fluid(60px, 24px) fluid(50px, 20px);
-  border-radius: fluid(40px, 24px);
+  gap: 40px;
+  padding: 60px 50px;
+  border-radius: 40px;
   background: rgba(255, 255, 255, 0.8);
   transform: rotate(2deg);
 
+  // The tape lies level on the page, so it turns back by the card's angle. Measured in the
+  // card's own frame: its top right corner 83px in from the right edge and 44px above the top.
   &::after {
     content: '';
     position: absolute;
-    top: fluid(-10px, -6px);
-    right: fluid(50px, 24px);
-    width: fluid(150px, 80px);
-    height: fluid(70px, 36px);
+    top: -44px;
+    right: 83px;
+    width: 150px;
+    height: 70px;
     background: color-mix(in srgb, var(--yellow) 70%, transparent);
+    transform: rotate(-2deg);
+    transform-origin: top right;
   }
 
   @include tablet {
+    gap: 32px;
+    padding: 40px 32px;
     transform: rotate(1deg);
+
+    &::after {
+      top: -32px;
+      right: 48px;
+      width: 110px;
+      height: 52px;
+      transform: rotate(-1deg);
+    }
+  }
+
+  @include mobile {
+    gap: 24px;
+    padding: 32px 20px;
+    border-radius: 24px;
+
+    &::after {
+      top: -24px;
+      right: 24px;
+      width: 80px;
+      height: 38px;
+    }
   }
 }
 
 .play-activities__title {
   margin: 0;
-  font-size: fluid(80px, 32px);
+  font-size: font-size(80px);
 }
 
 .play-activities__tabs {
@@ -44,108 +75,200 @@
 }
 
 .play-activities__tab {
-  min-width: fluid(120px, 72px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 122px;
+  height: 55px;
   padding: 8px 4px;
   border: 0;
   border-radius: 100px;
   background: var(--light-grey);
   color: var(--black);
-  font-size: fluid(32px, 16px);
+  font-size: font-size(32px);
   line-height: 1.1;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+
+  &:hover:not(.play-activities__tab--active) {
+    background: var(--ice);
+  }
 
   &--active {
     background: var(--dark-pink);
     color: var(--white);
   }
-}
 
-.play-activities__list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: fluid(40px, 16px);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-// Blue at rest; on hover the card turns yellow and tells what the play is about.
-.play-activities__item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: fluid(32px, 12px);
-  width: fluid(375px, 220px);
-  min-height: fluid(540px, 300px);
-  padding: 20px 20px fluid(32px, 20px);
-  border-radius: fluid(40px, 24px);
-  background: var(--ice);
-  text-align: center;
-  transition: background 0.2s;
-
-  &:hover {
-    background: var(--yellow);
+  @include tablet {
+    min-width: 96px;
+    height: 46px;
   }
 
   @include mobile {
-    width: 100%;
+    min-width: 64px;
+    height: 38px;
+    padding: 6px 12px;
   }
 }
 
-.play-activities__image {
-  width: fluid(320px, 180px);
-  height: fluid(320px, 180px);
-  // The illustrations are cropped to the drawing; the padding restores the design's 320px frame.
-  padding: fluid(40px, 22px);
-  object-fit: contain;
-  transition:
-    width 0.2s,
-    height 0.2s;
+.play-activities__list {
+  display: grid;
+  // Three or four play types per age, in one row on wide screens.
+  grid-template-columns: repeat(var(--columns, 3), minmax(0, 394px));
+  grid-auto-rows: 1fr;
+  gap: 40px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: flex;
+  }
+
+  @include tablet {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+    width: 100%;
+  }
+
+  @include mobile {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
 }
 
-.play-activities__item:hover .play-activities__image {
-  width: fluid(260px, 150px);
-  height: fluid(260px, 150px);
+// Blue at rest; on hover the card turns yellow and tells what the play is about. The two
+// faces overlap in one grid cell, so the card is always as tall as the taller one. A tap opens
+// the explanation too, for touch screens and keyboards.
+.play-activities__item {
+  display: grid;
+  flex: 1;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  min-height: 553px;
+  padding: 20px 20px 32px;
+  border-radius: 40px;
+  background: var(--ice);
+  text-align: center;
+  transition: background-color 0.3s;
+
+  &:hover,
+  &--open {
+    background: var(--yellow);
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--blue-green);
+    outline-offset: 4px;
+  }
+
+  @include tablet {
+    min-height: 0;
+    border-radius: 24px;
+  }
+}
+
+.play-activities__face {
+  grid-area: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: opacity 0.3s;
+
+  &--rest {
+    gap: 32px;
+  }
+
+  &--hover {
+    gap: 20px;
+    opacity: 0;
+  }
+}
+
+.play-activities__item:hover .play-activities__face--rest,
+.play-activities__item--open .play-activities__face--rest {
+  opacity: 0;
+}
+
+.play-activities__item:hover .play-activities__face--hover,
+.play-activities__item--open .play-activities__face--hover {
+  opacity: 1;
+}
+
+.play-activities__image {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  aspect-ratio: 1;
+  // The illustrations are cropped to the drawing; the padding restores the design's 320px frame.
+  padding: min(40px, 11%);
+  object-fit: contain;
+
+  // The hover drawings keep their own 320px frame and show at the design's 269px.
+  &--hover {
+    max-width: 269px;
+    padding: 0;
+  }
+
+  @include tablet {
+    max-width: 220px;
+
+    &--hover {
+      max-width: 180px;
+    }
+  }
 }
 
 .play-activities__item-title {
   margin: 0;
   font-family: var(--font-body);
   font-weight: 600;
-  font-size: fluid(40px, 22px);
-  line-height: 1.2;
-}
+  font-size: font-size(40px);
+  line-height: normal;
 
-.play-activities__item:hover .play-activities__item-title {
-  font-size: fluid(32px, 20px);
-}
-
-// Hidden until hover; touch screens have no hover, so they always show it.
-.play-activities__item-text {
-  display: none;
-  margin: 0;
-  font-size: fluid(28px, 16px);
-  line-height: 1.3;
-
-  @media (hover: none) {
-    display: block;
+  &--hover {
+    font-size: font-size(32px);
   }
 }
 
-.play-activities__item:hover .play-activities__item-text {
-  display: block;
+.play-activities__item-text {
+  margin: 0;
+  font-size: font-size(28px);
+  line-height: 1.3;
+}
+
+// Touch screens keep a hover after a tap; only the open state should colour the card there.
+@media (hover: none) {
+  .play-activities__item:hover:not(.play-activities__item--open) {
+    background: var(--ice);
+  }
+
+  .play-activities__item:hover:not(.play-activities__item--open) .play-activities__face--rest {
+    opacity: 1;
+  }
+
+  .play-activities__item:hover:not(.play-activities__item--open) .play-activities__face--hover {
+    opacity: 0;
+  }
 }
 
 .play-activities__explore {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  min-height: fluid(80px, 48px);
-  font-size: fluid(32px, 18px);
+  min-height: 80px;
+  font-size: font-size(32px);
   color: var(--blue-green);
   text-underline-offset: 4px;
 
   img {
-    width: fluid(24px, 18px);
+    width: 24px;
     height: auto;
+  }
+
+  @include mobile {
+    min-height: 48px;
   }
 }

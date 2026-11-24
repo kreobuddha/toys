@@ -1,5 +1,5 @@
 import './PlayActivities.scss';
-import { useState, type ReactElement } from 'react';
+import { useState, type CSSProperties, type ReactElement } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
@@ -9,13 +9,13 @@ type Stage = '0-6' | '6-12' | '12-24' | '24-36' | '36-plus';
 
 const STAGES: readonly Stage[] = ['0-6', '6-12', '12-24', '24-36', '36-plus'];
 
-/** Toy illustrations from `public/toys/`, one per activity in the stage's order. */
+/** Toy illustrations from `public/toys/`, one per play type in the stage's order. */
 const ILLUSTRATIONS: Record<Stage, readonly string[]> = {
-  '0-6': ['rattle', 'teether', 'soft-book'],
-  '6-12': ['cups', 'top', 'drum'],
-  '12-24': ['pyramid', 'elephant', 'blocks'],
-  '24-36': ['shape-puzzle', 'domino', 'balance-board'],
-  '36-plus': ['puzzle-piece', 'lacing', 'drum'],
+  '0-6': ['soft-book', 'teether', 'rattle'],
+  '6-12': ['sorter', 'cups', 'top'],
+  '12-24': ['shape-puzzle', 'pyramid', 'elephant', 'drum'],
+  '24-36': ['blocks', 'puzzle-piece', 'lacing', 'teapot'],
+  '36-plus': ['balance-board', 'domino', 'house-and-car', 'abc-blocks'],
 };
 
 /** The shop URL's age aliases behind each stage; a year spans two of the catalog's ranges. */
@@ -27,12 +27,22 @@ const SHOP_AGES: Record<Stage, string> = {
   '36-plus': '36-plus',
 };
 
+/**
+ * Play types per age. The cards only explain (hover, or a tap on touch screens, shows what the
+ * play means); the one link to the shop is the stage's "Explore" below them, as the team decided.
+ */
 const PlayActivities = (): ReactElement => {
   const { t } = useTranslation('commonSection');
   const links = useLinks();
   const [stage, setStage] = useState<Stage>('0-6');
+  const [opened, setOpened] = useState<number | null>(null);
   const ages = t('home.ages', { returnObjects: true });
   const activities = t('home.activities', { returnObjects: true })[stage];
+
+  const chooseStage = (value: Stage): void => {
+    setStage(value);
+    setOpened(null);
+  };
 
   return (
     <section className="container play-activities">
@@ -51,23 +61,55 @@ const PlayActivities = (): ReactElement => {
                 'play-activities__tab',
                 stage === value && 'play-activities__tab--active'
               )}
-              onClick={() => setStage(value)}
+              onClick={() => chooseStage(value)}
             >
               {ages[value]}
             </button>
           ))}
         </div>
 
-        <ul id="play-activities-panel" role="tabpanel" className="play-activities__list">
+        <ul
+          id="play-activities-panel"
+          role="tabpanel"
+          className="play-activities__list"
+          style={{ '--columns': activities.length } as CSSProperties}
+        >
           {activities.map((activity, index) => (
-            <li key={activity.title} className="play-activities__item">
-              <img
-                src={`/toys/${ILLUSTRATIONS[stage][index]}.svg`}
-                alt=""
-                className="play-activities__image"
-              />
-              <h3 className="play-activities__item-title">{activity.title}</h3>
-              <p className="play-activities__item-text">{activity.text}</p>
+            <li key={activity.title}>
+              {/* Both faces share one grid cell and stay laid out, so showing the explanation
+                  never changes the card's size. */}
+              <button
+                type="button"
+                className={clsx(
+                  'play-activities__item',
+                  opened === index && 'play-activities__item--open'
+                )}
+                aria-expanded={opened === index}
+                onClick={() => setOpened(opened === index ? null : index)}
+              >
+                <span className="play-activities__face play-activities__face--rest">
+                  <img
+                    src={`/toys/${ILLUSTRATIONS[stage][index]}.svg`}
+                    alt=""
+                    className="play-activities__image"
+                  />
+                  <span className="play-activities__item-title">{activity.title}</span>
+                </span>
+                <span className="play-activities__face play-activities__face--hover">
+                  <img
+                    src={`/toys/hover/${ILLUSTRATIONS[stage][index]}.svg`}
+                    alt=""
+                    className="play-activities__image play-activities__image--hover"
+                  />
+                  <span
+                    className="play-activities__item-title play-activities__item-title--hover"
+                    aria-hidden="true"
+                  >
+                    {activity.title}
+                  </span>
+                  <span className="play-activities__item-text">{activity.text}</span>
+                </span>
+              </button>
             </li>
           ))}
         </ul>
