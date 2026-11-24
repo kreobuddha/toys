@@ -1,3 +1,4 @@
+@use '@/styles/variables' as *;
 @use '@/styles/mixins' as *;
 
 .cart-dropdown {
@@ -7,20 +8,25 @@
 .cart-dropdown__toggle {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   background: none;
   border: 0;
   padding: 0;
   color: inherit;
 }
 
+.cart-dropdown__icon {
+  width: fluid(32px, 24px);
+  height: auto;
+}
+
 .cart-dropdown__badge {
-  background: var(--color-accent);
-  color: #fff;
-  border-radius: 999px;
-  padding: 0 7px;
-  font-size: 12px;
-  line-height: 18px;
+  background: var(--dark-pink);
+  color: var(--white);
+  border-radius: 100px;
+  padding: 2px 8px;
+  font-size: fluid(20px, 14px);
+  line-height: 1.2;
 }
 
 .cart-dropdown__panel {

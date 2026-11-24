@@ -1,0 +1,35 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.trust-strip {
+  background: var(--white);
+}
+
+.trust-strip__list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: fluid(20px, 16px);
+  margin: 0 auto;
+  padding-block: fluid(40px, 24px);
+  list-style: none;
+
+  @include tablet {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.trust-strip__item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 12em;
+  font-size: fluid(28px, 16px);
+  font-weight: 700;
+  line-height: 1.1;
+
+  img {
+    width: fluid(52px, 32px);
+    height: auto;
+    flex-shrink: 0;
+  }
+}

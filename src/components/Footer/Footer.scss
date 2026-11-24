@@ -1,6 +1,140 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
 .footer {
-  border-top: 1px solid var(--color-border);
-  padding: 24px 0;
-  color: var(--color-muted);
-  font-size: 14px;
+  padding-block: fluid(120px, 48px) fluid(80px, 32px);
+  overflow: hidden;
+}
+
+// A card taped to the page: tilted, with a strip of tape on its corner.
+.footer__card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: fluid(40px, 24px);
+  padding: fluid(60px, 24px) fluid(50px, 20px);
+  border-radius: 20px;
+  background: color-mix(in srgb, var(--yellow) 80%, transparent);
+  transform: rotate(-2deg);
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: fluid(-26px, -14px);
+    left: fluid(80px, 32px);
+    width: fluid(150px, 80px);
+    height: fluid(70px, 36px);
+    background: rgba(255, 255, 255, 0.7);
+  }
+
+  @include tablet {
+    transform: rotate(-1deg);
+  }
+}
+
+.footer__main {
+  display: flex;
+  justify-content: space-between;
+  gap: fluid(54px, 24px);
+
+  @include tablet {
+    flex-direction: column;
+  }
+}
+
+.footer__brand {
+  display: flex;
+  gap: fluid(54px, 20px);
+
+  @include mobile {
+    flex-direction: column;
+  }
+}
+
+.footer__logo {
+  width: fluid(276px, 140px);
+  height: auto;
+  flex-shrink: 0;
+}
+
+.footer__about {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 24px;
+  max-width: 581px;
+}
+
+.footer__tagline {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: fluid(50px, 24px);
+  line-height: 1;
+}
+
+.footer__location {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  margin: 0;
+  font-size: fluid(28px, 16px);
+  color: var(--brown);
+
+  img {
+    width: fluid(28px, 20px);
+    height: auto;
+  }
+}
+
+.footer__contacts {
+  display: flex;
+  flex-direction: column;
+  gap: fluid(32px, 16px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.footer__contact {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer__contact-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: fluid(28px, 18px);
+  color: var(--brown);
+  text-decoration: none;
+
+  img:first-child {
+    width: fluid(32px, 24px);
+    height: auto;
+    margin-right: 12px;
+  }
+}
+
+.footer__contact-caption {
+  padding-left: fluid(52px, 44px);
+  font-size: fluid(20px, 14px);
+}
+
+.footer__legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin: 0;
+  padding: fluid(40px, 20px) 0 0;
+  border-top: 1px solid var(--brown);
+  list-style: none;
+  font-size: fluid(20px, 14px);
+
+  li:not(:last-child)::after {
+    content: '·';
+    margin-left: 12px;
+  }
 }

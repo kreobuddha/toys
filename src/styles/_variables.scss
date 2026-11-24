@@ -1,6 +1,18 @@
-// Placeholder tokens until the design arrives. Keep everything here so
-// swapping to real values is a one-file change.
+@use 'sass:math';
+
 $bp-tablet: 768px;
 $bp-desktop: 1024px;
-$container-max: 1200px;
-$container-pad: 16px;
+
+// The design is drawn on a 1920px frame with 100px side margins.
+$design-width: 1920px;
+$container-max: 1720px;
+
+/**
+ * A size that equals the design value on the 1920px frame and shrinks with the viewport below
+ * it, never under `$min` (half the design value by default).
+ */
+@function fluid($max, $min: math.div($max, 2)) {
+  @return clamp(#{$min}, #{math.div($max, $design-width) * 100vw}, #{$max});
+}
+
+$container-pad: fluid(100px, 16px);

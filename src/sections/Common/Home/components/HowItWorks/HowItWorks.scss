@@ -1,0 +1,117 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.how-it-works {
+  padding-block: fluid(140px, 56px) fluid(180px, 56px);
+}
+
+.how-it-works__title {
+  margin: 0 0 fluid(80px, 32px);
+  font-size: fluid(80px, 36px);
+}
+
+.how-it-works__steps {
+  position: relative;
+  padding-top: fluid(103px, 0px);
+}
+
+// The arrow from the last step back to the first, and the line through the numbers, sit on the
+// 1720px content box: horizontal positions are fractions of it.
+.how-it-works__loop {
+  position: absolute;
+  top: 0;
+  left: 11.57%;
+  width: 76.8%;
+  height: auto;
+
+  @include tablet {
+    display: none;
+  }
+}
+
+.how-it-works__line {
+  position: absolute;
+  top: fluid(150px, 0px);
+  left: 15.81%;
+  width: 68.31%;
+  height: auto;
+
+  @include tablet {
+    display: none;
+  }
+}
+
+.how-it-works__list {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: fluid(40px, 24px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @include tablet {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+}
+
+.how-it-works__step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding-inline: fluid(24px, 0px);
+  text-align: center;
+}
+
+.how-it-works__number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: fluid(100px, 56px);
+  height: fluid(100px, 56px);
+  margin-bottom: fluid(20px, 8px);
+  border-radius: 50%;
+  background: var(--yellow);
+  font-size: fluid(32px, 20px);
+  color: var(--brown);
+}
+
+.how-it-works__step-title {
+  max-width: 9em;
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: fluid(40px, 22px);
+  line-height: 1.2;
+}
+
+.how-it-works__step-text {
+  flex: 1;
+  margin: 0 0 fluid(20px, 8px);
+  font-size: fluid(28px, 16px);
+  line-height: 1.2;
+}
+
+.how-it-works__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: fluid(80px, 48px);
+  font-size: fluid(32px, 18px);
+  color: var(--blue-green);
+  text-underline-offset: 4px;
+
+  img {
+    width: fluid(24px, 18px);
+    height: auto;
+  }
+}
+
+.how-it-works__action {
+  min-width: fluid(315px, 200px);
+}

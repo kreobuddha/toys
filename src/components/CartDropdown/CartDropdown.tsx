@@ -59,7 +59,7 @@ const CartDropdown = (): ReactElement => {
         aria-label={t('cart.open')}
         onClick={handleToggle}
       >
-        {t('cart.title')}
+        <img src="/icons/cart.svg" alt="" width={32} height={32} className="cart-dropdown__icon" />
         {count > 0 && <span className="cart-dropdown__badge">{count}</span>}
       </button>
 

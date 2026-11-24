@@ -21,7 +21,22 @@
     "empty": "No matches"
   },
   "footer": {
-    "rights": "All rights reserved."
+    "tagline": "Thoughtfully chosen toys, carefully checked — and easy to pass on when the time comes.",
+    "location": "Amsterdam, Netherlands",
+    "email": "thekeepers@gmail.com",
+    "emailCaption": "replies in 1–2 business days",
+    "instagram": "Instagram",
+    "instagramCaption": "behind the scenes",
+    "review": "Leave a review",
+    "reviewCaption": "your feedback helps us grow",
+    "legal": [
+      "Shipping & payment",
+      "Refund policy",
+      "Terms of service",
+      "Company details",
+      "Privacy policy",
+      "Cookie preferences"
+    ]
   },
   "cart": {
     "title": "Cart",
@@ -69,5 +84,9 @@
     "invalidPostcode": "Enter a Dutch postcode, like 1012 AB.",
     "nlOnly": "We deliver within the Netherlands only.",
     "required": "This field is required"
+  },
+  "brand": {
+    "name": "The Keepers",
+    "home": "The Keepers — home"
   }
 }
