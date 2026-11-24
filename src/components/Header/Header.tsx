@@ -20,8 +20,8 @@ const Header = (): ReactElement => {
   return (
     <header className="header">
       <div className="container header__inner">
-        <Link to={links.home} className="header__logo">
-          Toys
+        <Link to={links.home} className="header__logo" aria-label={t('brand.home')}>
+          <img src="/brand/logo-k.svg" alt="" width={46} height={40} />
         </Link>
         <nav className="header__nav">
           {navItems.map(({ to, label }) => (

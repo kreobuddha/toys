@@ -1,0 +1,149 @@
+@use '@/styles/variables' as *;
+@use '@/styles/mixins' as *;
+
+.play-activities {
+  padding-block: fluid(20px, 8px);
+}
+
+// A tilted sheet with a strip of tape on its corner, like the footer card.
+.play-activities__card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: fluid(40px, 20px);
+  padding: fluid(60px, 24px) fluid(50px, 20px);
+  border-radius: fluid(40px, 24px);
+  background: rgba(255, 255, 255, 0.8);
+  transform: rotate(2deg);
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: fluid(-10px, -6px);
+    right: fluid(50px, 24px);
+    width: fluid(150px, 80px);
+    height: fluid(70px, 36px);
+    background: color-mix(in srgb, var(--yellow) 70%, transparent);
+  }
+
+  @include tablet {
+    transform: rotate(1deg);
+  }
+}
+
+.play-activities__title {
+  margin: 0;
+  font-size: fluid(80px, 32px);
+}
+
+.play-activities__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.play-activities__tab {
+  min-width: fluid(120px, 72px);
+  padding: 8px 4px;
+  border: 0;
+  border-radius: 100px;
+  background: var(--light-grey);
+  color: var(--black);
+  font-size: fluid(32px, 16px);
+  line-height: 1.1;
+
+  &--active {
+    background: var(--dark-pink);
+    color: var(--white);
+  }
+}
+
+.play-activities__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: fluid(40px, 16px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+// Blue at rest; on hover the card turns yellow and tells what the play is about.
+.play-activities__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: fluid(32px, 12px);
+  width: fluid(375px, 220px);
+  min-height: fluid(540px, 300px);
+  padding: 20px 20px fluid(32px, 20px);
+  border-radius: fluid(40px, 24px);
+  background: var(--ice);
+  text-align: center;
+  transition: background 0.2s;
+
+  &:hover {
+    background: var(--yellow);
+  }
+
+  @include mobile {
+    width: 100%;
+  }
+}
+
+.play-activities__image {
+  width: fluid(320px, 180px);
+  height: fluid(320px, 180px);
+  object-fit: contain;
+  transition:
+    width 0.2s,
+    height 0.2s;
+}
+
+.play-activities__item:hover .play-activities__image {
+  width: fluid(260px, 150px);
+  height: fluid(260px, 150px);
+}
+
+.play-activities__item-title {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: fluid(40px, 22px);
+  line-height: 1.2;
+}
+
+.play-activities__item:hover .play-activities__item-title {
+  font-size: fluid(32px, 20px);
+}
+
+// Hidden until hover; touch screens have no hover, so they always show it.
+.play-activities__item-text {
+  display: none;
+  margin: 0;
+  font-size: fluid(28px, 16px);
+  line-height: 1.3;
+
+  @media (hover: none) {
+    display: block;
+  }
+}
+
+.play-activities__item:hover .play-activities__item-text {
+  display: block;
+}
+
+.play-activities__explore {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: fluid(80px, 48px);
+  font-size: fluid(32px, 18px);
+  color: var(--blue-green);
+  text-underline-offset: 4px;
+
+  img {
+    width: fluid(24px, 18px);
+    height: auto;
+  }
+}

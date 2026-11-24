@@ -1,18 +1,18 @@
+@use '@/styles/variables' as *;
 @use '@/styles/mixins' as *;
 
 .header {
   position: sticky;
   top: 0;
   z-index: 10;
-  background: var(--color-bg);
-  border-bottom: 1px solid var(--color-border);
+  background: var(--sky);
 }
 
 .header__inner {
   display: flex;
   align-items: center;
-  gap: 32px;
-  height: 64px;
+  gap: fluid(80px, 24px);
+  padding-block: fluid(20px, 12px);
 
   @include mobile {
     gap: 16px;
@@ -20,29 +20,39 @@
 }
 
 .header__logo {
-  font-weight: 700;
-  text-decoration: none;
+  flex-shrink: 0;
+
+  img {
+    width: fluid(46px, 32px);
+    height: auto;
+  }
 }
 
 .header__nav {
   display: flex;
-  gap: 24px;
+  gap: fluid(40px, 16px);
   flex: 1;
 
   // Four links plus logo and cart do not fit a phone: scroll instead of wrapping.
   @include mobile {
-    gap: 16px;
     overflow-x: auto;
     scrollbar-width: none;
   }
 }
 
 .header__link {
+  font-size: fluid(28px, 15px);
+  color: var(--brown);
   text-decoration: none;
-  color: var(--color-muted);
+  text-transform: uppercase;
   white-space: nowrap;
+  text-underline-offset: 6px;
+
+  &:hover {
+    text-decoration: underline;
+  }
 
   &--active {
-    color: var(--color-text);
+    font-weight: 600;
   }
 }

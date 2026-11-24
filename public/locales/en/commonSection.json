@@ -1,58 +1,149 @@
 {
   "home": {
-    "heroTitle": "Loved toys, ready for a second childhood",
-    "heroText": "We buy back educational toys children have outgrown, restore them and pass them on. Good for the planet, good for your wallet.",
-    "heroShop": "Browse toys",
-    "heroSell": "Sell your toys",
+    "heroEyebrow": "Pre-loved & new toys · ages 0–4",
+    "heroTitle": "Good toys deserve another childhood",
+    "heroText": "Choose what fits now — pass it on later.",
+    "heroShop": "Shop",
+    "heroSell": "Sell to us",
+    "trust": [
+      "Every toy is here for a reason",
+      "Checked, cleaned & ready to play",
+      "Natural materials first",
+      "Good toys can come back"
+    ],
     "howTitle": "How it works",
     "how": [
       {
-        "title": "Families send us toys",
-        "text": "Parents whose children have outgrown their toys fill in a short form and ship them to us."
+        "title": "It starts with good toys",
+        "text": "New or pre-loved, every toy is thoughtfully chosen for play.",
+        "link": "How we choose"
       },
       {
-        "title": "We restore and check",
-        "text": "Every item is cleaned, checked for missing parts and repaired where needed."
+        "title": "We check and clean them",
+        "text": "So every pre-loved toy arrives ready to play.",
+        "link": "How we care"
       },
       {
-        "title": "You pick and we deliver",
-        "text": "Choose from our shop, pay online and get the toys at your door or pick them up."
+        "title": "Choose a toy that fits now",
+        "text": "Discover toys by age or type of play.",
+        "link": "Explore toys"
+      },
+      {
+        "title": "Outgrown it? Pass it on",
+        "text": "Still in good condition? Sell it to us and we’ll get it ready for the next child.",
+        "link": "Sell to us"
       }
     ],
-    "featuredTitle": "Just arrived",
-    "featuredAll": "See all toys",
-    "faqTitle": "Questions parents ask",
-    "faq": [
-      {
-        "q": "Are the toys safe?",
-        "a": "Yes. Each toy is cleaned, checked against the manufacturer's age label and has no missing or broken parts."
-      },
-      {
-        "q": "What condition are they in?",
-        "a": "Every listing states the condition honestly: new, excellent or good. Photos show the actual item."
-      },
-      {
-        "q": "Can I return a toy?",
-        "a": "Within 14 days, if it is not what you expected. Contact us and we will arrange the return."
-      },
-      {
-        "q": "Where do you deliver?",
-        "a": "Across the Netherlands by courier or post, or pick up in Amsterdam for free."
-      }
-    ],
-    "reviewsTitle": "What parents say",
+    "activitiesTitle": "Play activities for every stage",
+    "ages": {
+      "0-6": "0-6m",
+      "6-12": "6-12m",
+      "12-24": "1-2y",
+      "24-36": "2-3y",
+      "36-plus": "3+y"
+    },
+    "activitiesExplore": "Explore {{age}} toys",
+    "activities": {
+      "0-6": [
+        {
+          "title": "Sensory discovery",
+          "text": "Soft colours and gentle sounds to look at, touch and follow."
+        },
+        {
+          "title": "Reaching & grasping",
+          "text": "Rings and rattles that are easy to hold and pass from hand to hand."
+        },
+        {
+          "title": "Sound & movement",
+          "text": "Shaking and moving toys to discover the sounds they make."
+        }
+      ],
+      "6-12": [
+        {
+          "title": "Stacking & nesting",
+          "text": "Cups that stack up, tumble down and fit inside each other."
+        },
+        {
+          "title": "Watching things move",
+          "text": "Spinning and rolling toys that keep little eyes busy."
+        },
+        {
+          "title": "Cause & effect",
+          "text": "Tap it, hear it: the first “I did that!” moments."
+        }
+      ],
+      "12-24": [
+        {
+          "title": "Sizes & order",
+          "text": "Rings from big to small, with no wrong way to start."
+        },
+        {
+          "title": "Push & pull",
+          "text": "Toys on wheels that follow every new step."
+        },
+        {
+          "title": "First building",
+          "text": "A few solid blocks are enough to start a tower."
+        }
+      ],
+      "24-36": [
+        {
+          "title": "Shapes & fitting",
+          "text": "Each piece has its place — and finding it feels great."
+        },
+        {
+          "title": "Matching pictures",
+          "text": "Spotting pairs builds attention and memory."
+        },
+        {
+          "title": "Building & balance",
+          "text": "Taller towers, bridges and the joy of knocking them down."
+        }
+      ],
+      "36-plus": [
+        {
+          "title": "Problem solving",
+          "text": "Puzzles that ask for a plan, not just a lucky guess."
+        },
+        {
+          "title": "Counting games",
+          "text": "Dots, numbers and taking turns with a friend."
+        },
+        {
+          "title": "Making music",
+          "text": "Rhythms to copy, invent and play together."
+        }
+      ]
+    },
+    "reviewsTitle": "Why parents choose us",
+    "reviewsLead": "Less clutter at home, no more wasted purchases, and toys that actually get used.",
+    "reviewsPrevious": "Previous reviews",
+    "reviewsNext": "Next reviews",
+    "reviewsPage": "Reviews {{index}}",
     "reviews": [
       {
-        "text": "The magnetic tiles looked brand new. My son has played with them every day since.",
-        "author": "Anna, Amsterdam"
+        "text": "“Perfect for our small living room” We don’t have much space, so this is ideal. My daughter always gets toys that match her age and I don’t have to store anything. Everything arrives clean and neatly packed.",
+        "author": "Maartje, Haarlem"
       },
       {
-        "text": "Sending in our old puzzles was easy and it felt good knowing they will be used again.",
-        "author": "Mark, Utrecht"
+        "text": "We don’t have much space at home, so this works perfectly for us. My daughter always gets toys that suit her age and what she’s interested in right now, without us having to keep buying more and more. When she outgrows something, we can simply pass it on instead of finding another place to store it. Everything we’ve received has been clean, in great condition and carefully packed.",
+        "author": "Sophie, Amsterdam"
       },
       {
-        "text": "Half the price of new and nothing was missing. We will be back.",
-        "author": "Sofie, Haarlem"
+        "text": "When our son outgrew his toys we simply passed them on. It feels good knowing another child will play with them.",
+        "author": "Noor, Leiden"
+      },
+      {
+        "text": "The wooden blocks looked brand new. My son has played with them every day since they arrived.",
+        "author": "Lotte, Utrecht"
+      },
+      {
+        "text": "Clear descriptions, honest about every mark, and quick to answer questions. Exactly what you want when buying second-hand.",
+        "author": "Daan, Amsterdam"
+      },
+      {
+        "text": "We sold a box of toys our twins had outgrown and bought a balance board for the next stage. Easy both ways.",
+        "author": "Eva, Rotterdam"
       }
     ]
   },

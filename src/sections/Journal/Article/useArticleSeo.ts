@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import type { IArticle } from '@/types/article';
 
-const DEFAULT_TITLE = 'Toys';
+const DEFAULT_TITLE = 'The Keepers';
 
 const setMeta = (attribute: string, name: string, content?: string): void => {
   const selector = `meta[${attribute}="${name}"]`;
