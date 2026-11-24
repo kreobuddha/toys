@@ -114,7 +114,7 @@ services:
     environment:
       PUBLIC_BASE_URL: https://shop.example.com # so image URLs point at the public origin
   web:
-    image: ghcr.io/kreobuddha/toys-web:latest
+    image: ghcr.io/kreobuddha/the-keepers-toys/frontend:latest
     ports: ['80:80']
     environment:
       API_URL: http://api:8080
@@ -135,7 +135,9 @@ are proxied through so the backend's images load from the same origin.
 
 `.github/workflows/docker.yaml` builds the image and pushes it to
 `ghcr.io/kreobuddha/the-keepers-toys/frontend`, tagged with the version from `package.json` and
-with `latest`, then tags the commit `v<version>`. It runs on demand: _Actions → Docker image → Run
-workflow_, after the release pull request is merged.
+with `latest`, then tags the commit `v<version>`. It runs when a merge lands on `master`, and
+publishes only if that version has no `v<version>` tag yet: merging a release pull request (which
+bumps the version) publishes it, other merges leave the published image alone. To rebuild the
+current version anyway, run it by hand: _Actions → Docker image → Run workflow_.
 
 The backend publishes the same way, so a server runs the two images side by side.
