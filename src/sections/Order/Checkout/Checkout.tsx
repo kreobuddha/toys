@@ -11,15 +11,14 @@ import { CURRENCY } from '@/constants/productAttributes';
 import { applyCartPreview, selectCartItems, selectCartTotal } from '@/features/cart/cartSlice';
 import { formatPrice, useLocale } from '@/i18n';
 import { useErrorMessage, useValidationMessage } from '@/i18n/errorLabels';
-import type { IAddress } from '@/types/address';
 import type { ICreateOrderRequest, IPreviewCartRequest } from '@/types/order';
 import { errorReasonOf, fieldViolationsOf } from '@/utils/apiError';
-import { normalizePostcode, resolveStreet } from '@/utils/nlAddress';
 import Button from '@components/Button/Button';
 import Input from '@components/Input/Input';
 import { useCreateOrderMutation, usePreviewCartQuery } from '@sections/Order/api/ordersApi';
-import AddressFields, { type AddressFormValues } from './components/AddressFields/AddressFields';
-import { DEFAULT_CITY, loadSavedCity } from './components/AddressFields/savedCity';
+import AddressFields, { type AddressFormValues } from '@components/AddressFields/AddressFields';
+import { toAddress } from '@components/AddressFields/toAddress';
+import { DEFAULT_CITY, loadSavedCity } from '@components/AddressFields/savedCity';
 import CartNotice from './components/CartNotice/CartNotice';
 import OrderSummary from './components/OrderSummary/OrderSummary';
 import { DELIVERY_OPTIONS, toOrderDelivery, type DeliveryMethod } from './deliveryOptions';
@@ -42,23 +41,6 @@ const DELIVERY_LABELS = {
   courier: { name: 'checkout.deliveryCourier', hint: 'checkout.deliveryCourierHint' },
   post: { name: 'checkout.deliveryPost', hint: 'checkout.deliveryPostHint' },
 } as const satisfies Record<DeliveryMethod, { name: string; hint: string }>;
-
-/**
- * The delivery address as the order carries it. The field rules have already checked the
- * formats; anything typed after the house number ("Dam 5B") joins the addition.
- */
-const toAddress = (values: AddressFormValues): IAddress | undefined => {
-  const parts = resolveStreet(values.addressLine, values.addressPick);
-  if (!parts) return undefined;
-  const addition = [parts.rest, values.apartment.trim()].filter(Boolean).join(' ');
-  return {
-    postalCode: normalizePostcode(values.postcode),
-    city: values.city.trim(),
-    street: parts.street,
-    houseNumber: String(parts.houseNumber),
-    houseNumberAddition: addition || undefined,
-  };
-};
 
 const Checkout = (): ReactElement => {
   const { t } = useTranslation(['orderSection', 'translation']);

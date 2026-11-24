@@ -18,7 +18,7 @@ import {
   useLazySuggestNlCitiesQuery,
   useSuggestNlCitiesQuery,
   useSuggestNlStreetsQuery,
-} from '@sections/Order/api/pdokApi';
+} from '@/api/pdokApi';
 import { saveCity } from './savedCity';
 import { useDebouncedValue } from './useDebouncedValue';
 
@@ -92,7 +92,7 @@ const toPostcodeHint = (
  * checked, and the backend validates the address itself.
  */
 const AddressFields = (): ReactElement => {
-  const { t } = useTranslation(['orderSection', 'translation']);
+  const { t } = useTranslation();
   const {
     register,
     control,
@@ -105,7 +105,7 @@ const AddressFields = (): ReactElement => {
   } = useController({
     control,
     name: 'city',
-    rules: { required: t('checkout.required') },
+    rules: { required: t('address.required') },
   });
   const {
     field: { ref: addressLineInputRef, ...addressLineField },
@@ -113,9 +113,9 @@ const AddressFields = (): ReactElement => {
     control,
     name: 'addressLine',
     rules: {
-      required: t('checkout.required'),
+      required: t('address.required'),
       validate: (line, values) =>
-        Boolean(resolveStreet(line, values.addressPick)) || t('checkout.invalidAddressLine'),
+        Boolean(resolveStreet(line, values.addressPick)) || t('address.invalidAddressLine'),
     },
   });
   const [cityPick, addressPick] = useWatch({ control, name: ['cityPick', 'addressPick'] });
@@ -233,7 +233,7 @@ const AddressFields = (): ReactElement => {
       <div className="address-fields__field">
         <Combobox
           id="city"
-          label={t('checkout.city')}
+          label={t('address.city')}
           name={cityField.name}
           ref={cityInputRef}
           value={cityField.value}
@@ -251,8 +251,8 @@ const AddressFields = (): ReactElement => {
       <div className="address-fields__field">
         <Combobox
           id="addressLine"
-          label={t('checkout.addressLine')}
-          placeholder={t('checkout.addressLinePlaceholder')}
+          label={t('address.addressLine')}
+          placeholder={t('address.addressLinePlaceholder')}
           name={addressLineField.name}
           ref={addressLineInputRef}
           value={addressLineField.value}
@@ -273,7 +273,7 @@ const AddressFields = (): ReactElement => {
         <div className="address-fields__field">
           <Input
             id="apartment"
-            label={t('checkout.apartment')}
+            label={t('address.apartment')}
             autoComplete="address-line2"
             {...register('apartment')}
           />
@@ -281,27 +281,27 @@ const AddressFields = (): ReactElement => {
         <div className="address-fields__field">
           <Input
             id="postcode"
-            label={t('checkout.postcode')}
+            label={t('address.postcode')}
             autoComplete="postal-code"
             autoCapitalize="characters"
             aria-invalid={Boolean(errors.postcode)}
             {...register('postcode', {
-              required: t('checkout.required'),
-              validate: (value) => isNlPostcode(value) || t('checkout.invalidPostcode'),
+              required: t('address.required'),
+              validate: (value) => isNlPostcode(value) || t('address.invalidPostcode'),
             })}
           />
           {errors.postcode && (
             <span className="address-fields__error">
               {errors.postcode.message}
-              {errors.postcode.type === 'validate' && ` ${t('checkout.nlOnly')}`}
+              {errors.postcode.type === 'validate' && ` ${t('address.nlOnly')}`}
             </span>
           )}
         </div>
       </div>
       <Input
         id="country"
-        label={t('checkout.country')}
-        value={t('checkout.countryNetherlands')}
+        label={t('address.country')}
+        value={t('address.countryNetherlands')}
         readOnly
       />
     </div>
