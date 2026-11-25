@@ -7,15 +7,14 @@ import type { ProductAgeRange, ProductCondition, ProductSort } from '@/types/pro
 export const AGE_RANGES: readonly ProductAgeRange[] = [
   'PRODUCT_AGE_RANGE_0_TO_6_MONTHS',
   'PRODUCT_AGE_RANGE_6_TO_12_MONTHS',
-  'PRODUCT_AGE_RANGE_12_TO_18_MONTHS',
-  'PRODUCT_AGE_RANGE_18_TO_24_MONTHS',
+  'PRODUCT_AGE_RANGE_1_TO_2_YEARS',
   'PRODUCT_AGE_RANGE_2_TO_3_YEARS',
   'PRODUCT_AGE_RANGE_3_YEARS_AND_UP',
 ];
 
 export const CONDITIONS: readonly ProductCondition[] = [
   'PRODUCT_CONDITION_NEW',
-  'PRODUCT_CONDITION_PRELOVED',
+  'PRODUCT_CONDITION_PRE_LOVED',
 ];
 
 export const SORT_OPTIONS: readonly ProductSort[] = [
@@ -28,21 +27,19 @@ export const AGE_RANGE_MONTHS: Record<ProductAgeRange, { from: number; to?: numb
   PRODUCT_AGE_RANGE_UNSPECIFIED: { from: 0 },
   PRODUCT_AGE_RANGE_0_TO_6_MONTHS: { from: 0, to: 6 },
   PRODUCT_AGE_RANGE_6_TO_12_MONTHS: { from: 6, to: 12 },
-  PRODUCT_AGE_RANGE_12_TO_18_MONTHS: { from: 12, to: 18 },
-  PRODUCT_AGE_RANGE_18_TO_24_MONTHS: { from: 18, to: 24 },
+  PRODUCT_AGE_RANGE_1_TO_2_YEARS: { from: 12, to: 24 },
   PRODUCT_AGE_RANGE_2_TO_3_YEARS: { from: 24, to: 36 },
   PRODUCT_AGE_RANGE_3_YEARS_AND_UP: { from: 36 },
 };
 
-// Short aliases keep the shop URL readable: /en/shop?age=12-18 instead of the enum name.
+// Short aliases keep the shop URL readable: /en/shop?age=12-24 instead of the enum name.
 // Categories and brands need none — their slugs are already short.
 
 export const AGE_RANGE_SLUGS: Record<ProductAgeRange, string> = {
   PRODUCT_AGE_RANGE_UNSPECIFIED: '',
   PRODUCT_AGE_RANGE_0_TO_6_MONTHS: '0-6',
   PRODUCT_AGE_RANGE_6_TO_12_MONTHS: '6-12',
-  PRODUCT_AGE_RANGE_12_TO_18_MONTHS: '12-18',
-  PRODUCT_AGE_RANGE_18_TO_24_MONTHS: '18-24',
+  PRODUCT_AGE_RANGE_1_TO_2_YEARS: '12-24',
   PRODUCT_AGE_RANGE_2_TO_3_YEARS: '24-36',
   PRODUCT_AGE_RANGE_3_YEARS_AND_UP: '36-plus',
 };
@@ -50,7 +47,7 @@ export const AGE_RANGE_SLUGS: Record<ProductAgeRange, string> = {
 export const CONDITION_SLUGS: Record<ProductCondition, string> = {
   PRODUCT_CONDITION_UNSPECIFIED: '',
   PRODUCT_CONDITION_NEW: 'new',
-  PRODUCT_CONDITION_PRELOVED: 'preloved',
+  PRODUCT_CONDITION_PRE_LOVED: 'preloved',
 };
 
 export const SORT_SLUGS: Record<ProductSort, string> = {

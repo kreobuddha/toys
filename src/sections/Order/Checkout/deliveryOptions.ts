@@ -56,13 +56,15 @@ export const toDeliveryChoices = (
 export const toOrderDelivery = (
   type: DeliveryType,
   address?: IAddress,
-  locationCode?: string
+  locationCode?: string,
+  deliveryNotes?: string
 ): IOrderDelivery => {
+  const toDoor = address && { address, deliveryNotes: deliveryNotes?.trim() || undefined };
   switch (type) {
     case 'DELIVERY_OPTION_TYPE_LOCAL_DELIVERY':
-      return address ? { localDelivery: { address } } : {};
+      return toDoor ? { localDelivery: toDoor } : {};
     case 'DELIVERY_OPTION_TYPE_POSTNL_HOME':
-      return address ? { postnlHomeDelivery: { address } } : {};
+      return toDoor ? { postnlHomeDelivery: toDoor } : {};
     case 'DELIVERY_OPTION_TYPE_POSTNL_PICKUP_POINT':
       return locationCode ? { postnlPickupPointDelivery: { locationCode } } : {};
     case 'DELIVERY_OPTION_TYPE_CUSTOMER_PICKUP':

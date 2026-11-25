@@ -6,6 +6,7 @@ import clsx from 'clsx';
 import { useLinks } from '@/app/useLinks';
 import { useGetProductFacetsQuery } from '@sections/Shop/api/productsApi';
 
+/** Age stages; each is also the shop URL's alias for that age range. */
 type Stage = '0-6' | '6-12' | '12-24' | '24-36' | '36-plus';
 
 const STAGES: readonly Stage[] = ['0-6', '6-12', '12-24', '24-36', '36-plus'];
@@ -17,15 +18,6 @@ const ILLUSTRATIONS: Record<Stage, readonly string[]> = {
   '12-24': ['shape-puzzle', 'pyramid', 'elephant', 'drum'],
   '24-36': ['blocks', 'puzzle-piece', 'lacing', 'teapot'],
   '36-plus': ['balance-board', 'domino', 'house-and-car', 'abc-blocks'],
-};
-
-/** The shop URL's age aliases behind each stage; a year spans two of the catalog's ranges. */
-const SHOP_AGES: Record<Stage, string> = {
-  '0-6': '0-6',
-  '6-12': '6-12',
-  '12-24': '12-18,18-24',
-  '24-36': '24-36',
-  '36-plus': '36-plus',
 };
 
 /**
@@ -76,7 +68,7 @@ const PlayActivities = (): ReactElement => {
   const shopUrl = (index: number): string => {
     const slug = slugByName.get(normalize(CATEGORIES[stage][index] ?? ''));
     const category = slug ? `category=${encodeURIComponent(slug)}&` : '';
-    return `${links.shop}?${category}age=${SHOP_AGES[stage]}`;
+    return `${links.shop}?${category}age=${stage}`;
   };
 
   return (
@@ -141,7 +133,7 @@ const PlayActivities = (): ReactElement => {
           ))}
         </ul>
 
-        <Link to={`${links.shop}?age=${SHOP_AGES[stage]}`} className="play-activities__explore">
+        <Link to={`${links.shop}?age=${stage}`} className="play-activities__explore">
           {t('home.activitiesExplore', { age: ages[stage] })}
           <img src="/icons/arrow-right.svg" alt="" width={24} height={24} />
         </Link>

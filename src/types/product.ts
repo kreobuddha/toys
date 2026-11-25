@@ -6,13 +6,12 @@ export type ProductAgeRange =
   | 'PRODUCT_AGE_RANGE_UNSPECIFIED'
   | 'PRODUCT_AGE_RANGE_0_TO_6_MONTHS'
   | 'PRODUCT_AGE_RANGE_6_TO_12_MONTHS'
-  | 'PRODUCT_AGE_RANGE_12_TO_18_MONTHS'
-  | 'PRODUCT_AGE_RANGE_18_TO_24_MONTHS'
+  | 'PRODUCT_AGE_RANGE_1_TO_2_YEARS'
   | 'PRODUCT_AGE_RANGE_2_TO_3_YEARS'
   | 'PRODUCT_AGE_RANGE_3_YEARS_AND_UP';
 
 export type ProductCondition =
-  'PRODUCT_CONDITION_UNSPECIFIED' | 'PRODUCT_CONDITION_NEW' | 'PRODUCT_CONDITION_PRELOVED';
+  'PRODUCT_CONDITION_UNSPECIFIED' | 'PRODUCT_CONDITION_NEW' | 'PRODUCT_CONDITION_PRE_LOVED';
 
 export type ProductSort = 'PRODUCT_SORT_PRICE_ASCENDING' | 'PRODUCT_SORT_PRICE_DESCENDING';
 
@@ -42,6 +41,13 @@ export interface IProduct {
   availableQuantity?: number;
   /** Slug of the journal article about this toy, when there is one. */
   relatedArticleSlug?: string;
+  material?: string;
+  /** Customer-facing measurements, units included. */
+  dimensions?: string;
+  /** More about a pre-loved toy's physical condition, when there is something to say. */
+  conditionNotes?: string;
+  /** What a set includes, when the toy is a set. */
+  setContents?: string;
 }
 
 /**
