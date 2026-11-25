@@ -10,8 +10,15 @@ import { useLocale } from './LocaleContext';
 const CONDITION_LABELS = {
   PRODUCT_CONDITION_UNSPECIFIED: '',
   PRODUCT_CONDITION_NEW: 'condition.new',
-  PRODUCT_CONDITION_PRELOVED: 'condition.preloved',
+  PRODUCT_CONDITION_PRE_LOVED: 'condition.preloved',
 } as const satisfies Record<ProductCondition, string>;
+
+/**
+ * Whether this build knows the range. The catalog may send one added to the contract after the
+ * build, and a toy should still render rather than take the page down.
+ */
+const isKnownAge = (range: string): range is ProductAgeRange =>
+  Object.hasOwn(AGE_RANGE_MONTHS, range);
 
 export interface ProductLabels {
   /** Age filter option: months under a year, years above it: "0–6m", "1–1.5y", "3+". */
@@ -30,6 +37,7 @@ export const useProductLabels = (): ProductLabels => {
     new Intl.NumberFormat(locale, { maximumFractionDigits: 1 }).format(months / 12);
 
   const ageOption = (range: ProductAgeRange): string => {
+    if (!isKnownAge(range)) return '';
     const { from, to } = AGE_RANGE_MONTHS[range];
     if (to === undefined) return t('age.groupOpen', { from: years(from) });
     if (to <= 12) return t('age.groupMonths', { from, to });
@@ -38,7 +46,7 @@ export const useProductLabels = (): ProductLabels => {
 
   const ageSpan = (ranges?: readonly ProductAgeRange[]): string => {
     const bounds = (ranges ?? [])
-      .filter((range) => range !== 'PRODUCT_AGE_RANGE_UNSPECIFIED')
+      .filter((range) => range !== 'PRODUCT_AGE_RANGE_UNSPECIFIED' && isKnownAge(range))
       .map((range) => AGE_RANGE_MONTHS[range]);
     if (bounds.length === 0) return '';
     const from = Math.min(...bounds.map((bound) => bound.from));
