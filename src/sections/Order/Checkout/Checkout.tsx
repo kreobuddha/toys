@@ -94,7 +94,7 @@ const Checkout = (): ReactElement => {
       name: values.name,
       email: values.email,
       phone: values.phone || undefined,
-      delivery: toOrderDelivery(values.delivery, address, values.pickupPoint),
+      delivery: toOrderDelivery(values.delivery, address, values.pickupPoint, values.deliveryNotes),
     };
     try {
       const { orderId, checkoutUrl } = await createOrder(order).unwrap();

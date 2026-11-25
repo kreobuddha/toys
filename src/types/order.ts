@@ -21,11 +21,17 @@ export interface IOrderItem {
   quantity: number;
 }
 
+/** Delivery to the customer's door, with the instructions they left for it. */
+export interface IAddressDelivery {
+  address: IAddress;
+  deliveryNotes?: string;
+}
+
 /** Exactly one member is set, mirroring the protobuf oneof. */
 export interface IOrderDelivery {
   customerPickup?: Record<string, never>;
-  localDelivery?: { address: IAddress };
-  postnlHomeDelivery?: { address: IAddress };
+  localDelivery?: IAddressDelivery;
+  postnlHomeDelivery?: IAddressDelivery;
   postnlPickupPointDelivery?: { locationCode: string };
 }
 
@@ -59,6 +65,8 @@ export interface IDeliveryOption {
   type: DeliveryOptionType;
   /** Euro cents; CreateOrder recalculates it. */
   priceEuroCents?: number;
+  /** Customer-facing explanation of the method. */
+  description?: string;
 }
 
 export interface IDeliveryOptionsResponse {
