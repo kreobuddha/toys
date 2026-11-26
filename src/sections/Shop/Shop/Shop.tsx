@@ -65,7 +65,7 @@ const Catalog = (): ReactElement => {
 
           {isEmpty && (
             <div className="shop__empty">
-              <img src="/toys/puzzle-piece.svg" alt="" className="shop__empty-image" />
+              <img src="/toys/color/puzzle-piece.svg" alt="" className="shop__empty-image" />
               <h2 className="shop__empty-title">{t('shop.emptyTitle')}</h2>
               <p className="shop__empty-text">{t('shop.emptyText')}</p>
               {activeCount > 0 && <Button onClick={reset}>{t('shop.emptyAction')}</Button>}

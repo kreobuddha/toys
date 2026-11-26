@@ -18,8 +18,8 @@ const HowItWorks = (): ReactElement => {
     <section className="container how-it-works">
       <h2 className="how-it-works__title">{t('home.howTitle')}</h2>
       <div className="how-it-works__steps">
-        <img src="/home/steps-loop.svg" alt="" className="how-it-works__loop" />
-        <img src="/home/steps-line.svg" alt="" className="how-it-works__line" />
+        <img src="/illustrations/steps-loop.svg" alt="" className="how-it-works__loop" />
+        <img src="/illustrations/steps-line.svg" alt="" className="how-it-works__line" />
         <ol className="how-it-works__list">
           {steps.map((step, index) => (
             <li key={step.title} className="how-it-works__step">

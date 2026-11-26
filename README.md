@@ -47,6 +47,21 @@ src/
   styles/     global styles, SCSS variables & mixins
 ```
 
+## Static files
+
+`public/` is grouped by what a file is, never by the page that uses it:
+
+| Folder             | What it holds                                                      |
+| ------------------ | ------------------------------------------------------------------ |
+| `brand/`           | Logos                                                              |
+| `icons/`           | Interface icons                                                    |
+| `illustrations/`   | Drawings and decorative shapes                                     |
+| `photos/`          | Photographs                                                        |
+| `toys/color/`      | Toy drawings in full colour                                        |
+| `toys/silhouette/` | The same toys in one colour; also masks for the falling background |
+| `locales/`         | Translations                                                       |
+| `config.json`      | Runtime config, rewritten by the container on start                |
+
 Desktop-first: base styles target desktop, `@include tablet` / `@include mobile` narrow down.
 
 ## Backend API
