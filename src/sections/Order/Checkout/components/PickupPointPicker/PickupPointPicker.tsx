@@ -9,6 +9,7 @@ import Button from '@components/Button/Button';
 import Input from '@components/Input/Input';
 import { useLazyListPickupPointsQuery } from '@sections/Order/api/ordersApi';
 import type { CheckoutFormValues } from '@sections/Order/Checkout/checkoutForm';
+import Radio from '@components/Radio/Radio';
 
 /** "Dam 1, 1012 JS, Amsterdam" */
 const formatAddress = (address: IAddress): string =>
@@ -98,10 +99,8 @@ const PickupPointPicker = (): ReactElement => {
                   selected === point.locationCode && 'pickup-picker__point--selected'
                 )}
               >
-                <input
-                  type="radio"
+                <Radio
                   value={point.locationCode}
-                  className="pickup-picker__radio"
                   {...register('pickupPoint', { required: t('checkout.errors.pickupRequired') })}
                 />
                 <span className="pickup-picker__details">

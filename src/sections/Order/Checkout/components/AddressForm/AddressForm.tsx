@@ -8,6 +8,7 @@ import { isNlPostcode, normalizePostcode } from '@/utils/nlAddress';
 import { useDebouncedValue } from '@components/AddressFields/useDebouncedValue';
 import Input from '@components/Input/Input';
 import { parseHouseNumber, type CheckoutFormValues } from '@sections/Order/Checkout/checkoutForm';
+import Textarea from '@components/Textarea/Textarea';
 
 const LOOKUP_DELAY_MS = 300;
 
@@ -102,18 +103,13 @@ const AddressForm = (): ReactElement => {
         error={errors.city?.message}
         {...register('city', { required: t('checkout.errors.cityRequired') })}
       />
-      <div className="input">
-        <label className="input__label" htmlFor="deliveryNotes">
-          {t('checkout.deliveryNotes')}
-        </label>
-        <textarea
-          id="deliveryNotes"
-          rows={2}
-          placeholder={t('checkout.deliveryNotesPlaceholder')}
-          className="input__control input__control--multiline"
-          {...register('deliveryNotes')}
-        />
-      </div>
+      <Textarea
+        id="deliveryNotes"
+        rows={2}
+        label={t('checkout.deliveryNotes')}
+        placeholder={t('checkout.deliveryNotesPlaceholder')}
+        {...register('deliveryNotes')}
+      />
     </fieldset>
   );
 };
