@@ -179,7 +179,7 @@ const Checkout = (): ReactElement => {
               {submitError && <p className="checkout__error">{submitError}</p>}
 
               <div className="checkout__submit">
-                <Button type="submit" disabled={isSubmitting || blocked} aria-busy={isSubmitting}>
+                <Button type="submit" disabled={blocked} loading={isSubmitting}>
                   {isSubmitting ? t('checkout.paying') : t('checkout.pay')}
                 </Button>
                 {problems.length > 0 && (
