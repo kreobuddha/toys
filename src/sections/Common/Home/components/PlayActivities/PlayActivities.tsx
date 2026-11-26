@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { useLinks } from '@/app/useLinks';
+import { toyColorUrl, toySilhouetteUrl, type ToyName } from '@/constants/toys';
 import { useGetProductFacetsQuery } from '@sections/Shop/api/productsApi';
 
 /** Age stages; each is also the shop URL's alias for that age range. */
@@ -11,8 +12,8 @@ type Stage = '0-6' | '6-12' | '12-24' | '24-36' | '36-plus';
 
 const STAGES: readonly Stage[] = ['0-6', '6-12', '12-24', '24-36', '36-plus'];
 
-/** Toy illustrations from `public/toys/color/` (hover: `silhouette/`), one per play type in the stage's order. */
-const ILLUSTRATIONS: Record<Stage, readonly string[]> = {
+/** Toy drawings, one per play type in the stage's order: in colour at rest, a silhouette on hover. */
+const ILLUSTRATIONS: Record<Stage, readonly ToyName[]> = {
   '0-6': ['soft-book', 'teether', 'rattle'],
   '6-12': ['sorter', 'cups', 'top'],
   '12-24': ['shape-puzzle', 'pyramid', 'elephant', 'drum'],
@@ -108,7 +109,7 @@ const PlayActivities = (): ReactElement => {
               <Link to={shopUrl(index)} className="play-activities__item">
                 <span className="play-activities__face play-activities__face--rest">
                   <img
-                    src={`/toys/color/${ILLUSTRATIONS[stage][index]}.svg`}
+                    src={toyColorUrl(ILLUSTRATIONS[stage][index])}
                     alt=""
                     className="play-activities__image"
                   />
@@ -116,7 +117,7 @@ const PlayActivities = (): ReactElement => {
                 </span>
                 <span className="play-activities__face play-activities__face--hover">
                   <img
-                    src={`/toys/silhouette/${ILLUSTRATIONS[stage][index]}.svg`}
+                    src={toySilhouetteUrl(ILLUSTRATIONS[stage][index])}
                     alt=""
                     className="play-activities__image play-activities__image--hover"
                   />

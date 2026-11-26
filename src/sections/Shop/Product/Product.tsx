@@ -91,7 +91,7 @@ const Product = (): ReactElement => {
 
   return (
     <div className="product">
-      <BackgroundShapes layout="product" />
+      <BackgroundShapes seed={3} />
       <section className="container product__main">
         <Link to={links.shop} className="product__back">
           <img src="/icons/arrow-left.svg" alt="" className="product__back-icon" />

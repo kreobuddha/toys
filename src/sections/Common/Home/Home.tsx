@@ -11,7 +11,7 @@ import TrustStrip from './components/TrustStrip/TrustStrip';
 const Home = (): ReactElement => {
   return (
     <div className="home">
-      <BackgroundShapes layout="home" />
+      <BackgroundShapes seed={1} />
       <HomeHero />
       <TrustStrip />
       <HowItWorks />
