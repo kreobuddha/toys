@@ -22,8 +22,8 @@ const percent = (value: number, of: number): string => `${(value / of) * 100}%`;
  * parent must be positioned.
  */
 const BackgroundShapes = ({
-  speed = 25,
-  density = 0.9,
+  speed = 50,
+  density = 1,
   seed = 1,
   toys = TOYS,
 }: BackgroundShapesProps): ReactElement => {
