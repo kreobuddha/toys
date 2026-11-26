@@ -33,12 +33,16 @@ const BackgroundShapes = ({
   // whenever it is attached, including after Suspense hides and reveals the page.
   const observe = useCallback((element: HTMLDivElement | null): (() => void) | undefined => {
     if (!element) return undefined;
-    const observer = new ResizeObserver(([entry]) => {
-      const { width, height } = entry.contentRect;
+    const measure = (width: number, height: number): void =>
       setBox((current) =>
         current.width === width && current.height === height ? current : { width, height }
       );
-    });
+    // Measured once right away: the observer only reports on a rendered frame, which a hidden
+    // tab may not get for a while.
+    measure(element.clientWidth, element.clientHeight);
+    const observer = new ResizeObserver(([entry]) =>
+      measure(entry.contentRect.width, entry.contentRect.height)
+    );
     observer.observe(element);
     return () => observer.disconnect();
   }, []);
