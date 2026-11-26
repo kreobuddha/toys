@@ -33,7 +33,7 @@ const Legal = ({ page }: LegalProps): ReactElement => {
 
   return (
     <div className="legal-page">
-      <BackgroundShapes layout="empty" />
+      <BackgroundShapes seed={5} />
       <article className="container legal">
         <h1 className="legal__title">{content.title}</h1>
         <div className="legal__card">

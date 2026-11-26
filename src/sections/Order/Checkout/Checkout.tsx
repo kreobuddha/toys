@@ -128,7 +128,7 @@ const Checkout = (): ReactElement => {
 
   return (
     <div className="checkout-page">
-      <BackgroundShapes layout="empty" />
+      <BackgroundShapes seed={4} />
       <section className="container checkout">
         <h1 className="checkout__title">{t('checkout.title')}</h1>
         <CartNotice problems={problems} />

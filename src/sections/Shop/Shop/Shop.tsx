@@ -37,7 +37,7 @@ const Catalog = (): ReactElement => {
 
   return (
     <section className="container shop">
-      <BackgroundShapes layout={isEmpty ? 'empty' : 'shop'} />
+      <BackgroundShapes seed={2} />
       <div className="shop__heading">
         <h1 className="shop__title">{t('shop.title')}</h1>
         <div className="shop__toolbar">
@@ -92,7 +92,7 @@ const Launch = (): ReactElement => {
   const { t } = useTranslation('shopSection');
   return (
     <section className="container shop">
-      <BackgroundShapes layout="empty" />
+      <BackgroundShapes seed={2} />
       <div className="shop__heading">
         <h1 className="shop__title">{t('shop.title')}</h1>
       </div>

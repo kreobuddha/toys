@@ -4,10 +4,57 @@
   z-index: -1;
   overflow: hidden;
   pointer-events: none;
+  // On the layer, not on each toy, so overlapping toys do not darken each other.
+  opacity: 0.2;
 }
 
-.background-shapes__shape {
+// Tiles stacked from one tile above the top; sliding down by exactly one tile and starting over
+// shows the same picture, so the loop is seamless.
+.background-shapes__track {
+  animation: background-shapes-fall linear infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+    transform: translateY(calc(-1 * var(--tile)));
+  }
+}
+
+.background-shapes__tile {
+  position: relative;
+  aspect-ratio: 1920 / 3000;
+}
+
+.background-shapes__toy {
   position: absolute;
-  max-width: none;
-  height: auto;
+  aspect-ratio: 1;
+  background: var(--blue);
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  rotate: var(--angle);
+  animation: background-shapes-spin linear infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+@keyframes background-shapes-fall {
+  from {
+    transform: translateY(calc(-1 * var(--tile)));
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes background-shapes-spin {
+  from {
+    rotate: var(--angle);
+  }
+
+  to {
+    rotate: calc(var(--angle) + var(--turn));
+  }
 }
