@@ -36,6 +36,27 @@
   }
 }
 
+// Loading indicator from the design: a faint ring with a bright arc, in the label's colour.
+.button__spinner {
+  flex-shrink: 0;
+  width: 0.875em;
+  height: 0.875em;
+  border: 3px solid color-mix(in srgb, currentColor 25%, transparent);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: button-spin 0.8s linear infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation-duration: 2.4s;
+  }
+}
+
+@keyframes button-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 // Filled pill with an uppercase label: the call to action.
 .button--primary {
   background: var(--blue-green);
@@ -43,17 +64,17 @@
   text-transform: uppercase;
 
   &:not(:disabled):hover {
-    background: color-mix(in srgb, var(--blue-green) 88%, var(--black));
+    background: var(--blue-green-hover);
   }
 
   &:not(:disabled):active {
-    background: color-mix(in srgb, var(--blue-green) 75%, var(--black));
+    background: var(--blue-green-pressed);
   }
 
   // Greyed out when it cannot be used; a button busy with a request keeps its colour.
   &:disabled:not([aria-busy='true']) {
     background: var(--light-grey);
-    color: var(--black);
+    color: color-mix(in srgb, var(--black) 40%, transparent);
   }
 }
 
@@ -71,12 +92,12 @@
     background: color-mix(in srgb, var(--blue-green) 14%, var(--white));
   }
 
+  // A 3px outline in the design: the border plus a 2px ring, so the button keeps its size.
   &:focus-visible {
-    box-shadow: none;
-    border-width: 3px;
+    box-shadow: 0 0 0 2px var(--blue-green);
   }
 
-  &:disabled {
+  &:disabled:not([aria-busy='true']) {
     background: var(--light-grey);
     border-color: rgba(2, 87, 92, 0.25);
     color: rgba(2, 87, 92, 0.45);

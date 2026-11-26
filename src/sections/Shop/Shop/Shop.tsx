@@ -3,7 +3,6 @@ import { useMemo, type ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 import { getRuntimeConfig } from '@/app/runtimeConfig';
 import { toPriceBounds } from '@/constants/productAttributes';
-import BackgroundShapes from '@components/BackgroundShapes/BackgroundShapes';
 import Button from '@components/Button/Button';
 import Pagination from '@components/Pagination/Pagination';
 import ProductCard from '@components/ProductCard/ProductCard';
@@ -37,7 +36,6 @@ const Catalog = (): ReactElement => {
 
   return (
     <section className="container shop">
-      <BackgroundShapes seed={2} />
       <div className="shop__heading">
         <h1 className="shop__title">{t('shop.title')}</h1>
         <div className="shop__toolbar">
@@ -92,7 +90,6 @@ const Launch = (): ReactElement => {
   const { t } = useTranslation('shopSection');
   return (
     <section className="container shop">
-      <BackgroundShapes seed={2} />
       <div className="shop__heading">
         <h1 className="shop__title">{t('shop.title')}</h1>
       </div>

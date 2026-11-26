@@ -9,7 +9,6 @@ import { addItem, selectCartItems, setQuantity } from '@/features/cart/cartSlice
 import { formatPrice, useLocale } from '@/i18n';
 import { useProductLabels } from '@/i18n/productLabels';
 import { errorReasonOf, httpStatusOf } from '@/utils/apiError';
-import BackgroundShapes from '@components/BackgroundShapes/BackgroundShapes';
 import Button from '@components/Button/Button';
 import QuantityStepper from '@components/QuantityStepper/QuantityStepper';
 import { useGetProductQuery } from '@sections/Shop/api/productsApi';
@@ -91,7 +90,6 @@ const Product = (): ReactElement => {
 
   return (
     <div className="product">
-      <BackgroundShapes seed={3} />
       <section className="container product__main">
         <Link to={links.shop} className="product__back">
           <img src="/icons/arrow-left.svg" alt="" className="product__back-icon" />

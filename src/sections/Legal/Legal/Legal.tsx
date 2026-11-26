@@ -3,7 +3,6 @@ import type { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import type { LegalPage } from '@/app/routes';
-import BackgroundShapes from '@components/BackgroundShapes/BackgroundShapes';
 
 interface LegalProps {
   page: LegalPage;
@@ -33,7 +32,6 @@ const Legal = ({ page }: LegalProps): ReactElement => {
 
   return (
     <div className="legal-page">
-      <BackgroundShapes seed={5} />
       <article className="container legal">
         <h1 className="legal__title">{content.title}</h1>
         <div className="legal__card">

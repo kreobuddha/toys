@@ -74,3 +74,9 @@ export const buildLinks = (locale: Locale): Links => {
     },
   };
 };
+
+/** What a route tells the layout through its `handle`. */
+export interface IRouteHandle {
+  /** Seed of the falling toys background behind the page and the footer; none when absent. */
+  backgroundSeed?: number;
+}

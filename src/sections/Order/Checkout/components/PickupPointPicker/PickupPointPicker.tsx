@@ -74,11 +74,9 @@ const PickupPointPicker = (): ReactElement => {
         />
         <Button
           className="pickup-picker__button"
-          disabled={isFetching}
-          aria-busy={isFetching}
+          loading={isFetching}
           onClick={() => void handleSearch()}
         >
-          {isFetching && <span className="pickup-picker__spinner" aria-hidden />}
           {isFetching ? t('checkout.pickupSearching') : t('checkout.pickupSearch')}
         </Button>
         {notFound && !errors.pickupPostcode && (
