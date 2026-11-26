@@ -177,6 +177,7 @@ const SellForm = (): ReactElement => {
         <div className="sell-form__field">
           <Textarea
             id="sell-message"
+            rows={4}
             label={t('sellToUs.message')}
             placeholder={t('sellToUs.messagePlaceholder')}
             aria-invalid={Boolean(errors.message)}
