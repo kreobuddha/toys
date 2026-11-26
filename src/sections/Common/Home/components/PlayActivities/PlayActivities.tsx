@@ -11,7 +11,7 @@ type Stage = '0-6' | '6-12' | '12-24' | '24-36' | '36-plus';
 
 const STAGES: readonly Stage[] = ['0-6', '6-12', '12-24', '24-36', '36-plus'];
 
-/** Toy illustrations from `public/toys/`, one per play type in the stage's order. */
+/** Toy illustrations from `public/toys/color/` (hover: `silhouette/`), one per play type in the stage's order. */
 const ILLUSTRATIONS: Record<Stage, readonly string[]> = {
   '0-6': ['soft-book', 'teether', 'rattle'],
   '6-12': ['sorter', 'cups', 'top'],
@@ -108,7 +108,7 @@ const PlayActivities = (): ReactElement => {
               <Link to={shopUrl(index)} className="play-activities__item">
                 <span className="play-activities__face play-activities__face--rest">
                   <img
-                    src={`/toys/${ILLUSTRATIONS[stage][index]}.svg`}
+                    src={`/toys/color/${ILLUSTRATIONS[stage][index]}.svg`}
                     alt=""
                     className="play-activities__image"
                   />
@@ -116,7 +116,7 @@ const PlayActivities = (): ReactElement => {
                 </span>
                 <span className="play-activities__face play-activities__face--hover">
                   <img
-                    src={`/toys/hover/${ILLUSTRATIONS[stage][index]}.svg`}
+                    src={`/toys/silhouette/${ILLUSTRATIONS[stage][index]}.svg`}
                     alt=""
                     className="play-activities__image play-activities__image--hover"
                   />
