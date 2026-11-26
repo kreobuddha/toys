@@ -7,6 +7,7 @@ import { CURRENCY } from '@/constants/productAttributes';
 import { formatPrice, useLocale } from '@/i18n';
 import type { CheckoutFormValues } from '@sections/Order/Checkout/checkoutForm';
 import type { DeliveryType, IDeliveryChoice } from '@sections/Order/Checkout/deliveryOptions';
+import Radio from '@components/Radio/Radio';
 
 interface DeliveryOptionListProps {
   choices: readonly IDeliveryChoice[];
@@ -44,10 +45,8 @@ const DeliveryOptionList = ({ choices }: DeliveryOptionListProps): ReactElement 
               selected === choice.type && 'delivery-options__option--selected'
             )}
           >
-            <input
-              type="radio"
+            <Radio
               value={choice.type}
-              className="delivery-options__radio"
               {...register('delivery', { required: t('checkout.errors.deliveryRequired') })}
             />
             <span className="delivery-options__details">

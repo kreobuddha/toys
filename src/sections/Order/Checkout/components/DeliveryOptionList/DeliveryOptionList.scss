@@ -42,29 +42,6 @@
   }
 }
 
-// A 28px ring that fills when picked.
-.delivery-options__radio {
-  flex-shrink: 0;
-  width: fluid(28px, 22px);
-  height: fluid(28px, 22px);
-  margin: 0;
-  border: 2px solid rgba(58, 60, 62, 0.6);
-  border-radius: 50%;
-  background: var(--white);
-  appearance: none;
-  cursor: pointer;
-
-  &:checked {
-    border-color: var(--blue-green);
-    background: radial-gradient(var(--blue-green) 0 45%, var(--white) 50%);
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--blue-green);
-    outline-offset: 2px;
-  }
-}
-
 .delivery-options__details {
   display: flex;
   flex: 1;
