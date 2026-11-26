@@ -31,17 +31,20 @@
     border: 2px solid var(--blue-green);
   }
 
-  // A textarea in the same frame: two lines high, as the design's delivery notes.
+  // A textarea in the same frame: at least two lines, as the design's delivery notes; `rows`
+  // makes it taller.
   &--multiline {
-    height: fluid(96px, 72px);
+    height: auto;
+    min-height: fluid(96px, 72px);
     padding: fluid(16px, 12px) fluid(20px, 14px);
     line-height: 1.2;
     resize: vertical;
   }
 
+  // The design keeps the 1.5px frame and only turns it pink.
   &--invalid,
   &--invalid:focus {
-    border: 2px solid var(--dark-pink);
+    border: 1.5px solid var(--dark-pink);
   }
 }
 

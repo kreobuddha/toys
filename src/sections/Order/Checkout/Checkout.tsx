@@ -16,7 +16,6 @@ import {
 import { useErrorMessage, useValidationMessage } from '@/i18n/errorLabels';
 import type { ICreateOrderRequest, IPreviewCartRequest } from '@/types/order';
 import { errorReasonOf, fieldViolationsOf } from '@/utils/apiError';
-import BackgroundShapes from '@components/BackgroundShapes/BackgroundShapes';
 import Button from '@components/Button/Button';
 import Input from '@components/Input/Input';
 import { useCreateOrderMutation, usePreviewCartQuery } from '@sections/Order/api/ordersApi';
@@ -128,7 +127,6 @@ const Checkout = (): ReactElement => {
 
   return (
     <div className="checkout-page">
-      <BackgroundShapes layout="empty" />
       <section className="container checkout">
         <h1 className="checkout__title">{t('checkout.title')}</h1>
         <CartNotice problems={problems} />
@@ -181,7 +179,7 @@ const Checkout = (): ReactElement => {
               {submitError && <p className="checkout__error">{submitError}</p>}
 
               <div className="checkout__submit">
-                <Button type="submit" disabled={isSubmitting || blocked} aria-busy={isSubmitting}>
+                <Button type="submit" disabled={blocked} loading={isSubmitting}>
                   {isSubmitting ? t('checkout.paying') : t('checkout.pay')}
                 </Button>
                 {problems.length > 0 && (

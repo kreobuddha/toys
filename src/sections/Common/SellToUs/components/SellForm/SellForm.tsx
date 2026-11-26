@@ -12,6 +12,7 @@ import { DEFAULT_CITY, loadSavedCity } from '@components/AddressFields/savedCity
 import Button from '@components/Button/Button';
 import Input from '@components/Input/Input';
 import Textarea from '@components/Textarea/Textarea';
+import Radio from '@components/Radio/Radio';
 import {
   useGetSellToysDeliveryOptionsQuery,
   useSubmitOfferMutation,
@@ -176,6 +177,7 @@ const SellForm = (): ReactElement => {
         <div className="sell-form__field">
           <Textarea
             id="sell-message"
+            rows={4}
             label={t('sellToUs.message')}
             placeholder={t('sellToUs.messagePlaceholder')}
             aria-invalid={Boolean(errors.message)}
@@ -196,10 +198,8 @@ const SellForm = (): ReactElement => {
                     delivery === point.pickupPointId && 'sell-form__option--selected'
                   )}
                 >
-                  <input
-                    type="radio"
+                  <Radio
                     value={point.pickupPointId}
-                    className="sell-form__radio"
                     {...register('delivery', { required: t('sellToUs.required') })}
                   />
                   <span className="sell-form__option-body">
@@ -221,10 +221,8 @@ const SellForm = (): ReactElement => {
                     collectsAtHome && 'sell-form__option--selected'
                   )}
                 >
-                  <input
-                    type="radio"
+                  <Radio
                     value={HOME_COLLECTION}
-                    className="sell-form__radio"
                     {...register('delivery', { required: t('sellToUs.required') })}
                   />
                   <span className="sell-form__option-body">
@@ -256,7 +254,7 @@ const SellForm = (): ReactElement => {
 
         {submitError && <p className="sell-form__error">{submitError}</p>}
 
-        <Button type="submit" disabled={isLoading} aria-busy={isLoading}>
+        <Button type="submit" loading={isLoading}>
           {isLoading ? t('sellToUs.sending') : t('sellToUs.submit')}
         </Button>
       </form>

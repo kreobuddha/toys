@@ -38,10 +38,12 @@ const Select = ({
   );
   if (!label) return select;
   return (
-    <label className="select" htmlFor={id}>
-      <span className="select__label">{label}</span>
+    <div className="select">
+      <label className="select__label" htmlFor={id}>
+        {label}
+      </label>
       {select}
-    </label>
+    </div>
   );
 };
 

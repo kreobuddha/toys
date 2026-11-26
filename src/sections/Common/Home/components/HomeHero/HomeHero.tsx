@@ -10,8 +10,8 @@ const HomeHero = (): ReactElement => {
 
   return (
     <section className="home-hero">
-      <img src="/home/hero-shape.svg" alt="" className="home-hero__shape" />
-      <img src="/home/hero-photo.png" alt="" className="home-hero__photo" />
+      <img src="/illustrations/hero-shape.svg" alt="" className="home-hero__shape" />
+      <img src="/photos/hero.png" alt="" className="home-hero__photo" />
       <div className="container home-hero__inner">
         <div className="home-hero__text">
           <p className="home-hero__eyebrow">{t('home.heroEyebrow')}</p>

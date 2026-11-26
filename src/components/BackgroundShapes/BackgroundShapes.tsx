@@ -1,105 +1,93 @@
 import './BackgroundShapes.scss';
-import type { ReactElement } from 'react';
+import { useCallback, useMemo, useState, type CSSProperties, type ReactElement } from 'react';
+import { TOYS, toySilhouetteUrl, type ToyName } from '@/constants/toys';
+import { DESIGN_WIDTH, TILE_HEIGHT, placeToys } from './placeToys';
 
-type Shape = 'arch' | 'car' | 'cube' | 'elephant' | 'puzzle-piece' | 'teapot' | 'triangle';
-
-interface IPlacement {
-  shape: Shape;
-  /** Left edge and top edge in the design's px, measured from the page's top under the header. */
-  x: number;
-  y: number;
+interface BackgroundShapesProps {
+  /** Fall speed in px per second at the design's 1920px width; it scales with the page. */
+  speed?: number;
+  /** Toys per 1000×1000 design px. */
+  density?: number;
+  /** Arrangement seed: pages pass different ones so they do not look alike. */
+  seed?: number;
+  /** Toys to draw from; all of them by default. */
+  toys?: readonly ToyName[];
 }
-
-interface ILayout {
-  /** Page height in the design from the header to the footer; tops scale against it. */
-  height: number;
-  shapes: IPlacement[];
-}
-
-export type BackgroundShapesLayout = 'home' | 'shop' | 'product' | 'empty';
-
-const DESIGN_WIDTH = 1920;
-
-/** Natural widths of the files in `public/home/shapes/`, in the design's px. */
-const WIDTHS: Record<Shape, number> = {
-  arch: 683,
-  car: 706,
-  cube: 454,
-  elephant: 1039,
-  'puzzle-piece': 623,
-  teapot: 1086,
-  triangle: 442,
-};
-
-const LAYOUTS: Record<BackgroundShapesLayout, ILayout> = {
-  home: {
-    height: 4395,
-    shapes: [
-      { shape: 'car', x: 1053, y: 1222 },
-      { shape: 'teapot', x: 52, y: 1706 },
-      { shape: 'triangle', x: 1478, y: 1844 },
-      { shape: 'elephant', x: 753, y: 2592 },
-      { shape: 'arch', x: 133, y: 3186 },
-      { shape: 'cube', x: 1248, y: 3752 },
-      { shape: 'puzzle-piece', x: -162, y: 3979 },
-    ],
-  },
-  shop: {
-    height: 2621,
-    shapes: [
-      { shape: 'arch', x: 133, y: -187 },
-      { shape: 'cube', x: 1248, y: 379 },
-      { shape: 'puzzle-piece', x: -162, y: 606 },
-      { shape: 'car', x: 1053, y: 1222 },
-      { shape: 'teapot', x: 52, y: 1706 },
-      { shape: 'triangle', x: 1478, y: 1844 },
-    ],
-  },
-  product: {
-    height: 3017,
-    shapes: [
-      { shape: 'arch', x: 20, y: 10 },
-      { shape: 'cube', x: 1490, y: 650 },
-      { shape: 'puzzle-piece', x: -300, y: 1120 },
-    ],
-  },
-  empty: {
-    height: 1162,
-    shapes: [
-      { shape: 'arch', x: -165, y: -147 },
-      { shape: 'cube', x: 1580, y: 590 },
-    ],
-  },
-};
 
 const percent = (value: number, of: number): string => `${(value / of) * 100}%`;
 
-interface BackgroundShapesProps {
-  layout: BackgroundShapesLayout;
-}
-
 /**
- * The pale falling toy shapes behind a page. Placed in the design's coordinates and scaled with
- * the page, so they keep their composition at any width. The parent must be positioned.
+ * Pale toy silhouettes slowly falling behind a page. One tile of toys repeats down the page and
+ * the whole stack slides down by one tile per loop, so the fall never ends and never jumps. The
+ * parent must be positioned.
  */
-const BackgroundShapes = ({ layout }: BackgroundShapesProps): ReactElement => {
-  const { height, shapes } = LAYOUTS[layout];
+const BackgroundShapes = ({
+  speed = 50,
+  density = 1,
+  seed = 1,
+  toys = TOYS,
+}: BackgroundShapesProps): ReactElement => {
+  const [box, setBox] = useState({ width: 0, height: 0 });
+
+  // A callback ref rather than an effect: it follows the node itself, so the layer is measured
+  // whenever it is attached, including after Suspense hides and reveals the page.
+  const observe = useCallback((element: HTMLDivElement | null): (() => void) | undefined => {
+    if (!element) return undefined;
+    const measure = (width: number, height: number): void =>
+      setBox((current) =>
+        current.width === width && current.height === height ? current : { width, height }
+      );
+    // Measured once right away: the observer only reports on a rendered frame, which a hidden
+    // tab may not get for a while.
+    measure(element.clientWidth, element.clientHeight);
+    const observer = new ResizeObserver(([entry]) =>
+      measure(entry.contentRect.width, entry.contentRect.height)
+    );
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+
+  const toysKey = toys.join();
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- `toysKey` stands for `toys`
+  const placements = useMemo(() => placeToys({ density, seed, toys }), [density, seed, toysKey]);
+
+  const scale = box.width / DESIGN_WIDTH;
+  const tileHeight = TILE_HEIGHT * scale;
+  const tiles = tileHeight > 0 ? Math.ceil(box.height / tileHeight) + 1 : 0;
+
+  const trackStyle = {
+    '--tile': `${tileHeight}px`,
+    animationDuration: `${tileHeight / Math.max(speed * scale, 0.001)}s`,
+  } as CSSProperties;
 
   return (
-    <div className="background-shapes" aria-hidden>
-      {shapes.map(({ shape, x, y }) => (
-        <img
-          key={`${shape}-${y}`}
-          src={`/home/shapes/${shape}.svg`}
-          alt=""
-          className="background-shapes__shape"
-          style={{
-            left: percent(x, DESIGN_WIDTH),
-            top: percent(y, height),
-            width: percent(WIDTHS[shape], DESIGN_WIDTH),
-          }}
-        />
-      ))}
+    <div ref={observe} className="background-shapes" aria-hidden>
+      {tiles > 0 && (
+        // Keyed by the tile count, so tiles added on resize start in step with the others.
+        <div key={tiles} className="background-shapes__track" style={trackStyle}>
+          {Array.from({ length: tiles }, (_, tile) => (
+            <div key={tile} className="background-shapes__tile">
+              {placements.map(({ toy, x, y, size, angle, spin }, index) => (
+                <span
+                  key={index}
+                  className="background-shapes__toy"
+                  style={
+                    {
+                      left: percent(x - size / 2, DESIGN_WIDTH),
+                      top: percent(y - size / 2, TILE_HEIGHT),
+                      width: percent(size, DESIGN_WIDTH),
+                      maskImage: `url(${toySilhouetteUrl(toy)})`,
+                      '--angle': `${angle}deg`,
+                      '--turn': `${spin < 0 ? -360 : 360}deg`,
+                      animationDuration: `${Math.abs(spin)}s`,
+                    } as CSSProperties
+                  }
+                />
+              ))}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
