@@ -14,31 +14,28 @@
   }
 }
 
-// A drawn box: 18px outline in a 24px cell, filled with a tick when checked.
+// The design's icons in a 24px cell: an 18px outline, and a filled box with the tick cut out.
 .checkbox__input {
   flex-shrink: 0;
   width: fluid(24px, 20px);
   height: fluid(24px, 20px);
   margin: 0;
-  border: 1.5px solid var(--black);
-  border-radius: 4px;
-  background: var(--white) center / 75% no-repeat;
+  border-radius: 3px;
+  background: url('/icons/checkbox.svg') center / contain no-repeat;
   appearance: none;
   cursor: pointer;
 
   &:checked {
-    border-color: var(--blue-green);
-    background-color: var(--blue-green);
-    background-image: url('/icons/check.svg');
+    background-image: url('/icons/checkbox-checked.svg');
   }
 
   &:focus-visible {
     outline: 2px solid var(--blue-green);
-    outline-offset: 2px;
+    outline-offset: 1px;
   }
 
   &:disabled {
-    border-color: var(--color-border);
+    opacity: 0.4;
     cursor: default;
   }
 }
